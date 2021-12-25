@@ -46,5 +46,6 @@ $ret.=tag('div',['id'=>'popup'],'');
 if(ses('dev')=='prog')$ret.=div(round(microtime(1)-$start,5),'chrono');
 $ret.='</body>
 </html>';
+//if(ses('enc'))$ret=utf8_encode($ret);
 echo $ret;
 ?>

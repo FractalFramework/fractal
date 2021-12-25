@@ -1,11 +1,11 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors',1);
-setlocale(LC_TIME,'fr_FR');
-if(isset($_GET['reset'])){$dev=$_SESSION['dev']; $_SESSION=[]; $_SESSION['dev']=$dev;}
-$f='cnfg/connect.php'; include($f);
-if(!isset($_SESSION['time']) or isset($_GET['reset'])){
-	$_SESSION['site']=$site; $_SESSION['macboot']=$macboot; $_SESSION['updated']=0;
+setlocale(LC_TIME,'fr_FR'); if(isset($_GET['reset'])){$dev=$_SESSION['dev']; $_SESSION=[]; $_SESSION['dev']=$dev;}
+if(!isset($_SESSION['enc']) or !isset($_SESSION['connect']) or isset($_GET['reset'])){
+	$f='cnfg/'.$_SERVER['HTTP_HOST'].'.php'; include($f);
+	$_SESSION['connect']=$f; $_SESSION['site']=$site; $_SESSION['enc']=$utf8;
+	$_SESSION['macboot']=$macboot; $_SESSION['updated']=0;
 	if(isset($_COOKIE['lng']))$_SESSION['lng']=$_COOKIE['lng'];
 	elseif(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		$_SESSION['lng']=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'],0,2);
@@ -15,7 +15,7 @@ if(isset($_GET['dev']))$_SESSION['dev']=$_GET['dev']=='='?'prog':'prod';
 if(!isset($_SESSION['dev']))$_SESSION['dev']='prod';
 require($_SESSION['dev'].'/lib.php');
 require($_SESSION['dev'].'/core.php');
-ses('dbq',$dbq);
+require($_SESSION['connect']); ses('dbq',$dbq);
 if(isset($_GET['logout'])){auth::logout(); reload('/');}
 if(!isset($_SESSION['time']))auth::autolog();
 $_SESSION['time']=time();

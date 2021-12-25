@@ -1,4 +1,8 @@
 RewriteEngine on
+
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^(.*)$ public/index.php?g=$1 [QSA,L]
+
 RewriteRule ^([0-9]+)$ /?p=id:$1 [L]
 RewriteRule ^a/([0-9]+)$ /?p=art:$1 [L]
 RewriteRule ^u/([^./]+)$ /?p=usr:$1 [L]

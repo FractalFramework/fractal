@@ -209,7 +209,7 @@ elseif($tmp<20)$ic=ico('thermometer-2'); elseif($tmp<30)$ic=ico('thermometer-3')
 else $ic=ico('thermometer-4');
 $ret.=$ic.$tmp.' '.$r['temperature'][1].' ';
 $ret.=ico('dashboard').$r['barometer'][0].' '.$r['barometer'][1].' ';
-//list($n,$nm,$ic)=self::icosvg($n); $ret=img('/usr/weather/'.$ic.'.svg').span($nm,'bold');
+//list($n,$nm,$ic)=self::icosvg($n); $ret=img('/usr/_/weather/'.$ic.'.svg').span($nm,'bold');
 $ret.=ico('angle-up').$r['sunrise'].' '.ico('angle-down').$r['sunset'];
 return $ret;}
 

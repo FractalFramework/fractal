@@ -298,6 +298,7 @@ elseif($v=='float')$ret.='`'.$k.'` float(20,2) NULL default NULL,'."\n";
 elseif($v=='double')$ret.='`'.$k.'` double NULL default NULL,'."\n";
 elseif($v=='json')$ret.='`'.$k.'` json,'."\n";
 //elseif($v=='json'){$ret.='`'.$k.'` mediumtext,'."\n"; $end='CHECK ('.$k.' IS NULL OR JSON_VALID('.$k.')),'."\n";}
+//elseif($v=='enum')$ret.=''.$k.'` enum ("'.implode('","',$k).'") NOT NULL,';
 return $ret.$end;}
 
 function jsoncolfromattr($b,$c,$k){//add col from json attr k in new col c//attr_colour
@@ -525,7 +526,7 @@ return div($ret);}
 function inpclr($id,$clr,$sz='',$sky='',$bkg=''){$cb=randid('cklr');
 if(substr($clr,0,1)=='-' or strpos($clr,',') or is_img($clr))$clrb='black';
 else $clrb=clrneg($clr,1);
-$inp=tag('input',['type'=>'text','id'=>$id,'value'=>$clr,'size'=>$sz,'placeholder'=>lang($id,1),'onclick'=>'applyclr(this,'.$bkg.')','onkeyup'=>'applyclr(this,'.$bkg.')','style'=>'background-color:#'.$clr.'; color:#'.$clrb],'',1);
+$inp=tag('input',['type'=>'color','id'=>$id,'value'=>$clr,'size'=>$sz,'placeholder'=>lang($id,1),'onclick'=>'applyclr(this,'.$bkg.')','onkeyup'=>'applyclr(this,'.$bkg.')','style'=>'background-color:#'.$clr.'; color:#'.$clrb],'',1);
 $ret=span(pic('color').$inp,'inpic');
 $ret.=toggle($cb.'|core,clrpick|id='.$id.''.$bkg,pic('clr'),'btn');
 if($sky)$ret.=toggle($cb.'|sky,slct|rid='.$id,ico('snowflake-o'),'btn');
@@ -585,6 +586,13 @@ $med=is_file($fb); if(!$dim)$dim='full'; if(!is_file($fc))imgthumb($f);
 if($dim=='mini' or $dim=='micro')$im=$fc;
 elseif($dim=='medium')$im=$med?$fb:$fa; else $im=$fa;
 return $im;}
+
+function goodir($f){
+if(substr($f,0,4)=='http')return $f;
+elseif(substr($f,0,4)=='/usr')return $f; 
+elseif(substr($f,0,4)=='disk')return $f;
+elseif(substr($f,0,3)=='usr')return '/disk/'.$f; 
+else return '/disk/usr/'.$f;}
 
 function img2($f,$dim='',$o=''){
 $ret=imgroot($f,$dim); $w=$dim=='micro'?100:''; $w=$dim=='avt'?60:'';

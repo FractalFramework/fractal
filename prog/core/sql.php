@@ -1,14 +1,13 @@
 <?php
 class sql{
-static private $dbhost='localhost';
-static private $dbuser='root';
-static private $dbname='wos';
-static private $dbpass='';
-static $dbq=Object;
-function __construct(){self::$dbq=new mysqli(self::$dbhost,self::$dbuser,self::$dbname,self::$dbpass);}
-//static function connect(){self::$dbq=new mysqli(self::$dbhost,self::$dbuser,self::$dbname,self::$dbpass);}
-//static function connect(){require('cnfg/connect.php'); self::$dbq=$dbq;}
-static function qr($sql,$z=''){if($z==1)echo $sql; $rq=mysqli_self::query(self::$dbq,$sql);
+static private $host='localhost';
+static private $user='root';
+static private $name='tlex';
+static private $pass='';
+static $dbq;
+//function __construct(){self::$dbq=new mysqli(self::$host,self::$user,self::$pass,self::$name);}
+function __construct(){require(ses('connect')); self::$dbq=$dbq;}
+static function qr($sql,$z=''){if($z==1)echo $sql; $rq=mysqli_query(self::$dbq,$sql);
 if($rq==null)echo mysqli_error(ses('dbq')).br().$sql.hr(); return $rq;}
 static function qfar($r){if($r)return mysqli_fetch_array($r);}
 static function qfas($r){if($r)return mysqli_fetch_assoc($r);}
@@ -19,7 +18,7 @@ static function escape($v){return mysqli_real_escape_string(ses('dbq'),stripslas
 
 static function sqlformat($rq,$p){$rt=[];
 if($p=='rq')return $rq;
-if($p=='ry')return self::($rq);
+if($p=='ry')return self::qr($rq);
 if($p=='ra')return self::qfas($rq);
 if($p=='rw')return self::qfrw($rq);
 if($p=='v'){$r=self::qfrw($rq); return $r[0];}
@@ -323,3 +322,4 @@ foreach($rc as $k=>$v){
 return $r;}
 
 }
+?>

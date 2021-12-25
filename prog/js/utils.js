@@ -433,7 +433,7 @@ function upload(rid,usr){
 		if(filename)upload_progress(rid);
 		var prm='rid:'+rid+',ty:'+ty;//getinp:1
 		var url='/call.php?appName=upload&appMethod=save&params='+prm;
-		if(ty=='img')var ajax=new AJAX(url,'after','upl'+rid+'','z',fd);
+		if(ty=='img')var ajax=new AJAX(url,'after','upl'+rid+'','z',fd,'');
 		else var ajax=new AJAX(url,'div',''+rid+'up','xb',fd);}}
 
 function cancelupload(rid){clearTimeout(xb); uploaded=0; inn('',rid+'up');}
@@ -474,7 +474,7 @@ function gps_ko(error){switch(error.code){
 	case error.TIMEOUT: p('gps: ne répond pas'); break;}}
 
 //keyPressEnter
-function checkEnter(e,o){
+function checkenter(e,o){
 	if(e && e.which)char=e.which; else char=e.keyCode;
 	if(char==13){document.forms[o].submit(); return false;}
 	else return true;}

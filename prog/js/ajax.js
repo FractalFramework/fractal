@@ -10,6 +10,10 @@ if(this.mRequest!=undefined){this.mRequest.abort(); delete this.mRequest;}
 this.mRequest=this.createReqestObject(); var m_This=this;
 this.mRequest.onreadystatechange=function(){m_This.handleResponse(aEl);}
 this.mRequest.open('POST',this.mUrl,true);
+if(aPost){//this.mRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');//
+	//this.mRequest.setRequestHeader('Content-length',aPost.length);//
+	//this.mRequest.setRequestHeader('Connection','close');
+	}
 if(aPost)this.mRequest.upload.addEventListener('progress',progressHandler,false);
 this.mRequest.send(aPost?aPost:null);}
 
@@ -19,8 +23,8 @@ AJAX.prototype.mRequest=undefined;
 
 AJAX.prototype.createReqestObject=function(){var req;
 try{req=new XMLHttpRequest();}//all
-catch(error){try{req=new ActiveXObject("Microsoft.XMLHTTP");}//IE
-	catch(error){try{req=new mUrliveXObject("Msxml2.XMLHTTP");}//IE
+catch(error){try{req=new ActiveXObject("Microsoft.XMLHTTP");}//IE6
+	catch(error){try{req=new mUrliveXObject("Msxml2.XMLHTTP");}//IE4
 		catch(error){req=false;}}}
 return req;}
 
@@ -30,9 +34,11 @@ function progressHandler(ev){uploaded=Math.round((ev.loaded/ev.total)*100,2);}
 AJAX.prototype.handleResponse=function(el){
 var tg=this.targetId; var mth=this.method; var opt=this.ajaxOption; var ob='';
 if(this.mRequest.readyState==4){wait=0;
+//if(this.mRequest.readyState===XMLHttpRequest.DONE){
 	//if(opt=='load')wait=0;
 	if(this.mRequest.status=="200"){
 		var res=this.mRequest.responseText;
+		//var xres=httpRequest.responseXML; var root_node=xres.getElementsByTagName('root').item(0);
 		//if(opt==3)opt='z'; else if(opt==2)opac(100,tg);
 		if(opt=='z' || opt=='zx'){mpop('x'); opac(100,tg);}
 		if(opt=='x' || opt=='xy' || opt=='zx')if(curid)Close('popup');
@@ -137,6 +143,8 @@ var cbJs=com[3]!=undefined?com[3]:'';//id of code to retro-inject in headers
 //component
 var appName=app[0];
 var appMethod=app[1]!=undefined?'&appMethod='+app[1]:'';
+//aPost
+var fd=new FormData();
 //loading
 if(cbOption=='z')mpop('Loading...');
 //if(cbOption=='x' || cbOption=='xy')if(curid)Close('popup');
@@ -150,9 +158,11 @@ if(inp!=undefined && inp!=null){
 				for(var io=0;io<ob.length;io++){if(ob[io].checked)rc.push(ob[io].value);}//var typ=ob[io].type;
 				var content=rc.join('-');}
 			else var content=ajaxCaptures(ob);
-			if(content!=undefined)prm[inp[i]]=jurl(content);
-			if(content.length>cutat){na=multithread(content,inp[i]); prm[inp[i]]='memtmp';}//amt
-		}}}
+			//if(content.length>cutat){na=multithread(content,inp[i]); prm[inp[i]]='memtmp';}//amt
+			if(content.length>cutat){fd.append(inp[i],content);}//prm[inp[i]]='_post';
+			//else if(content!=undefined)prm[inp[i]]=jurl(content);
+			else if(content!=undefined){fd.append(inp[i],content);}//prm[inp[i]]='_post';
+		}}} if(fd.lenght)pr(fd);
 //load operation
 if(cbMethod=='popup' || cbOption=='w')prm['pagewidth']=getbyid('page').offsetWidth-40;
 //var 
@@ -160,7 +170,7 @@ var str=jrb(prm);
 var url='/call.php?appName='+appName+appMethod+'&params='+str+'&'+cbMethod+'='+(cbId?cbId:1);
 //send
 if(na){mem=[url,cbMethod,cbId,cbOption]; return;}
-else var ajax=new AJAX(url,cbMethod,cbId,cbOption,'',el);
+else var ajax=new AJAX(url,cbMethod,cbId,cbOption,fd,el);
 //post actions
 if(cbOption=='reload')setTimeout('window.location=document.URL',100);//,,reload
 else if(cbOption=='resetform')for(i=0;i<inp.length;i++){

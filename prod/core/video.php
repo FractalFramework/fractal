@@ -113,7 +113,7 @@ return iframe('http://www.youtube.com/embed/'.$id.'?border=0&version=3&autohide=
 
 static function content($p){
 $u=jurl($p['p1']??'',1); $j='vd|video,call||id';
-$bt=form::call(['id'=>['url','inputcall',$u,$j],['ok','submit',$j,'']]);
+$bt=form::call(['id'=>['inputcall','url',$u,$j],['submit','ok',$j,'']]);
 return $bt.div('','board','vd');}
 
 static function api($p){

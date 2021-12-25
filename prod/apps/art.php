@@ -26,7 +26,7 @@ return parent::admin($p);}
 static function injectJs(){return '';}
 
 static function headers(){
-add_head('csscode','.sticky-edt{position:sticky;top: 20px;background:white; padding:0px; margin:4px;}');
+add_head('csscode','');
 add_prop('og:title',addslashes_b(self::$title));
 add_prop('og:description',addslashes_b(self::$descr));
 add_prop('og:image',self::$image);}

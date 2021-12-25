@@ -6,12 +6,6 @@
 * (see below)
 */
 
-assert_options(ASSERT_ACTIVE,1);//in case of
-assert_options(ASSERT_CALLBACK,'see_assert');
-assert_options(ASSERT_BAIL,0);
-function see_assert($script,$line,$error){
-echo 'error in '.$script.' at line '.$line.': '. $error;}
-
 class cartapi{
 static $private=0;
 static $a=__CLASS__;

@@ -6,6 +6,8 @@ $app=get('appName');
 $mth=get('appMethod');
 $prm=get('params');
 $p=$prm?_jrb($prm):[];
+//foreach($p as $k=>$v)if($v=='_post')$p[$k]=post($k);
+if(isset($_POST))$p+=$_POST;
 $p['appName']=$app;
 $p['appMethod']=$mth;
 //$p['callBack']=get('div');
@@ -21,6 +23,7 @@ elseif(get('drop'))$ret.=mkmenu($content);
 elseif(get('ses'))sez($p['k'],$p['v']);
 else $ret.=$content;
 //stats::add($app,$p);
+if(ses('enc'))$ret=utf8_encode($ret);
 echo $ret;
 sqlclose();
 ?>

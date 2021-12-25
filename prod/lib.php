@@ -10,8 +10,8 @@ spl_autoload_register('loadapp');
 
 #dev
 function p($r){print_r($r);}
-function pr($r,$o=''){$ret='<pre>'.print_r($r,true).'</pre>'; 
-if($o)return $ret; else echo $ret;}
+function pr($r,$o=''){$ret='<pre>'.print_r($r,true).'</pre>'; if($o)return $ret; else echo $ret;}
+function vd($r){var_dump($r);}
 function br(){return '<br />';}
 function hr(){return '<hr />';}
 function sp(){return '&nbsp;';}
@@ -20,7 +20,7 @@ function ns(){return '&thinsp;';}
 function n(){return "\n";}
 
 #html
-function atb($d,$v){if($v!=='')return ' '.$d.'="'.$v.'"';}
+function atb($d,$v){if($v)return ' '.$d.'="'.$v.'"';}
 function atc($d){if($d)return ' class="'.$d.'"';}
 function atd($d){if($d)return ' id="'.$d.'"';}
 function ats($d){if($d)return ' style="'.$d.'"';}
@@ -39,7 +39,7 @@ function ajx($d){return atj('ajx',$d);}
 function tag($tag,$r,$t=false,$o=''){$p='';
 	if(is_string($r))$r=prmr($r);
 	if(is_array($r))foreach($r as $k=>$v)$p.=atb($k,$v);
-	if($o && $t===false)return '<'.$tag.$p.' />'; else return '<'.$tag.$p.'>'.$t.'</'.$tag.'>';}
+	if($o && $t===false)return '<'.$tag.$p.'/>'; else return '<'.$tag.$p.'>'.$t.'</'.$tag.'>';}
 function div($t,$c='',$id='',$s='',$r=[]){
 	if($id)$r['id']=$id; if($c)$r['class']=$c; if($s)$r['style']=$s;
 	return tag('div',$r,$t);}
@@ -61,24 +61,19 @@ function bubjs($tx,$t,$c=''){$id=randid();
 	if($c)$r['class']=$c; return tag('a',$r,$t);}
 function close($id,$t,$c=''){return btj($t,atj('closediv',$id),$c);}
 function btn($r,$t){return tag('button',$r,$t);}
+function small($t){return tag('small','',$t);}
+function divh($d,$id){return div($d,'',$id,'display:none;');}
+function iframe($f,$w='',$h=''){return tag('iframe',['width'=>$w,'height'=>$h,'frameborder'=>'0','scrolling'=>'no','marginheight'=>'0','marginwidth'=>'0','src'=>$f],'');}
 
 function img($src,$w='',$h='',$c='',$s=''){
 	if(is_numeric($w))$w.='px'; if(is_numeric($h))$h.='px'; $r['src']=$src;
 	if($w)$r['width']=$w; if($h)$r['height']=$h; if($s)$r['style']=$s; if($c)$r['class']=$c;
 	return tag('img',$r,'','1');}
-
 function picture($f){
 $ret=tag('source',['media'=>'min-width:0px','srcset'=>imgroot($f,'medium')],'',1);
 $ret.=tag('source',['media'=>'min-width:1000px','srcset'=>imgroot($f,'full')],'',1);
 $ret.=tag('img','','',1);
 return $ret;}
-
-function goodir($f){
-if(substr($f,0,4)=='http')return $f;
-elseif(substr($f,0,4)=='/usr')return $f; 
-elseif(substr($f,0,4)=='disk')return $f;
-elseif(substr($f,0,3)=='usr')return '/disk/'.$f; 
-else return '/disk/usr/'.$f;}
 function video($f,$w='',$h=''){if(!$w)$w='100%'; return '<video controls width="'.$w.'" height="'.$h.'"><source src="'.goodir($f).'" type="video/mp4"></video>';}
 function audio($f,$id=''){return '<audio controls>
 <source id="mp3'.$id.'" src="'.goodir($f).'" type="audio/mpeg"></audio>';}
@@ -90,9 +85,14 @@ function input($id,$v,$s='',$h='',$num='',$mx='',$j='',$no=''){$r=['id'=>$id];
 	if($s)$r['size']=$s; if($mx)$r['maxlength']=$mx; if($no)$r['readonly']=true; if($num)$r['type']='number';
 	if($num)$j='numonly(this);'.$j; if($j){$r['onkeyup']=$j; $r['onchange']=$j;}//$r['onclick']=$j; 
 	return tag('input',$r,'',1);}
-function inputr($r){return tag('input',$r,'',1);}
-function goodinput($id,$v){
-	if(strlen($v)<20)return input($id,$v); else return textarea($id,$v,40,4);}
+function inpdate($id,$v,$min='',$max='',$o=''){$ty=$o?'datetime-local':'date';//time//step=1
+return tag('input',['type'=>$ty,'id'=>$id,'name'=>$id,'value'=>$v,'min'=>$min,'max'=>$max],'',1);}
+function inpnb($id,$v,$min='',$max='',$st=1){
+return tag('input',['type'=>'number','id'=>$id,'name'=>$id,'value'=>$v,'min'=>$min,'max'=>$max,'step'=>$st],'',1);}
+function inpcolor($id,$v=''){return tag('input',['type'=>'color','id'=>$id,'name'=>$id,'value'=>$v],'',1);}
+function inpmail($id){return tag('input',['type'=>'mail','id'=>$id,'name'=>$id],'',1);}
+function inptel($id,$v,$pl='06-01-02-03'){return tag('input',['type'=>'tel','id'=>$id,'name'=>$id,'value'=>$v,'placeholder'=>$pl,'pattern'=>"[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}"],'',1);}
+function goodinput($id,$v){if(strlen($v)<20)return input($id,$v); else return textarea($id,$v,40,4);}
 function hidden($id,$v){return tag('input',['type'=>'hidden','id'=>$id,'value'=>$v],'',1);}
 function password($id,$v,$sz='',$h=''){
 	$r=['type'=>'password','id'=>$id,'value'=>$v,'size'=>$sz];
@@ -109,11 +109,7 @@ function textareact($id,$v,$cl=64,$rw=8,$j='',$c=''){if($j)$j='ajxt(\''.$j.'\',t
 	return tag('textarea',$r,$v);}
 function divarea($id,$v,$c='article',$o=''){$bt=build::wsgbt($id,$o);
 	return $bt.tag('div',['id'=>$id,'class'=>$c,'contenteditable'=>'true'],$v);}
-function small($t){return tag('small','',$t);}
-function divh($d,$id){return div($d,'',$id,'display:none;');}
-function iframe($f,$w='',$h=''){return tag('iframe',['width'=>$w,'height'=>$h,'frameborder'=>'0','scrolling'=>'no','marginheight'=>'0','marginwidth'=>'0','src'=>$f],'');}
 
-function progress($id,$n){return '<progress id="'.$id.'" value="'.$n.'" max="100"></progress>';}
 function select($id,$r,$ck='',$o='',$lg='',$j='',$js=''){$ret='';
 $ra=['id'=>$id]; if($j)$ra['onchange']=atj('ajx',$j.'\'+this.value+\''); if($js)$ra['onchange']=$js;
 if($r)foreach($r as $k=>$v){$rb=[];
@@ -138,18 +134,18 @@ foreach($r as $k=>$v){$ka=$k;
 	$ret.=span(tag('input',$atb,'',1).label($kb,lang($v)),'btn').' ';}
 	return $ret;}
 function datalist($id,$r,$v,$s=34,$t=''){$ret=''; $opt='';
-	$ret=tag('input',['id'=>$id,'list'=>'dt'.$id,'size'=>$s,'value'=>$v,'placeholder'=>$t],'',1);
+	$ret=tag('input',['id'=>$id,'name'=>$id,'list'=>'dt'.$id,'size'=>$s,'value'=>$v,'placeholder'=>$t],'',1);
 	foreach($r as $v)$opt.=tag('option','value='.$v,'',1);
 	$ret.=tag('datalist',['id'=>'dt'.$id],$opt);
 	return $ret;}
 function bar($id,$v=1,$step=10,$min=0,$max=100,$in='',$j='',$c='',$s=''){if(!$v)$v=$step;
 	$bt=$in?input('lbl'.$id,$v,8,'',1,'','val(this.value,\''.$id.'\');'.$j):span($v,'btn','lbl'.$id);
-	return tag('input',['type'=>'range','id'=>$id,'min'=>$min,'max'=>$max,'step'=>$step,'value'=>$v,'onchange'=>($in?'val':'inn').'(this.value,\'lbl\'+id);'.$j,'class'=>$c,'style'=>'width:'.$s],'',1).$bt;}
+	return tag('input',['type'=>'range','id'=>$id,'name'=>$id,'min'=>$min,'max'=>$max,'step'=>$step,'value'=>$v,'onchange'=>($in?'val':'inn').'(this.value,\'lbl\'+id);'.$j,'class'=>$c,'style'=>'width:'.$s],'',1).$bt;}
 function label($for,$v,$id='',$c=''){return tag('label',['for'=>$for,'id'=>$id,'class'=>$c],$v);}
 function input_label($id,$v,$t,$s=12){return input($id,$v,$s,$t).label($id,$t);}//div()
 function input_row($id,$bt,$t){return div(div(label($id,lang($t)),'cell2').div($bt,'cell'),'row');}
-function input_pic($id,$v,$t,$p,$o=''){if($o)$o=label($id,$t);
-	return span(pic($p).input($id,$v,30,$t).$o,'inpic');}
+function input_pic($id,$v,$t,$p,$o=''){if($o)$o=label($id,$t); return span(pic($p).input($id,$v,30,$t).$o,'inpic');}
+function progress($id,$n){return tag('progress',['id'=>$id,'value'=>$n,'max'=>100],'');}
 
 function select2($id,$r,$ck='',$o='',$lg='',$j=''){$ret='';
 $ra=['id'=>$id]; if($j)$ra['onchange']=atj('ajx',$j.'\'+this.value+\'');
@@ -163,6 +159,13 @@ $ra=['id'=>$id]; if($j)$ra['onchange']=atj('ajx',$j.'\'+this.value+\'');
 		else $ret.=values($k,$v,$ck,$o,$lg);
 	return tag('select',$ra,$ret);}
 
+function mkform($id,$j,$r){$d='';
+$rp=['id'=>$id,'action'=>'ajbt(this);','data-j'=>$j,'onkeyup'=>atj('checkenter','this')];
+foreach($r as $k=>$v)$d.=tag('input',$v,'',1).label($v['name'],$v['label']);
+$d.=tag('submit',['class'=>'btsav'],langp('ok'));
+return tag('form',$rp,$d);}
+
+//formj
 function inputcall($j,$id,$v,$s='',$h='',$p='',$r=[]){$r['id']=$id;
 	if($h==1)$r['placeholder']=$v; elseif($h){$r['placeholder']=$h; $r['title']=$h;} if($h!=1)$r['value']=$v;
 	if($s)$r['size']=$s; $r['data-j']=$j; $js='checkj(event,this);'; $onk=$r['onkeyup']??''; $r['onkeyup']=$js.$onk;
@@ -184,7 +187,7 @@ function aj($tg,$a,$p,$inp,$bt,$c){return bj($tg.'|'.$a.'|'.prm($p).'|'.implode(
 function bj($call,$t,$c='',$r=[]){//wait for data-jb/-prmtm/-toggle
 	$onc=$r['onclick']??''; $r['data-j']=$call; if($c)$r['class']=$c; $r['onclick']='ajbt(this);'.$onc;
 	if(ses('dev')=='prog')$r['title']=vadd($r,'title',$call); return tag('a',$r,$t);}
-function bjs($j){$p=explode('|',$j); if(isset($p[2]))$p[2]=_jr(explode(',',$p[2])); return atj('ajx',implode('|',$p));}
+function bjs($j){$p=explode('|',$j); if(isset($p[2]))$p[2]=_jr(explode(',',$p[2]));return atj('ajx',implode('|',$p));}
 function bjt($call,$t,$c='',$ti=''){return bj($call,$t,$c,['title'=>$ti]);}
 function bjlog($call,$t,$c='',$r=[]){if(auth(1))return bj($call,$t,$c,$r); else return popup('login,com',$t,$c);}
 function bjk($call,$t,$c,$u){return bj($call,$t,$c,['data-u'=>$u]);}
@@ -604,7 +607,8 @@ function fex2($f){$fp=curl_init($f); curl_setopt($fp,CURLOPT_NOBODY,true); curl_
 $d=curl_getinfo($fp,CURLINFO_HTTP_CODE); curl_close($fp); return $d==200?1:0;}
 
 function write_file($f,$d){
-$h=fopen($f,'w+'); if(!$h)return 'error'; $w=fwrite($h,$d); fclose($h); opcache_invalidate($f);
+$h=fopen($f,'w+'); if(!$h)return 'error'; $w=fwrite($h,$d); fclose($h);
+if(!ses('enc'))opcache_invalidate($f);//
 if($w===false)return 'error';}
 
 function read_file($f){

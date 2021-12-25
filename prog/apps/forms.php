@@ -79,7 +79,7 @@ return conn::com2($p['com'],'conn','form');}
 
 static function edit_form($p){$com=str_replace("\n",'',val($p,'com')); $id=$p['id']??'';
 if(!$com)$com=utf8_encode('[label§title:input][label2§text:textarea]');//[form'.$id.'§'.ses('user').':submit]
-$ret=build::cbt('com',uns(form::bt(),'submit'));
+$ret=build::cbt('com',uns(form::ex(),'submit'));
 $j='frmpw|forms,preview|id='.$id.'|com';
 $ret.=div(textarea('com',$com,60,4,lang('fields'),'console','',$j));
 $ret.=div(bj($j,langp('preview'),'btn'));//preview

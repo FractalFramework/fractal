@@ -65,7 +65,7 @@ static function morse($d,$o=0){$ret='';
 if($o)$ra=explode(' ',$d); else $ra=str_split($d);
 $r=['a'=>'-.-','b'=>'-...','c'=>'-.-.','d'=>'-..','e'=>'.','f'=>'..-.','g'=>'--.','h'=>'....','i'=>'..','j'=>'.---','k'=>'-.-','l'=>'.-..','m'=>'--','n'=>'-.','o'=>'---','p'=>'.--.','q'=>'--.-','r'=>'.-.','s'=>'...','t'=>'-','u'=>'..-','v'=>'...-','w'=>'.--','x'=>'-..-','y'=>'-.--','z'=>'--..','0'=>'-----','1'=>'.----','2'=>'..---','3'=>'...--','4'=>'....-','5'=>'.....','6'=>'-....','7'=>'--...','8'=>'---..','9'=>'----.'];
 if($o)$r=array_flip($r);
-if($ra)foreach($ra as $v)$ret.=$r[trim($v)].' ';
+if($ra)foreach($ra as $v)$ret.=$r[trim($v)].'';
 return $ret;}
 
 static function exe($p,$d){
@@ -116,7 +116,7 @@ if($p)switch($p){
 	case('hexa2rgb'):$d=hexrgb($d); break;
 	case('soundex'):$d=soundex($d); break;
 	case('morse-enc'):$d=self::morse($d); break;
-	case('morse-dec'):$d=self::morse($d,''); break;
+	case('morse-dec'):$d=self::morse($d,1); break;
 	case('sex2dec'):$d=maths::base2dec($d,60); break;
 	case('dec2sex'):$d=maths::dec2base($d,60); break;
 	case('time_distorsion'):$d=maths::spacetime($d,1); break;

@@ -98,7 +98,7 @@ return img('usr/oracle/'.$in.'.jpg',238,400);
 return $bt;}
 
 static function play($n,$i){
-$im=img('usr/oracle/back.jpg',238,400);
+$im=img('usr/_/oracle/back.jpg',238,400);
 return bj(self::$cb.$i.'|oracle,card|n='.$n.',i='.$i,$im);}
 
 static function template($r){

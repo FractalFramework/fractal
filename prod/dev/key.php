@@ -41,7 +41,7 @@ static function com($p){}
 
 static function menu($p){//9625,9627,9628,9631
 $j=self::$cb.'|'.self::$a.',call||p1'; $p1=$p['p1']??'';
-$ret=form::call(['p1'=>['url','inputcall',$p1,$j],['ok','submit',$j,'']]);
+$ret=form::call(['p1'=>['inputcall','url',$p1,$j],['submit','ok',$j,'']]);
 return $ret;}
 
 #content

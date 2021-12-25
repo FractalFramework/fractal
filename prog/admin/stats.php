@@ -26,7 +26,7 @@ add_head('jscode',self::injectJs());}
 
 static function iq(){$ip=sesf('ip'); $cuid=ses('uid');
 [$iq,$uid]=sql('id,uid',self::$db,'rw',['ip'=>$ip],0);
-if(!$iq)$iq=sqlsav(self::$db,[$ip,$cuid],0);
+if(!$iq)$iq=sqlsav(self::$db,['ip'=>$ip,'uid'=>$cuid],0);
 elseif(!$uid && $cuid)sqlup(self::$db,['uid'=>$cuid],$iq,'',0);
 return $iq;}
 
@@ -77,7 +77,7 @@ $j=self::$cb.'|'.self::$a.',call||p1'; $p1=$p['p1']??'';
 //$bt=bj($j,langp('ok'),'btn');
 //$ret=$bt.textarea('p1','',60,4);
 //$ret=inputcall($j,'p1',$p['p1']??'',32).$bt;
-$ret=form::call(['p1'=>['url','inputcall',$p1,$j],['ok','submit',$j,'']]);
+$ret=form::call(['p1'=>['inputcall','url',$p1,$j],['submit','ok',$j,'']]);
 $ret.=bj(self::$cb.'|stats,consolid|',langp('consolidation'),'btn');
 $ret.=bj(self::$cb.'|stats,uniqs|',langp('unique_visitors'),'btn');
 return $ret;}

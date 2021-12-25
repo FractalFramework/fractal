@@ -1,7 +1,7 @@
 <?php
 class form{
 
-static function bt(){return ['input'=>'label§title','textarea'=>'label2§text','select'=>'choice§a/b/c','checkbox'=>'options§a/b','radio'=>'choose one§a/b','bar'=>'evaluation§1-10','submit'=>'form0§'.ses('user')];}
+static function ex(){return ['input'=>'label§title','textarea'=>'label2§text','select'=>'choice§a/b/c','checkbox'=>'options§a/b','radio'=>'choose one§a/b','bar'=>'evaluation§1-10','submit'=>'form0§'.ses('user')];}
 
 static function usave($p){//from conn
 $u=$p['u']; $b=$p['b']; $h=$p['h']; unset($p['u']); unset($p['b']); unset($p['h']);
@@ -28,9 +28,9 @@ foreach($r as $k=>$v){$val=$v['value']??''; $d=''; $k=normalize($k,1); $lbl=$v['
 	$rt[$k]['field']=$dv?div($d):$d;}
 return $rt;}
 
-//['p1'=>['label','input','url',0],['ok','submit','popup|form']]
+//['p1'=>['input','label','url',0],['submit','ok','popup|form']]
 static function call($rp){
-$ra=['label','type','value','opt'];
+$ra=['type','label','value','opt'];
 foreach($rp as $k=>$v)$rp[$k]=array_combine($ra,$v);
 $r=self::build($rp);
 $rt=array_column($r,'field');

@@ -65,7 +65,7 @@ $j=self::$cb.'|'.self::$a.',call||p1'; $p1=$p['p1']??'';
 //$bt=bj($j,langp('ok'),'btn');
 //$ret=$bt.textarea('p1','',60,4);
 //$ret=inputcall($j,'p1',$p['p1']??'',32).$bt;
-$ret=form::call(['p1'=>['url','inputcall',$p1,$j],['ok','submit',$j,'']]);
+$ret=form::call(['p1'=>['inputcall','url',$p1,$j],['submit','ok',$j,'']]);
 return $ret;}
 
 #content

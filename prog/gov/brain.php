@@ -99,7 +99,7 @@ return tag('canvas',['id'=>'cnv','width'=>self::$w.'px','height'=>self::$h.'px']
 static function menu($p){$a=self::$a; $cb=self::$cb; 
 $p1=$p['p1']?$p['p1']:10; $p2=$p['p2']??10; $p3=$p['p3']??2;
 $j=$cb.',,,1|'.$a.',com||p1,p2,p3';
-$ret=form::call(['p1'=>['cl1','inputnb',$p1,$j],'p2'=>['cl2','inputnb',$p2,$j],'p3'=>['cl3','inputnb',$p3,$j]]);//,['ok','submit',$j,'']
+$ret=form::call(['p1'=>['inputnb','cl1',$p1,$j],'p2'=>['inputnb','cl2',$p2,$j],'p3'=>['inputnb','cl3',$p3,$j]]);//,['submit','ok',$j,'']
 //$ret.=bj($cb.',,,1|'.$a.',com|p1=10,p2=10,p3=2',pic('reset'),'btn');
 $ret.=btj(langp('play'),'playstop()','btn');
 $ret.=btj(langp('pause'),'wait()','btn');

@@ -354,7 +354,7 @@ static function create($usr){//$uid=ses('uid');
 $id=sql('id',self::$db,'v','where pusr="'.$usr.'"');
 $uid=idusr($usr);
 if(!$id && $usr && $uid==ses('uid')){
-	$kg=keygen::build();
+	$kg=keygen::build(['length'=>8]);
 	//$clr=sesif('clr'.$usr,self::default_clr());
 	$clr=sesrif('clr',$usr,profile::default_clr());
 	$r=['puid'=>$uid,'pusr'=>$usr,'pname'=>$usr,'status'=>'','clr'=>$clr,'avatar'=>'','banner'=>'','web'=>'','gps'=>'','location'=>'','privacy'=>0,'oAuth'=>$kg,'ntf'=>0,'role'=>0];
