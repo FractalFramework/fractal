@@ -1,0 +1,34 @@
+@fractalFramework
+Free License GNU/GPL
+====================
+
+AJAX MVC FRAMEWORK
+
+This is a platform for build web applications.
+The architecture is based on the the Ajax process.
+
+REQUIREMENTS
+----------
+Recommanded: PHP 7.4 + MariaDB 10
+
+INSTALLATION
+-------------
+- copy files on your server
+- or use ssh: 
+> wget -P /home/yourdir http://logic.ovh/fractal.tar.gz
+> tar -zxvf /home/yourdir/fractal.tar.gz
+- chmod -R 777 /home/yourdir (to ALL)
+- create your database in utf8mb4
+- set the config : rename /cnfg/site.com.php to [your domaine].php and fill the variables.
+- rename htaccess.txt -> .htaccess (if you'r not using virtualhosts)
+- go to the page '/install' (!! temporaly change var private=6 -> private=0 to access it while you are not again registered !!*)
+- clic on 'install' to install all tables for each App
+- clic on 'databases" to import some needed datas (lang, help, icons, desktop)
+- create first account, it will the only one to have the column 'auth' of mysql table 'login' set to 6 (as superadmin). Others accounts will have auth=2.
+
+- (*) to erase modifs in code, go to prog in dev/prog 
+- push in prod
+
+================
+Fractal 2015-2020
+//logic.ovh

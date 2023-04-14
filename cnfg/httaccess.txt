@@ -1,0 +1,5 @@
+AuthType Basic
+AuthName "restricted area"
+AuthUserFile /home/ffw/cnfg/.htpasswd
+AuthPGAuthoritative Off
+require user dav

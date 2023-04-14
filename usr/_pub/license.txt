@@ -1,0 +1,3 @@
+@fractalFrameWork 2015-2020
+License GNU/GPL v3+
+http://logic.ovh

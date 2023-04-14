@@ -1,0 +1,97 @@
+@fractalFrameWork 2015-2023
+Free License GNU/GPL
+====================
+
+#full install of vps for debian
+
+apt-get update && apt-get upgrade -y
+adduser USERNAME
+usermod -aG sudo USERNAME
+
+#change current user
+su - USERNAME
+
+#install apache2
+sudo apt-get install apache2 apache2-doc
+sudo service apache2 status
+sudo apt-get install php
+
+#install MariaDb
+sudo apt-get install mysql-server
+mysql_secure_installation
+# type y, y, y, y
+
+sudo apt-get install phpmyadmin
+#type 'space' 'enter'
+
+sudo nano /etc/apache2/apache2.conf
+#add at last line
+Include /etc/phpmyadmin/apache.conf
+service apache2 restart
+
+#create user of database
+mysql -u root -p
+PASSWORD
+MariaDB [(none)]> CREATE USER 'USERNAME'@'localhost' IDENTIFIED BY 'PASSWORD';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON * . * TO 'USERNAME'@'localhost';
+MariaDB [(none)]> FLUSH PRIVILEGES;
+
+#virtualhosts
+cd /etc/apache2/sites-available
+nano SITE.COM.conf
+#fill with this:
+
+<VirtualHost *:80>
+DocumentRoot /home/USERNAME
+ServerName SITE.COM
+<Directory /home/USERNAME>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+	RewriteEngine on
+RewriteRule ^([0-9]+)$ /?p=id:$1 [L]
+RewriteRule ^a/([0-9]+)$ /?p=art:$1 [L]
+RewriteRule ^u/([^./]+)$ /?p=usr:$1 [L]
+RewriteRule ^@([^./]+)$ /?p=usr:$1 [L]
+RewriteRule ^tm/([^./]+)$ /?p=tm:$1 [L]
+RewriteRule ^th/([^./]+)$ /?p=th:$1 [L]
+RewriteRule ^desk/([^./]+)$ /?p=desk:1,usr:$1 [L]
+RewriteRule ^ntf/([^./]+)$ /?p=ntf:1,usr:$1 [L]
+RewriteRule ^api/([^./]+)/(.+)$ /api.php?app=$1&p=$2 [L]
+RewriteRule ^explorer/(.+)$ /?app=explorer&p=f:$1 [L]
+RewriteRule ^frame/([^.]+)/(.+)$ /api.php?frame=$1&p=$2 [L]
+RewriteRule ^reset$ /?reset== [L]
+RewriteRule ^logout$ /?logout== [L]
+RewriteRule ^([^.]+)/([^.]+):([^.]+)$ /?app=$1&p=$2:$3 [L]
+RewriteRule ^([^.]+)/([^.]+)/([^.]+)$ /?app=$1&p=p:$2,o:$3 [L]
+RewriteRule ^([^.]+)/([^.]+)$ /?app=$1&p=p:$2 [L]
+RewriteRule ^([^.]+)/$ /?app=$1 [L]
+RewriteRule ^([^.]+)$ /?app=$1 [L]
+</Directory>
+ServerAlias www.SITE.COM
+HostNameLookups on
+Options +FollowSymLinks
+</VirtualHost>
+
+a2ensite SITE.COM
+systemctl reload apache2
+/etc/init.d/apache2 restart
+service apache2 reload
+
+#save
+ctrl+x, "y"
+
+#htaccess
+a2enmod rewrite
+
+#ftp
+apt-get install proftpd
+chmod -R 777 /home/tlex
+
+#install Fractal
+cd /home/USERNAME
+wget -P /home/USERNAME http://logic.ovh/fractal.tar.gz
+tar -zxvf /home/tlex/fractal.tar.gz /home/USERNAME
+
+#go to SITE.COM
+site.com/install
