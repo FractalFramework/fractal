@@ -1,0 +1,4 @@
+directories:
+- full
+- medium
+- mini
