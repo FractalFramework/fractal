@@ -1,0 +1,61 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.xml
+_bckp
+_sql
+_old
+_notes
+disk/_bak
+disk/usr/dav
+disk/_
+cnfg/vps801456.ovh.net.php
+cnfg/weather.txt
+cnfg/twitter.txt
+cnfg/watson.txt
+cnfg/deepl.txt
+_trash.php
+fonts/_old
+fonts/ttf
+_trash.php
+*.sh
