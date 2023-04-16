@@ -42,16 +42,15 @@ static function op($p){$ret='';
 //$d=sql('txt','multilang','v',150); sql::up('book_chap','txt',$d,28);
 return $ret;}
 
-static function newhasher($p){$ret='';
-	$b=$p['b']??''; $rb=[];
-	$r=applist::allapps(); p($r);
+static function newhasher($p){$ret='';//book_chap,comic_cases,note,slide_r,stext,stx,sys,syslib,tlex,tlex_web,userguide,vector,
+	$b=$p['inp1']??''; $rb=[];
+	$r=applist::allapps(); //p($r);
 	foreach($r as $k=>$v){
 		$cls=isset($v::$cols)?$v::$cols:[];
 		if(in_array('txt',$cls))$rb[]=$v;
 	}
-	foreach($rb as $k=>$v){
-		qr('UPDATE '.$v.' SET `txt`=REPLACE(txt,"§","|");');
-	}
+	if($b)sql::qr('UPDATE '.$b.' SET `txt`=REPLACE(txt,"§","|");',1);
+	else foreach($rb as $k=>$v)qr('UPDATE '.$v.' SET `txt`=REPLACE(txt,"§","|");',1);
 	//$r=applist::build();
 	//pr($rb);
     //$b=$p['inp1']??self::$db;
@@ -76,8 +75,8 @@ static function content($p){
 //self::install();
 $p['p1']=$p['p1']??'';
 $op='newhasher';//
-$bt=input('inp1','value1','','1');
-$bt.=bj(self::$cb.'|maintenance,call|v1=hello,op='.$op.'|inp1',lang('send'),'btn');
+$bt=input('inp1','','','1');
+$bt.=bj(self::$cb.'|maintenance,call|op='.$op.'|inp1',lang('send'),'btn');
 $ret=self::call($p);
 return $bt.div($ret,'pane',self::$cb);}
 }

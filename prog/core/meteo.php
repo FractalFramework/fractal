@@ -164,15 +164,9 @@ return $d;}
 
 //com
 static function com_observation($r){//pr($r);
-$rb['station']=$r[0]['station']['city']; $ob=$r[0]['observation'];
-$rb['temperature']=[$ob['outside_temperature']['value'],$ob['outside_temperature']['unit']];
-$rb['barometer']=[$ob['barometer']['value'],$ob['barometer']['unit']];
-$rb['rainfall']=[$ob['rainfall']['value'],$ob['rainfall']['unit']];
-$rb['solar_radiation']=[$ob['solar_radiation']['value']??'',$ob['solar_radiation']['unit']??''];
-$rb['wind_speed']=[$ob['wind_speed']['value']??'',$ob['wind_speed']['unit']??''];
-$rb['windchill']=[$ob['windchill']['value']??'',$ob['windchill']['unit']??''];//tmp ressentie
-$rb['windgust_speed']=[$ob['windgust_speed']['value']??'',$ob['windgust_speed']['unit']??''];
-$rb['outside_humidity']=[$ob['outside_humidity']['value']??'',$ob['outside_humidity']['unit']??''];
+$rb['station']=$r[0]['station']['city']??''; $ob=$r[0]['observation']??[];
+$ra=['temperature','barometer','rainfall','solar_radiation','wind_speed','windchill','windgust_speed','outside_humidity'];
+foreach($ra as $k=>$v)$rb[$v]=[$ob[$v]['value']??'',$ob[$v]['unit']??''];
 return $rb;}
 
 static function com_forecast($r,$o=''){//pr($r);
