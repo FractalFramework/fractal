@@ -72,9 +72,9 @@ static function connreader($d,$b){[$p,$o,$c,$da]=readconn($d);
 if($c==$b && $p)return $p.',';}
 
 static function repair($da,$b){//[$p,$o,$c,$d]=readconn($da);
-//return '['.$p.($o?'§'.$o:'').($c?':'.$c:'').']'
+//return '['.$p.($o?'|'.$o:'').($c?':'.$c:'').']'
 $da=str_replace(':aj',':bj',$da);
-return '['.str_replace('*','§',$da).']';}
+return '['.str_replace('*','|',$da).']';}
 
 static function noconn($d,$b){[$p,$o,$c]=readconn($d);
 $r=['b','i','u','e','n','h1','h2','h3','h4','span','div','small','big','table'];
@@ -170,7 +170,7 @@ static function html($p,$o,$c){}
 
 #read
 static function reader($da,$b=''){
-[$p,$o,$c,$d]=readconn($da); $atb=[];//[p§o:c]//d=p*o
+[$p,$o,$c,$d]=readconn($da); $atb=[];//[p|o:c]//d=p*o
 if($p=='http'){$p.=':'.$c; $c='';}
 $r=['b','i','u','h1','h2','h3','h4','sub','big','small','center'];
 if(in_array($c,$r)){return tag($c,$atb,$d);}//if($o)$p=self::url($d,'');
@@ -217,10 +217,10 @@ switch($c){
 	case('pub'):return lk('/art/'.$p,$o?$o:art::tit(['id'=>$p]),'btlk'); break;
 	case('apj'):$js='ajx("div,cn'.$c.',,1|'.$p.','.$o.'|headers=1");';
 		return div(head::csscode($js),'','cn'.$c); break;
-	//case('app'):return app($p,_jrb($o)); break;//c§o
-	case('app'):[$b,$a]=split_one(':',$d,1); return app($a,_jrb($b,'=')); break;//p:a§t
+	//case('app'):return app($p,_jrb($o)); break;//c|o
+	case('app'):[$b,$a]=split_one(':',$d,1); return app($a,_jrb($b,'=')); break;//p:a|t
 	case('com'):[$b,$a]=split_one(':',$d,1); return app($a,_jrb($b,'='),'com'); break;
-	case('bt'):[$b,$a]=split_one(':',$p,1); $t=$a=='art'?art::tit(['id'=>$b]):($a);//p:a§t
+	case('bt'):[$b,$a]=split_one(':',$p,1); $t=$a=='art'?art::tit(['id'=>$b]):($a);//p:a|t
 		return pagup($a.',call|'.implode_k(_jrb($b,'='),',','='),pic($a).($o?$o:$t)); break;
 	//case('open'):if(method_exists($p,$o))return $p::$o([]); break;
 	case('popup'):return popup($p,$o?$o:pic('popup'),''); break;

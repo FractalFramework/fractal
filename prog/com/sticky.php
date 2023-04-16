@@ -132,8 +132,8 @@ $d1=mb_substr($ret,0,$s); $d2=mb_substr($ret,$s,$e-$s); $d3=mb_substr($ret,$e);
 //pr([$s,$e,$pad,$d2,$decal]);
 //if($d2!=$pad){$pos=strpos(substr($ret,$s),$pad); $diff=$e-$s;
 //	$d1=mb_substr($ret,0,$pos); $d2=mb_substr($ret,$s,$pos-$diff); $d3=mb_substr($ret,$diff);}
-$ret=$d1.'['.$d2.'§'.$id.':sticky]'.$d3; $decal+=strlen($id)+1;
-//return str_replace($pad,'['.$pad.'§'.$id.':sticky]',$ret);
+$ret=$d1.'['.$d2.'|'.$id.':sticky]'.$d3; $decal+=strlen($id)+1;
+//return str_replace($pad,'['.$pad.'|'.$id.':sticky]',$ret);
 return $ret;}
 
 static function stabilo($p){
@@ -144,7 +144,7 @@ if($r)foreach($r as $k=>$v){$ok=1;
 	$ok=self::intersections($r,$v,$txt);
 	//if($ex===false)$ok=0;
 	//if($ok)$ret=self::detection($ret,$v);
-	if($ok)$ret=str_replace($v['pad'],'['.$v['pad'].'§'.$v['id'].':sticky]',$ret);
+	if($ok)$ret=str_replace($v['pad'],'['.$v['pad'].'|'.$v['id'].':sticky]',$ret);
 	else self::$obso[]=$v['id'];}
 return $ret;}
 

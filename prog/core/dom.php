@@ -70,7 +70,7 @@ return $ret;}
 static function href($d){$lk=''; $va=''; $dom=dom($d);
 $r=$dom->getElementsByTagName('a');
 foreach($r as $k=>$v){$lk=domattr($v,'href'); $va=$v->nodeValue;}
-return '['.$lk.($va?'§'.$va:'').']';}
+return '['.$lk.($va?'|'.$va:'').']';}
 
 //dom2conn//dev
 /**/static function dc($v){$at=[];

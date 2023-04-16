@@ -1,7 +1,7 @@
 <?php
 class form{
 
-static function ex(){return ['input'=>'label§title','textarea'=>'label2§text','select'=>'choice§a/b/c','checkbox'=>'options§a/b','radio'=>'choose one§a/b','bar'=>'evaluation§1-10','submit'=>'form0§'.ses('usr')];}
+static function ex(){return ['input'=>'label|title','textarea'=>'label2|text','select'=>'choice|a/b/c','checkbox'=>'options|a/b','radio'=>'choose one|a/b','bar'=>'evaluation|1-10','submit'=>'form0|'.ses('usr')];}
 
 static function usave($p){//from conn
 $u=$p['u']; $b=$p['b']; $h=$p['h']; unset($p['u']); unset($p['b']); unset($p['h']);

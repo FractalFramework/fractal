@@ -43,9 +43,20 @@ static function op($p){$ret='';
 return $ret;}
 
 static function newhasher($p){$ret='';
-    $b=$p['inp1']??self::$db;
-    $d=sql('txt',$b,'ra','');
-    $d=str_replace('§','|',$d);
+	$b=$p['b']??''; $rb=[];
+	$r=applist::allapps(); p($r);
+	foreach($r as $k=>$v){
+		$cls=isset($v::$cols)?$v::$cols:[];
+		if(in_array('txt',$cls))$rb[]=$v;
+	}
+	foreach($rb as $k=>$v){
+		qr('UPDATE '.$v.' SET `txt`=REPLACE(txt,"§","|");');
+	}
+	//$r=applist::build();
+	//pr($rb);
+    //$b=$p['inp1']??self::$db;
+    //$d=sql('txt',$b,'ra','');
+    //$d=str_replace('|','|',$d);
     //sql::up($b,'txt',$d,28);
 return $ret;}
 

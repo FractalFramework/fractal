@@ -521,7 +521,7 @@ for(var i=0;i<ob.length;i++)if(ob[i]==e)ob[i].className='active'; else ob[i].cla
 //composants
 function strreplace(rep,by,val){return val.split(rep).join(by);}
 function jurl(val,n){//encodeURIComponent
-var arr=['|','§'];//"\n","\t",'\'',"'",'"','*','#','+','=','&','?','.',':',',',,' ','<','>','/','%u'
+var arr=['|','|'];//"\n","\t",'\'',"'",'"','*','#','+','=','&','?','.',':',',',,' ','<','>','/','%u'
 var arb=['(-bar)','(-par)'];//'(-n)','(-t)','(-asl)','(-q)','(-dq)','(-star)','(-dz)','(-add)','(-eq)','(-and)','(-qm)','(-dot)','(-ddot)','(-coma)',,'(-sp)','(-b1)','(-b2)','(-sl)','(-pu)'
 if(n){var ra=arb; var rb=arr;}else{var ra=arr; var rb=arb;}
 var rgx=new RegExp(/([^A-Za-z0-9\-])/);

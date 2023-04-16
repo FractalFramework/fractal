@@ -537,14 +537,14 @@ $d=clean_n($d);
 $d=cleansp($d);
 return $d;}
 
-function connprm($d,$o=0){$s='ง';
-$d=str_replace('รง','็',$d);//patch
-$s=strpos($d,'ยง')?'ยง':'ง';//used when ง come from code
-//$d=str_replace(['$','ยง'],$s,$d);//patch//,'*'
-$d=str_replace('็','รง',$d);
+function connprm($d,$o=0){$s='|';
+//$d=str_replace('|','็',$d);//patch
+//$s=strpos($d,'|')?'|':'|';//used when | come from code
+//$d=str_replace(['$','|'],$s,$d);//patch//,'*'
+//$d=str_replace('็','|',$d);
 return split_one_mb($s,$d,$o);}
 
-function readconn($d){//pงo:c
+function readconn($d){//p|o:c
 [$da,$c]=split_one(':',$d,1);
 [$p,$o]=connprm($da);
 return [$p,$o,$c,$da];}
@@ -634,7 +634,7 @@ $d=curl_getinfo($fp,CURLINFO_HTTP_CODE); curl_close($fp); return $d==200?1:0;}
 
 function write_file($f,$d){
 $h=fopen($f,'w+'); if(!$h)return 'error'; $w=fwrite($h,$d); fclose($h);
-opcache_invalidate($f);
+if(!sql::$lc)opcache_invalidate($f);
 if($w===false)return 'error';}
 
 function read_file($f){

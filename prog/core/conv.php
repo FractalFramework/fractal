@@ -55,10 +55,10 @@ switch($tag){
 case('a'):$u=between($atb,'href="','"'); //$ub=between($atb,'data-j="','"');
 	if($d==domain($u))$d='';
 	if($u==$d && $u)return '['.trim($u).':url]';
-	$pv=video::provider($u); if($pv)return '['.video::extractid($u,$pv).($d?'§'.$d:'').':video]';
+	$pv=video::provider($u); if($pv)return '['.video::extractid($u,$pv).($d?'|'.$d:'').':video]';
 	if(substr($u,0,3)=='#nh')return '['.substr($u,3).':nb]';
 	if(substr($u,0,3)=='#nb')return '['.substr($u,3).':nh]';
-	if($u)return '['.trim($u).($d?'§'.trim($d):'').':url]'; break;
+	if($u)return '['.trim($u).($d?'|'.trim($d):'').':url]'; break;
 case('img'):$u=between($atb,'src="','"'); $b64='';
 	$w=between($atb,'width="','"'); $h=between($atb,'height="','"');
 	if(substr($u,0,10)=='data:image')$u=self::b64img($u);
@@ -66,11 +66,11 @@ case('img'):$u=between($atb,'src="','"'); $b64='';
 	elseif(substr($u,0,9)=='/img/mini')return '';
 	//elseif(substr($u,0,9)=='/img/full')return $u;
 	elseif(substr($u,0,4)!='http')$u=strend($u,'/');
-	//if($w && $h)$u.='§'.$w.'-'.$h;
+	//if($w && $h)$u.='|'.$w.'-'.$h;
 	return '['.$u.']'; break;//:img
 case('table'):
 	if(mb_substr($d,-1,1)=='¬')$d=mb_substr($d,0,-1);
-	if(post('th')){$o='§1'; self::$th='';} else $o='';
+	if(post('th')){$o='|1'; self::$th='';} else $o='';
 	return '['.$d.$o.':table]';break;//.$o
 case('big'):return '['.$d.':big]'; break;
 case('center'):return '['.$d.':c]'; break;
@@ -154,7 +154,7 @@ if($el->childNodes)return self::parsedom($el);
 if(!isset($el->tagName)){$el0=$el->parentNode; $tg=$el0->tagName; echo $tg.'-';
 	switch($tg){
 	case('img'):return '['.$el0->getAttribute('src').':img]'; break;
-	case('a'):return '['.$el0->getAttribute('href').'§'.$el->nodeValue.':url]'; break;
+	case('a'):return '['.$el0->getAttribute('href').'|'.$el->nodeValue.':url]'; break;
 	case('b'):return '['.$el->nodeValue.':b]'; break;
 	case('td'):$td[]=$el->nodeValue; return; break;
 	case('tr'):$tr[]=implode('|',$td); $td=[]; return; break;

@@ -1,5 +1,6 @@
 <?php
 class sql{
+static $lc;
 static $db;
 static $qr;
 static private $r;
@@ -7,6 +8,7 @@ static private $r;
 function __construct($r){$this->boot($r);}//if(!self::$qr)
 
 private function boot($r){self::$db=$r[3]; self::$r=$r;
+self::$lc=$r[0]=='localhost'?1:0;
 self::$qr=new mysqli($r[0],$r[1],$r[2],$r[3]) or die(pr($r));
 self::$qr->query('set names utf8mb4');
 self::$qr->query('set character set utf8mb4');}
