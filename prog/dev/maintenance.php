@@ -2,7 +2,7 @@
 
 class maintenance{//todo:multicron
 static $private=6;
-static $db='_model';
+static $db='model';
 static $a='maintenance';
 static $cb='mnt';
 
@@ -42,11 +42,19 @@ static function op($p){$ret='';
 //$d=sql('txt','multilang','v',150); sql::up('book_chap','txt',$d,28);
 return $ret;}
 
+static function newhasher($p){$ret='';
+    $b=$p['inp1']??self::$db;
+    $d=sql('txt',$b,'ra','');
+    $d=str_replace('§','|',$d);
+    //sql::up($b,'txt',$d,28);
+return $ret;}
+
 #call
 static function call($p){$ret='';
+$op=$p['op']??'play';
 //$r=self::build($p);
-$ret=self::play($p);
-//$ret=self::op($p);
+//$ret=self::play($p);
+$ret=self::$op($p);
 return $ret;}
 
 static function com(){
@@ -56,8 +64,9 @@ return self::content($p);}
 static function content($p){
 //self::install();
 $p['p1']=$p['p1']??'';
+$op='newhasher';//
 $bt=input('inp1','value1','','1');
-$bt.=bj(self::$cb.'|maintenance,call|v1=hello|inp1',lang('send'),'btn');
+$bt.=bj(self::$cb.'|maintenance,call|v1=hello,op='.$op.'|inp1',lang('send'),'btn');
 $ret=self::call($p);
 return $bt.div($ret,'pane',self::$cb);}
 }
