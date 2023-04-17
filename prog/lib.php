@@ -239,7 +239,7 @@ function exclude($d,$s,$e){$pa=strpos($d,$s);
 function combine($a,$b){$n=count($a); $r=[];
 	for($i=0;$i<$n;$i++)$r[$a[$i]]=$b[$i]??''; return $r;}//if(!empty($b[$i]))
 function merge($r,$rb){if(is_array($r) && $rb)return array_merge($r,$rb); elseif($rb)return $rb; else return $r;}
-function merger(...$r){$rt=[]; foreach($r[0] as $k=>$v)foreach($r as $ka=>$va)$rt[$k][]=$va[$k]; return $rt;}
+function merger(...$r){$rt=[]; foreach($r as $k=>$v)foreach($v as $ka=>$va)$rt[$ka][$k]=$va; return $rt;}
 function pushr($r,$rb){foreach($rb as $k=>$v)$r[]=$v; return $r;}
 function pushv($ra,...$rb){return array_merge($ra,$rb);}
 function split_one($s,$d,$o=''){$n=$o?strrpos($d,$s):strpos($d,$s);
