@@ -264,7 +264,7 @@ $usr=$p['usr']??ses('usr'); $r=self::datas($usr); $rt=[];
 $r=['identity','account','Apis'];
 foreach($r as $k=>$v)$rt[]=toggle('edtprf|profile,calledt|op='.$v,lang($v),'',[],active($v,'identity'),1);
 $main=self::calledt($p);
-return div(implode('',$rt),'lisb').div($main,'board','edtprf');}
+return div(implode(' ',$rt),'lisb').div($main,'board','edtprf');}
 
 #follow
 static function follow($p){

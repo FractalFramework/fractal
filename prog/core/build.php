@@ -235,5 +235,14 @@ if($k)$d=$r[$k]??''; if($d)return utf8enc($d); elseif($k)return;
 foreach($r as $k=>$v)$ret.=bj($b.'|build,sample|a='.$a.',k='.$k,$k,'');
 return div($ret,'nbp');}
 
+static function dcode($d){
+$r=str_split($d); $n=count($r); $n2=$n**4; $rt=[];
+for($i=0;$i<$n2;$i++){$r2=$r; $na=rand(1,$n);
+for($o=0;$o<$na;$o++){sort($r2); $nr2=count($r2)-1; $nc=rand(0,$nr2); //echo $nc; pr($r2);
+$rb[$i][$o]=$r2[$nc]; unset($r2[$nc]);}}
+foreach($rb as $k=>$v)$rt[]=implode('',$v);
+$rt=array_flip(array_flip($rt)); sort($rt);
+return $rt;}
+
 }
 ?>

@@ -345,7 +345,6 @@ function unicode($d){
 		else $ret.=$c.$cb;}
 	else $ret.=substr($d,$i,1);}
 return $ret;}
-
 function unicode2($d){return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/',function($match){return mb_convert_encoding(pack('H*',$match[1]),'UTF-8','UCS-2BE');},$d);}
 function protect($d,$o=''){$a='|'; $b='(bar)';
 	return str_replace($o?$b:$a,$o?$a:$b,$d);}

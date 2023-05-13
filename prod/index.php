@@ -1,7 +1,8 @@
 <?php
 #Fractal
 //setlocale(LC_ALL,'fr_FR');//kill rgba ability?
-$nc=ses('dev')?'?'.randid():'';
+$enc='UTF-8';
+$nc=ses('dev')?'?'.randid():'';//if()
 $index=ses::$cnfg['index'];
 header('Content-Type: text/html; charset=UTF-8');
 //head::add('code','<base href="'.$_SERVER['HTTP_HOST'].'" />');

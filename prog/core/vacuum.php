@@ -52,18 +52,18 @@ static function com($u,$o=''){$dom=domain($u); $mode='conn';//conn-html
 if($dom=='oumo.fr' or $dom=='newsnet.fr')$r=self::api_philum($u); else $r=self::api($u,$mode);
 if(!$r)return ['','',''];
 if($dom=='oumo.fr' or $dom=='newsnet.fr')$phi=1; else $phi=0;
-$enc=self::utf8($u);
-$tit=val($r,'title');
-$img=val($r,'image');//lead_image_url
+$tit=$r['title']??'';
+$img=$r['image']??'';//lead_image_url
 //if($mode=='conn')$txt=val($r,'conn'); else //miss img+domain
 //$txt=conv::com(val($r,'content'));
-$txt=val($r,'content');
+$txt=$r['content']??'';
+/*$enc=self::utf8($u);
 if($enc=='utf-8'){
 	$tit=utfdec($tit);
 	$img=utfdec($img);
-	$txt=utfdec($txt);}
+	$txt=utfdec($txt);}*/
 if($mode=='conn'){
-	$txt=str_replace(htmlentities('�'),'*',$txt);//%A7
+	$txt=str_replace(htmlentities('§'),'|',$txt);
 	$txt=str_replace(':twitter',':twit',$txt);//eco($txt);
 	$txt=conn::com($txt,1);}
 else{$txt=conv::call(['txt'=>$txt]); $txt=conn::call(['msg'=>$txt,'ptag'=>1]);}

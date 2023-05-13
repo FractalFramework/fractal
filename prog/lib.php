@@ -279,7 +279,7 @@ function strid($p,$n=6){return substr(md5($p),2,$n);}
 function randid($p=''){return $p.base_convert(substr(microtime(),2,8),10,36);}
 function random($p='',$n=10){return $p.strid(microtime(),$n);}
 function http($d){return substr($d,0,4)!='http'?'http://'.$d:$d;}
-function nohttp($d){return str_replace(['https','http','://','www.'],'',$d);}
+function nohttp($d){return str_replace(['https','http','://','www.'],'',$d??'');}
 function domain($d){$d=nohttp($d); return strto($d,'/');}
 function nodomain($d){$d=nohttp($d); return strfrom($d,'/');}
 function reload($u=''){echo tag('script','','window.location='.($u?$u:'document.URL'));}
@@ -336,7 +336,7 @@ function prmp($p,$r){$rb=[]; foreach($r as $k=>$v)$rb[$v]=$p['p'.($k+1)]??''; re
 function prmr($d){$r=explode(',',$d); $rb=[];//explode_k
 	foreach($r as $k=>$v){[$ka,$va]=split_one('=',$v); if($ka)$rb[$ka]=$va;} return $rb;}
 function mkprm($p){foreach($p as $k=>$v)$rt[]=$k.'='.$v; if($rt)return implode('&',$rt);}
-function trims($r){foreach($r as $k=>$v)$r[$k]=trim($v); return $r;}
+function trims($r){foreach($r as $k=>$v)$r[$k]=trim($v,"&nbsp; "); return $r;}
 function trimv($d){return trim($d);}
 function trimr($r){return array_filter($r,'trimv');}
 function get($k,$v=''){$d=filter_input(INPUT_GET,$k); return $d?$d:$v;}
