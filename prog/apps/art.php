@@ -73,7 +73,7 @@ if($conn)return self::play($p);
 return conn::call(['msg'=>$txt,'ptag'=>1]);}
 
 //js
-static function playconn($p){//from utils.js
+static function playconn($p){//from core.js
 $ret=sql('txt',self::$db,'v',$p['id']);
 $ret=conn::call(['msg'=>$ret,'mth'=>'minconn','ptag'=>1]);
 return $ret;}
@@ -102,21 +102,21 @@ return parent::edit($p);}
 
 //play
 static function build($p){$lnk='';//extract($p);
-$rp=['id','rid','uid','name','date','pub','edt','ptagg','tit','txt'];
-[$id,$rid,$uid,$name,$date,$pub,$edt,$ptg,$tit,$txt]=vals($p,$rp);
+$rp=['id','rid','uid','name','date','pub','edt','ptag','tit','txt','imax'];
+[$id,$rid,$uid,$name,$date,$pub,$edt,$ptg,$tit,$txt,$imax]=vals($p,$rp);
 $editable=parent::permission($uid,$edt);//perms=0:no,1:net,2:clan,3:clan,4:owner
 $date=lk('/art/'.substr(md5($id),7,7),picto('url').$date,'grey');//
 //$rtg=sql::inner('ref','tags_r','tags','bid','rv',['app'=>'art','aid'=>$id]);
 $rtg=sql::inr('ref',[['tags_r','bid','tags','id']],'rv',['app'=>'art','aid'=>$id]);
 $tags=picto('tags').implode(' ',$rtg);
 //$lnk=lk('/art/'.$id,langpi('url'),'btn',1);
-$prmb=['id'=>'tit'.$id,'class'=>'editoff','contenteditable'=>$editable?'true':'false'];
+$prmb=['id'=>'tit'.$id,'class'=>'editoff','contenteditable'=>'false'];//$editable?'true':
 if($editable){$prmb['onclick']=atj('editxt',['tit',$id]);
-	$prmb['onblur']=atj('savtxt',['tit',$id]);
+	$prmb['onblur']=atj('savtxt',['tit',$id,0]);
 	//$lnk=btj(langpi('restore'),atj('restore_art',$id),'btn');
 	//$lnk=popup('art,edit|id='.$id,ico('edit'));
 	$lnk=span(self::editbt(['id'=>$id,'o'=>0]),'','bt'.$id);}
-//elseif(val($p,'opn'))$ret['mnu']=bj(self::$cb.'|art,stream|rid='.$p['rid']??'',langp('back'),'btn');
+//elseif($p['opn']??'')$ret['mnu']=bj(self::$cb.'|art,stream|rid='.$p['rid']??'',langp('back'),'btn');
 if($edt)$edd=span('('.lang(appx::$privedt[$edt]).')','small').' '; else $edd='';
 //$tags=admin_tags::call(['id'=>$id,'a'=>self::$a,'lg'=>lng(),'edt'=>$edt]);
 $ret['ref']=div($edd.' '.$lnk,'sticky right');//$tags.
@@ -127,11 +127,11 @@ $ret['edit']=self::wsgbt($id);
 //$ret['edit']=span(build::connbt($p['id']),'connbt','edt'.$id,'display:none;');
 $prm=['id'=>'txt'.$id,'class'=>'editoff','contenteditable'=>'off'];
 if($editable){$prm['ondblclick']=atj('editbt',[$id,1]);//
-	//$prm['onblur']=atj('savtxt',['txt',$id]);//not work with wsyg
+	$prm['onblur']=atj('savtxt',['txt',$id,1]);//not work with wsyg
 	//$prm['onblur']=atj('editbt',$id);
 	$prm['onkeypress']='backsav(event,\''.$id.'\')';}
 //eco(($txt));
-$txt=conn::call(['msg'=>$txt,'ptag'=>1]);//$ptg
+$txt=conn::call(['msg'=>$txt,'ptag'=>1,'imax'=>$imax]);//$ptg
 $rtx=tag('div',$prm,$txt);
 $ret['m']=div($rtx,'article txt');
 self::$title=$tit;
@@ -145,7 +145,7 @@ if($id)$r=sql::inner($cols,self::$db,'login','uid','ra','where '.self::$db.'.id=
 //if($id)$r=sql::join($cols,'login',self::$db,'uid','ra',$id);
 if(isset($r))$p=merge($p,$r);
 $ret=self::build($p);
-$apf=val($p,'appFrom');//$apf && 
+$apf=$p['appFrom']??'';//$apf && 
 if($p['id']){tlex::$title=self::$title;//meta
 	tlex::$descr=self::$descr;
 	tlex::$image=self::$image;}

@@ -2,7 +2,7 @@
 
 class conv{
 static $conn=['b'=>'b','i'=>'i','u'=>'u','small'=>'s','em'=>'b','strike'=>'k','center'=>'c','sup'=>'e','sub'=>'n'];
-static $conb=['h1'=>'h1','h2'=>'h2','h3'=>'h3','h4'=>'h4','h5'=>'h5','h6'=>'h6','big'=>'h','blockquote'=>'q','ul'=>'list','ol'=>'numlist'];
+static $conb=['h1'=>'h1','h2'=>'h2','h3'=>'h3','h4'=>'h4','h5'=>'h5','h6'=>'h6','big'=>'h','blockquote'=>'q','ul'=>'list','ol'=>'numlist','table'=>'table'];
 static $th='';
 
 static function getxt($el,$ret=''){$attr='';
@@ -90,7 +90,7 @@ case('iframe'):$u=between($atb,'src="','"'); if($s=strpos($u,'?'))$u=substr($u,$
 		if($pv=video::provider($u))return '['.video::extractid($u,$pv).':video]';
 		else return '['.$u.':iframe]'."\n\n"; break;}
 $r=self::$conn; if($d && isset($r[$tag]))return '['.$d.':'.$r[$tag].']';
-$r=self::$conb; if($d && isset($r[$tag]))return "\n".'['.$d.':'.$r[$tag].']'."\n";
+$r=self::$conb; if($d && isset($r[$tag]))return "\n\n".'['.$d.':'.$r[$tag].']'."\n\n";
 return $d;}
 
 static function recursearch($v,$ab,$ba,$tag){//pousse si autre balise similaire
@@ -174,7 +174,7 @@ foreach($dom->childNodes as $k=>$el)$rt[]=self::getcnt($el);
 return join('',$rt);}
 
 static function call($p){
-$d=$p['txt']??'';
+$d=$p['txt']??''; //eco($d);
 //$d=unicode($d);
 //if(!$p['brut']??'')$d=deln($d);
 $d=delt($d);

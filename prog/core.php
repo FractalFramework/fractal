@@ -20,7 +20,7 @@ static function voc($p){return voc($p['txt']??'',$p['ref']??'');}
 static function web($p){return web::play(http($p['u']??''));}
 static function audio($p){return audio(http($p['u']??''));}
 static function video($p){return video::com(http($p['u']??''));}
-static function rplay($p){return play_r(json_decode($p['rj']??'',true));}
+static function tree($p){return tree(json_decode($p['rj']??'',true));}
 static function clean_mail($p){$x=$p['x']??''; if($x)return clean_mail($p[$x]??'');}}
 
 class mem{static $r=[]; static $ret='';}
@@ -223,7 +223,7 @@ head::add('csscode','body{'.$sty.'}');}
 function night($dt){$dt=round($dt);
 $r=ses::$r['night']??[]; if($r)return $r;//from meteo
 $r=date_sun_info($dt,48.839,2.237);
-[$h1,$h2]=vals($r,['sunrise','sunset']); //echo $h1.'-'.$dt.'-'.$h2;
+[$h1,$h2]=vals($r,['sunrise','sunset']);
 if($dt>$h2 or $dt<$h1)$res='night'; else $res='day';
 return '/css/'.$res.'.css';}
 
@@ -249,8 +249,9 @@ elseif(substr($f,0,4)=='disk')return $f;
 elseif(substr($f,0,3)=='usr')return '/disk/'.$f;
 else return '/disk/usr/'.$f;}
 
-function img2($f,$dim='',$o=''){
-$ret=imgroot($f,$dim); $w=$dim=='micro'?100:''; $w=$dim=='avt'?60:'';
+function img2($f,$dim='',$o=''){ 
+
+$ret=imgroot($f,$dim); $w=''; if($dim=='micro')$w=100; elseif($dim=='avt')$w=60; elseif($dim=='med')$w=640;
 if(ex_img($ret))return img('/'.$ret,$w);
 elseif($o)return pic('img');}
 
@@ -416,11 +417,23 @@ if(is_array($r))foreach($r as $k=>$v){$td=[]; $i++;
 $ret=tag('tbody','',join('',$tr));
 return div(tag('table','',$ret),'scroll','','');}//overflow:auto;
 
-function play_r($r){$ret='';//expl
-if(is_array($r))foreach($r as $k=>$v)
-	if(is_array($v))$ret.=li($k).play_r($v);
-	else $ret.=li($k.':'.$v);
-return ul($ret);}
+function playr($r,$c=''){$ret='';
+if(is_array($r))foreach($r as $k=>$v){
+	if(is_array($v))$ret.=li(btj($k,'liul(this)',$c?'active':'').playr($v,$c));
+	else $ret.=li($k.': '.$v);}
+return ul($ret,$c?'on':'off');}
+
+function tree($r,$c='1'){
+return div(playr($r,$c),'topology');}
+
+function html($f,$d){
+head::add('charset','UTF-8');
+head::add('csslink',night(40000));
+head::add('csslink','/css/global.css');
+head::add('csslink','/css/apps.css');
+$h=head::run();
+write_file($f,$h.$d);
+return lk('/'.$f,$f,'btn',1);}
 
 //taxo
 function taxo_clean(&$r,$rb){

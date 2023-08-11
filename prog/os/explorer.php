@@ -313,7 +313,7 @@ if($xt=='.php'){
 	else $ret=self::editxt(['f'=>$f]);}
 elseif($xt=='.json'){
 	if(fsize($u)>10000)$ret=lk($f,ico('file-code-o').$f,'',1);
-	else $ret=play_r(json_decode($d,1));}
+	else $ret=tree(json_decode($d,1));}
 elseif($xt=='.jpg' or $xt=='.png' or $xt=='.gif' or $xt=='.webp')$ret=img('/'.$u);
 elseif($xt=='.mp3' or $xt=='.mid')$ret=audio($u);
 elseif($xt=='.mp4')$ret=video($u);

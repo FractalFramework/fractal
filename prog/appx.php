@@ -424,6 +424,7 @@ if($own){
 	$ret.=bj($cb.$id.'|'.$a.',del|id='.$id.',rid='.$rid,langpi('delete'),'btdel');}
 else $ret.=span(lang('by').' '.usrid($r['uid']),'btn');
 $ret.=bj('popup|appx,viewports|app='.$a.',id='.$id,pic('api'),'btn');
+$ret.=bj('popup|appx,html|app='.$a.',id='.$id,pic('html'),'btn');
 if($p['lang']??'' && $md5=$p['md5']??'')$ret.=lk('/'.$a.'/'.$md5,'#'.$id,'btn');
 elseif(in_array('tit',self::$cols))$ret.=lk('/'.$a.'/'.$id,'#'.$id,'btn');
 else $ret.=lk('/'.$a.'/'.$id,pic('id').$id,'btn');
@@ -655,16 +656,23 @@ $a=self::$a;
 $ret=$a::content($p);
 return $ret;}
 
-static function viewports($a,$id){
+static function viewports($p){
+[$a,$id]=vals($p,['app','id']);
 $ret=span(langp('connectors'),'nfo');
-$ret.=textarea('','['.$id.':'.$a.']','','1');
+$ret.=div(textarea('','['.$id.':'.$a.']','','1'));
 $ret.=lk('/frame/'.$a.'/'.$id,langp('iframe'),'nfo',1);
 if(method_exists($a,'iframe'))
-	$ret.=textarea('','<iframe src="'.host(1).'/frame/'.$a.'/'.$id.'"></iframe>','','1');
+	$ret.=div(textarea('','<iframe src="'.host(1).'/frame/'.$a.'/'.$id.'"></iframe>','','1'));
 if(method_exists($a,'api')){
 	$ret.=lk(host(1).'/api/'.$a.'/'.$id,langp('api'),'nfo',1);
-	$ret.=textarea('',host(1).'/api/'.$a.'/id:'.$id.'','','1');}
+	$ret.=div(textarea('',host(1).'/api/'.$a.'/id:'.$id.'','','1'));}
 return $ret;}
+
+static function html($p){
+[$a,$id]=vals($p,['app','id']);
+$f='usr/'.ses('usr').'/'.$a.$id.'.html';
+$d=$a::read(['id'=>$id,'ptag'=>1,'imax'=>1]);
+return html($f,$d);}
 
 static function iframe($p){
 $id=$p['p1']??''; $a=self::$a; $cb=self::$cb;
@@ -679,7 +687,7 @@ head::add('csslink','/css/apps.css');
 head::add('csslink','/css/pictos.css');
 head::add('csslink','/css/fa.css');
 head::add('jslink','/js/ajax.js');
-head::add('jslink','/js/utils.js');
+head::add('jslink','/js/core.js');
 $ret=div($ret,'board',$cb);
 $ret=tag('body',['onmousemove'=>'popslide(event)','onmouseup'=>'closebub(event)'],$ret);
 $ret.=tag('div',['id'=>'closebub','onclick'=>'bubClose()'],'');
