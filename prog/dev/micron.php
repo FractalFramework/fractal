@@ -7,10 +7,6 @@ static $db='micron';
 static $cols=['tit','txt'];
 static $typs=['var','bvar'];
 
-function __construct(){
-$r=['a','db','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
 appx::install(array_combine(self::$cols,self::$typs));}
 

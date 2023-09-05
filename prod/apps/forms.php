@@ -12,10 +12,6 @@ static $open=1;
 static $tags=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','db2','cb','cols','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create('forms_vals',['bid'=>'int','uid'=>'int','q1'=>'var','q2'=>'var','q3'=>'var','q4'=>'var','q5'=>'var','q6'=>'var','q7'=>'var','q8'=>'var','q9'=>'var'],1);}
@@ -78,7 +74,7 @@ static function preview($p){$id=$p['id'];
 return conn::com2($p['com'],'conn','form');}
 
 static function edit_form($p){$com=str_replace("\n",'',val($p,'com')); $id=$p['id']??'';
-if(!$com)$com=utf8enc('[label§title:input][label2§text:textarea]');//[form'.$id.'§'.ses('usr').':submit]
+if(!$com)$com=utf8enc('[label|title:input][label2|text:textarea]');//[form'.$id.'|'.ses('usr').':submit]
 $ret=build::cbt('com',uns(form::ex(),'submit'));
 $j='frmpw|forms,preview|id='.$id.'|com';
 $ret.=div(textarea('com',$com,60,4,lang('fields'),'console','',$j));

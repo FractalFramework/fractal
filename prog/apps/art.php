@@ -13,10 +13,6 @@ static $descr='Articles';
 static $tags=1;
 static $image;
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));}
 

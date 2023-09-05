@@ -12,10 +12,6 @@ static $db3='ideas_valid';
 static $tags=1;
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols','db2'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));

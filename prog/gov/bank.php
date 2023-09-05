@@ -24,10 +24,6 @@ static $rf=[];
 static $at=0;
 static $er=0;
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn','db3'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create(self::$db2,self::$bank_credits,1);

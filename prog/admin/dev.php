@@ -5,9 +5,6 @@ static $private=4;
 static $a='dev';
 static $cb='dvdt';
 
-function __construct(){
-foreach(['a','cb'] as $v)parent::$$v=self::$$v;}
-
 static function js(){return '';}
 static function headers(){
 head::add('jscode',self::js());

@@ -1,8 +1,7 @@
 <?php
 #Fractal
 //setlocale(LC_ALL,'fr_FR');//kill rgba ability?
-$enc='UTF-8';
-$nc=ses('dev')?'?'.randid():'';//if()
+$nc=ses('dev')?'?'.randid():'';
 $index=ses::$cnfg['index'];
 header('Content-Type: text/html; charset=UTF-8');
 //head::add('code','<base href="'.$_SERVER['HTTP_HOST'].'" />');
@@ -16,11 +15,11 @@ head::add('csslink','/css/apps.css'.$nc);
 head::add('csslink','/css/pictos.css');
 head::add('csslink','/css/fa.css');
 head::add('jslink','/js/ajax.js'.$nc);
-head::add('jslink','/js/utils.js'.$nc);
+head::add('jslink','/js/core.js'.$nc);
 head::add('jscode','var index="'.$index.'";');
 //head::add('jslink','/js/bab.js');
 head::name('generator','Fractal');
-head::name('version','21');
+head::name('version','23');
 #usr
 $own=ses('usr'); $usr=$p['usr']??'';
 ses('cusr',$own); ses('cuid',ses('uid'));

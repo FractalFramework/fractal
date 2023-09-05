@@ -13,10 +13,6 @@ static $open=0;
 static $qb='';//db
 static $obso=[];
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['uid'=>'int','bid'=>'int','start'=>'int','end'=>'int','pad'=>'var','txt'=>'bvar'],1);
 parent::install(array_combine(self::$cols,self::$typs));}
@@ -146,10 +142,10 @@ return $ok;}
 static function detection($ret,$v){static $dc=0;//decal because of previous results
 $s=$v['start']; $e=$v['end']; $pad=$v['pad']; $id=$v['id'];
 $n=mb_substr_count($ret,$pad); $pos=0; $s2=0; $dist=$e-$s; if($n)$dc+=10;
-if($n==1)return str_replace($pad,'['.$pad.'§'.$id.':sticky]',$ret);//or search nearest
+if($n==1)return str_replace($pad,'['.$pad.'|'.$id.':sticky]',$ret);//or search nearest
 else for($i=0;$i<$n;$i++){$pos=mb_strpos($ret,$pad,$pos+1); if($pos-$s-$dc>=0 && !$s2)$s2=$pos;}
 if($s2){$d1=mb_substr($ret,0,$s2); $d2=mb_substr($ret,$s2,$dist); $d3=mb_substr($ret,$s2+$dist);
-	return $d1.'['.$d2.'§'.$id.':sticky]'.$d3;}
+	return $d1.'['.$d2.'|'.$id.':sticky]'.$d3;}
 else return $ret;}
 
 static function build_stick($p){

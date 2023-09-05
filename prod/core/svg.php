@@ -146,7 +146,7 @@ for($i=0;$i<$nx;$i++)$ret.='[red:attr]['.($i*$g).',10*'.$i.':text][,silver:attr]
 return $ret;}
 
 static function conn($d){
-$ra=self::motor(); //$d=str_replace('*','§',$d);
+$ra=self::motor(); //$d=str_replace('*','|',$d);
 [$p,$o,$c]=readgen($d); $pr=[];
 if(!$c)return; if(substr($p,0,2)=='//')return;
 //echo $p.'--'.$o.'--'.$c.br();

@@ -12,10 +12,6 @@ static $typs=['var','int','int','int'];
 static $tags=1;
 static $boot;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create('chatxt',['bid'=>'int','rusr'=>'var','txt'=>'bvar'],1);

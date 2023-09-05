@@ -20,18 +20,16 @@ static $db3;
 static $db4;
 static $db5;
 
-function __construct(){self::$cb=randid('appx');}
-
 static function install($p){$r['uid']='int';
-sql::create(self::$db,merge($r,$p),1);}
+sql::create(static::$db,merge($r,$p),1);}
 
-static function dblist(){$r['db']=self::$db;
+static function dblist(){$r['db']=static::$db;
 foreach(['db2','db3','db4','db5'] as $k=>$v)if(isset(self::$$v))$r[$v]=self::$$v;
 return $r;}
 
 #admin menus
 static function admin($p){//pr($p);
-$a=self::$a; $db=self::$db; $cb=self::$cb; $rid=$p['rid']??''; $id=$p['id']??''; $nm='app';
+$a=static::$a; $db=static::$db; $cb=static::$cb; $rid=$p['rid']??''; $id=$p['id']??''; $nm='app';
 //if($rid)$r[]=['','j',$cb.'|tlxf,apps|rid='.$rid,'',$a];
 //if($rid)$r[]=['','j',$cb.'|'.$a.',stream|rid='.$rid,'',$a];
 //if($p['ob']??'')$r[]=['','j',$cb.'|'.$a.',menu|display=2,rid='.$rid,'folder-open-o','files'];
@@ -41,7 +39,7 @@ if(ses('uid'))$r[]=['','j',$cb.'|'.$a.',create|rid='.$rid,'plus-circle','new'];
 $r[]=['','bub','core,help|ref='.$a.'_app','question-circle-o','-'];
 $r[]=['','lk','/'.$a.($id?'/'.$id:''),'url','-'];
 $r[]=['','pop',$a.',search','search','-'];
-//if($id)$r[]=['','','appx,viewports|app='.self::$a.',id='.$id,'api','api'];
+//if($id)$r[]=['','','appx,viewports|app='.static::$a.',id='.$id,'api','api'];
 //$r[]=['','j',$cb.'|core,help|ref='.$a.'_app','question-circle-o','-'];
 if(auth(4)){$r[]=[$nm,'j','pagup|dev,seeCode|f='.$a,'code','Code'];
 	$r[]=[$nm,'j','popup|dev,com|f='.$a,'terminal','dev'];
@@ -57,13 +55,13 @@ if(auth(6)){$rb=self::dblist();
 return $r;}
 
 static function find($p){$ret='';
-$a=self::$a; $db=$p['db']; $b=$a::$$db; $c=$p['col']??self::$cols[0]; $d=$p['search'];
+$a=static::$a; $db=$p['db']; $b=$a::$$db; $c=$p['col']??static::$cols[0]; $d=$p['search'];
 $r=sql('id',$b,'rv',['uid'=>ses('uid'),'%'.$c=>$d],0); if(!$r)return help('no_result');
 foreach($r as $k=>$v)$ret.=bj('popup|'.$a.'|id='.$v,$a::tit(['id'=>$v]));
 return div($ret,'list');}
 
 static function search($p){
-$a=self::$a; $r=sql::cols($a::$db,4,2);
+$a=static::$a; $r=sql::cols($a::$db,4,2);
 $ret=select('db',self::dblist(),'',0);
 $ret.=select('col',$r,'',1);
 $j='srch|'.$a.',find||search,col,db';
@@ -74,19 +72,19 @@ return div($ret).div('','pane','srch');}
 #titles to display in popup for each method
 static function titles($p){
 $d=$p['_m']??'';
-$r=['content'=>'welcome','collect'=>'collected datas','call'=>self::$a];
+$r=['content'=>'welcome','collect'=>'collected datas','call'=>static::$a];
 if(isset($r[$d]))return lang($r[$d]);
 return $d;}
 
 static function js(){}
 static function headers(){
-head::prop('og:title',addslashes_b(self::$title));
-head::prop('og:description',addslashes_b(self::$descr));
+head::prop('og:title',addslashes_b(static::$title));
+head::prop('og:description',addslashes_b(static::$descr));
 head::prop('og:image',self::$image);}
 
 #edit
 static function del($p){$id=$p['id']??'';
-$a=self::$a; $db=self::$db; $cb=self::$cb; $ok=$p['ok']??'';
+$a=static::$a; $db=static::$db; $cb=static::$cb; $ok=$p['ok']??'';
 $own=sql('id',$db,'v',['uid'=>ses('uid'),'id'=>$id]);
 if($own!=$id)return help('operation not permited','alert');
 if($ok){$p['noab']=1;//return in posts
@@ -102,15 +100,15 @@ $ret.=bj($cb.'|'.$a.',edit|id='.$id,langp('cancel'),'btn');
 return $ret;}
 
 static function addentry($p){
-$b=self::$db; $r=sql::pvalk($p,$b,1);
+$b=static::$db; $r=sql::pvalk($p,$b,1);
 return sql::sav($b,$r);}
 
-static function save($p){$a=self::$a;
+static function save($p){$a=static::$a;
 $p['id']=$a::addentry($p);
 return $a::edit($p);}
 
 static function modif($p){
-$id=$p['id']??''; $a=self::$a; $db=self::$db;
+$id=$p['id']??''; $a=static::$a; $db=static::$db;
 if($a::$conn==1 && isset($p['txt']))$p['txt']=cleanconn($p['txt']??'');
 $r=sql::pvalk($p,$db,0); $r=trims($r);
 $ok=self::perms($db,$id,'pub');
@@ -139,22 +137,22 @@ elseif($pub==3)return 1;
 else return 0;}
 
 static function perms($db,$id,$typ='pub'){//edt
-if(!in_array($typ,self::$cols)){if($typ=='edt')return false;//default from app
+if(!in_array($typ,static::$cols)){if($typ=='edt')return false;//default from app
 	//visitors can publicated object of apps without col 'pub' following app's privacy 
-	else{$a=self::$a; $b=$a::$private; $c=self::$app2dsk[$b]; return self::$privacy[$c];}}
+	else{$a=static::$a; $b=$a::$private; $c=self::$app2dsk[$b]; return self::$privacy[$c];}}
 [$uid,$pub]=sql('uid,'.$typ,$db,'rw',$id); if(!$pub)$pub=0;//supplante pub
 if($typ=='pub')$ret=self::$privacy[$pub]; else $ret=self::$privedt[$pub];
 if(self::permission($uid,$pub))return $ret;}//call appx means no abstraction
 
 //works for pub and edt
 static function mkpub($p){
-if(isset($p['pub'])){$v=$p['pub']??0; sql::up(self::$db,'pub',$v,$p['id']??''); desktop::renove(self::$a);}
-elseif(isset($p['edt'])){$v=$p['edt']??0; sql::up(self::$db,'edt',$v,$p['id']??'');}
+if(isset($p['pub'])){$v=$p['pub']??0; sql::up(static::$db,'pub',$v,$p['id']??''); desktop::renove(static::$a);}
+elseif(isset($p['edt'])){$v=$p['edt']??0; sql::up(static::$db,'edt',$v,$p['id']??'');}
 return self::edit($p);}
 
 static function privacy($p){$ret=''; $typ=$id=$p['typ']??'pub'; $edtlimit=$p['pub']??'';
-$a=self::$a; $cb=self::$cb; $id=$p['id']??''; $rid=$p['rid']??''; //$pub=$p['pub']??'';
-if($typ=='pub')$pub=sql('pub',self::$db,'v',$id); else $pub=sql('edt',self::$db,'v',$id);
+$a=static::$a; $cb=static::$cb; $id=$p['id']??''; $rid=$p['rid']??''; //$pub=$p['pub']??'';
+if($typ=='pub')$pub=sql('pub',static::$db,'v',$id); else $pub=sql('edt',static::$db,'v',$id);
 if($typ=='pub')$r=self::$privacy; else $r=self::$privedt;
 foreach($r as $k=>$v){$bt=$k==$pub?ico('check'):''; $c=$k==$pub?'active':'';
 	//call app and not appx means use extends appx, to know the db
@@ -163,9 +161,9 @@ foreach($r as $k=>$v){$bt=$k==$pub?ico('check'):''; $c=$k==$pub?'active':'';
 	if($v)$ret.=bj($cb.'|'.$a.',mkpub|opn=1,id='.$id.',rid='.$rid.','.$typ.'='.$k,langp($v).$bt,$c);}
 return div($ret,'list');}
 
-static function privedt($p){$ret=''; $r=self::$privedt; //echo $a=self::$a;
-$a=self::$a; $cb=self::$cb; $id=$p['id']??''; $rid=$p['rid']??''; //$pub=$p['pub']??'';
-$pub=sql('edt',self::$db,'v',$id);
+static function privedt($p){$ret=''; $r=self::$privedt;
+$a=static::$a; $cb=static::$cb; $id=$p['id']??''; $rid=$p['rid']??''; //$pub=$p['pub']??'';
+$pub=sql('edt',static::$db,'v',$id);
 foreach($r as $k=>$v){$bt=$k==$pub?ico('check'):'';
 	//call app and not appx means use extends appx, to know the db
 	$ret.=bj($cb.'|'.$a.',mkpub|id='.$id.',rid='.$rid.',edt='.$k,lang($v).$bt);}
@@ -180,9 +178,9 @@ else{sql::up('desktop','auth',$pub,$ex); if(!$ex)return tlxf::dsksav($p);}
 return desktop::content(['dir'=>'/documents/'.$com]);}
 
 static function dsk($p){$ret='';
-$a=self::$a; $id=$p['id']??''; $uid=$p['uid']??''; $t=$p['t']??''; $pub=$p['pub']??'';
-//$pub=sql('pub',self::$db,'v',$id); 
-$t=sql($t,self::$db,'v',$id); $r=self::$privacy;
+$a=static::$a; $id=$p['id']??''; $uid=$p['uid']??''; $t=$p['t']??''; $pub=$p['pub']??'';
+//$pub=sql('pub',static::$db,'v',$id); 
+$t=sql($t,static::$db,'v',$id); $r=self::$privacy;
 $ra=sql('id,auth','desktop','rw',['uid'=>$uid,'dir'=>'/documents/'.$a,'bt'=>$t]);
 [$ex,$ath]=$ra?$ra:['',''];
 $rb=self::$app2dsk;
@@ -197,7 +195,7 @@ return div($ret,'list');}
 //subcall
 static function subops($p){
 $id=$p['id']??''; $idb=$p['idb']??''; $op=$p['op']??'';
-$a=self::$a; $cb=self::$cb; $db2=self::$db2; $rb=[];
+$a=static::$a; $cb=static::$cb; $db2=static::$db2; $rb=[];
 if($op=='add'){$cols=sql::cols($db2,2);
 	foreach($cols as $k=>$v){$idn=$p[$k]??'';
 		if($k=='bid')$rc[$k]=$id; elseif($k=='uid')$rc[$k]=ses('uid');
@@ -219,9 +217,9 @@ elseif($op=='del'){
 	return self::subcall($p);}
 return $a::subedit(['id'=>$id,'idb'=>$idb]);}
 
-static function subform($p){$ret=''; $a=self::$a;
+static function subform($p){$ret=''; $a=static::$a;
 $ret=hidden('bid',$p['bid']); array_shift($p);//not edit bid
-$rc=sql::cols(self::$db2,3); $html=$p['html']??'';//!
+$rc=sql::cols(static::$db2,3); $html=$p['html']??'';//!
 foreach($rc as $k=>$v)if($k!='bid'){$val=$p[$k]??''; $bt=''; $lbl=label($k,lang($k));
 	if($p['fc'.$k]??''){$f='fc_'.$k; $bt=$a::$f($k,$val,$v,$p['bid']);}
 	elseif($k==$html)$bt=divarea($k,conn::mincom($val,1),'article');
@@ -235,7 +233,7 @@ foreach($rc as $k=>$v)if($k!='bid'){$val=$p[$k]??''; $bt=''; $lbl=label($k,lang(
 return $ret;}
 
 static function prevnext($id,$idb,$w){$ka=0;// order by idn
-$r=sql('id',self::$db2,'rv','where bid="'.$id.'"'.$w); $a=''; $b='';
+$r=sql('id',static::$db2,'rv','where bid="'.$id.'"'.$w); $a=''; $b='';
 if($r)foreach($r as $k=>$v){$rb[$k]=$v; if($v==$idb)$ka=$k;}
 if(isset($rb[$ka-1]))$a=$rb[$ka-1];
 if(isset($rb[$ka+1]))$b=$rb[$ka+1];
@@ -243,12 +241,12 @@ return [$a,$b];}
 
 static function subedit($p){
 $id=$p['id']??''; $idb=$p['idb']??'';
-$a=self::$a; $cb=self::$cb.$id; $cbb=$cb.'edit';
+$a=static::$a; $cb=static::$cb.$id; $cbb=$cb.'edit';
 //$j=$p['data-jb']??''; if($j)$rj['data-jb']=$j;
 $j='id='.$id.',idb='.$idb; $ret='';
-$cls=sql::cols(self::$db2,3,2); $cols=implode(',',$cls);
+$cls=sql::cols(static::$db2,3,2); $cols=implode(',',$cls);
 if(in_array('idn',$cls))$w=' order by idn+0'; else $w=' order by id asc';
-$r=sql($cols,self::$db2,'ra',$idb);
+$r=sql($cols,static::$db2,'ra',$idb);
 $j=$cb.'|'.$a.',subedit|id='.$id.',idb=';
 $urf=$p['urf']??''; if($urf && in_array($urf,$cls))$uk=$r[$urf]; else $uk=$idb; $lk=$a.'/'.$id.'/'.$uk;
 //$ret=bjk($cbb.'|'.$a.',edit|id='.$id,langp('back'),'btn',$a.'/'.$id,$a.'/'.$id);//cbb
@@ -266,7 +264,7 @@ if($idb)$ret.=bj('popup|'.$a.',preview|idb='.$idb,langpi('preview'),'btn');
 //if($idb && auth(6))$ret.=bj('popup|'.$a.',datasdb2|epub=1,idb='.$idb,langpi('epub'),'btn');
 if($bt=$p['bt']??'')$ret.=$bt;
 $t=$p['t']??$cls[1];
-$ra=sql('id,'.$t,self::$db2,'kv','where bid="'.$id.'"'.$w);
+$ra=sql('id,'.$t,static::$db2,'kv','where bid="'.$id.'"'.$w);
 $ret.=select('slctsub'.$id,$ra,$idb,0,0,$j);
 if(in_array('txt',$cls) && $a::$conn=1)
 	$ret.=bj('popup|'.$a.',subeditconn|id='.$id.',idb='.$idb.',cbk=subedit',ico('edit'),'btn');
@@ -277,7 +275,7 @@ return $ret;}
 
 //substream
 static function subcall($p){$id=$p['id']??'';
-$a=self::$a; $cb=self::$cb; $db=self::$db; $db2=self::$db2; $mode=$p['collect']??'';
+$a=static::$a; $cb=static::$cb; $db=static::$db; $db2=static::$db2; $mode=$p['collect']??'';
 $rc=sql::cols($db2,2); $cls=array_keys($rc); $cols=implode(',',$cls);
 if(in_array('idn',$cls))$w=' order by idn+0';
 elseif(in_array('twid',$cls))$w=' order by twid desc';
@@ -293,7 +291,7 @@ if($bt=$p['bt']??'')$ret.=$bt;
 $col=$p['t']??$cls[1];//used col
 array_unshift($cls,'id'); $rb['_']=$cls;
 if($r){$t=$p['t']??$cls[1]; if(in_array('idn',$cls))$w=' order by idn';
-	$ra=sql('id,'.$t,self::$db2,'kv','where bid="'.$id.'"'.$w); $ra=['subarts']+$ra;;
+	$ra=sql('id,'.$t,static::$db2,'kv','where bid="'.$id.'"'.$w); $ra=['subarts']+$ra;;
 	if(!$mode)$ret.=select('slctsub'.$id,$ra,'',0,0,$cb.$id.'|'.$a.',subedit|id='.$id.',idb=');
 	if($b=$p['player']??'')$ret.=$a::$b($p,$r);
 	//elseif(in_array('root',$cls))$ret.=root($r);
@@ -308,13 +306,13 @@ return div($ret,'',$cb.'sub');}
 
 static function submdftxt($p){
 $id=$p['id']??''; $idb=$p['idb']??''; $rid=$p['rid']??'';
-$a=self::$a; $d=$p[$rid]??''; $d=cleanconn($d);
-sql::up(self::$db2,'txt',$d,$idb);
+$a=static::$a; $d=$p[$rid]??''; $d=cleanconn($d);
+sql::up(static::$db2,'txt',$d,$idb);
 return $a::subedit(['id'=>$id,'idb'=>$idb]);}
 
 static function subeditconn($p){$id=$p['id']??''; $idb=$p['idb']??'';
-$txt=sql('txt',self::$db2,'v',$idb); $rid=randid('art'); $a=self::$a; $cb=self::$cb;
-$ret=bj($cb.$id.',,x|'.self::$a.',submdftxt|id='.$id.',idb='.$idb.',rid='.$rid.'|'.$rid,langp('save'),'btsav');
+$txt=sql('txt',static::$db2,'v',$idb); $rid=randid('art'); $a=static::$a; $cb=static::$cb;
+$ret=bj($cb.$id.',,x|'.static::$a.',submdftxt|id='.$id.',idb='.$idb.',rid='.$rid.'|'.$rid,langp('save'),'btsav');
 $ret.=build::connbt($rid).textarea($rid,$txt,'64','22','','console');
 return $ret;}
 
@@ -339,8 +337,8 @@ if($nb<20)$ret.=bj('choices|appx,formcom|ty='.$ty.',nb='.($nb+1).'|'.$inps,langp
 if(!($p['nb']??''))$ret=div($ret,'','choices').hidden($ty,$answ);
 return $ret;}
 
-static function form($p){$a=self::$a; $cb=self::$cb; $ret=''; $sz='34';//63
-$cols=sql::cols(self::$db,3); $id=$p['id']??''; $uid=$p['uid']??''; $html=$p['html']??'';
+static function form($p){$a=static::$a; $cb=static::$cb; $ret=''; $sz='34';//63
+$cols=sql::cols(static::$db,3); $id=$p['id']??''; $uid=$p['uid']??''; $html=$p['html']??'';
 foreach($cols as $k=>$v){$val=$p[$k]??''; $bt=''; $wsg=$p['wsg']??''; $lbl=lang($p['label'.$k]??$k);
 	if($p['fc'.$k]??''){$f='fc_'.$k; $bt=$a::$f($k,$val,$v,$id,$lbl);}
 	elseif($k==$html)$bt=divarea($k,conn::com($val,1),'article',1);
@@ -382,7 +380,7 @@ return $ret;}
 //admin	
 static function create($p){
 $id=$p['id']??''; $rid=$p['rid']??'';
-$a=self::$a; $cb=self::$cb; $cls=implode(',',self::$cols);
+$a=static::$a; $cb=static::$cb; $cls=implode(',',static::$cols);
 $ret=bj($cb.'|'.$a.',stream|rid='.$rid,pic('back'),'btn');
 $ret.=bj($cb.'|'.$a.',save|rid='.$rid.'|'.$cls,lang('save'),'btsav');
 if($p['help']??'')$ret.=hlpbt($a.'_help');
@@ -391,12 +389,12 @@ return div($ret,'',$cb);}
 
 static function edit($p){
 $id=$p['id']??$p['edit']??''; $rid=$p['rid']??''; $opn=$p['opn']??''; 
-$db2=$p['collect']??''; $uid=ses('uid'); $own=0; $sav=''; $qb=self::$qb;
-$a=self::$a; $cb=self::$cb; $db=self::$db; $cls=implode(',',self::$cols);
-$t=$p['t']??self::$cols[0]; $cc=$rid?$rid:$cb.$id.'edit'; //$cd=$cb.$id;
+$db2=$p['collect']??''; $uid=ses('uid'); $own=0; $sav=''; $qb=static::$boot;
+$a=static::$a; $cb=static::$cb; $db=static::$db; $cls=implode(',',static::$cols);
+$t=$p['t']??static::$cols[0]; $cc=$rid?$rid:$cb.$id.'edit'; //$cd=$cb.$id;
 $r=sql('id,uid,'.$cls,$db,'ra',$id); if(!$r)return; //pr($r); return;
 $pub=$p['pub']??''; $edt=$p['edt']??0; $r['sub']=$p['sub']??'';
-//if($r['edt']==null)pr(self::$cols);
+//if($r['edt']==null)pr(static::$cols);
 $readable=self::permission($r['uid'],$pub);
 $editable=self::permission($r['uid'],$edt);
 //$readable=self::perms($db,$id,$pub,'pub');//more secure
@@ -424,8 +422,9 @@ if($own){
 	$ret.=bj($cb.$id.'|'.$a.',del|id='.$id.',rid='.$rid,langpi('delete'),'btdel');}
 else $ret.=span(lang('by').' '.usrid($r['uid']),'btn');
 $ret.=bj('popup|appx,viewports|app='.$a.',id='.$id,pic('api'),'btn');
+$ret.=bj('popup|appx,html|app='.$a.',id='.$id,pic('html'),'btn');
 if($p['lang']??'' && $md5=$p['md5']??'')$ret.=lk('/'.$a.'/'.$md5,'#'.$id,'btn');
-elseif(in_array('tit',self::$cols))$ret.=lk('/'.$a.'/'.$id,'#'.$id,'btn');
+elseif(in_array('tit',static::$cols))$ret.=lk('/'.$a.'/'.$id,'#'.$id,'btn');
 else $ret.=lk('/'.$a.'/'.$id,pic('id').$id,'btn');
 if($a::$tags??'')$ret.=admin_tags::call(['id'=>$id,'a'=>$a,'lg'=>lng(),'edt'=>$edt]);
 if($bt=$p['bt']??'')$ret.=$bt;
@@ -440,7 +439,7 @@ if(auth(4))sql::del($p['db'],$p['idb']);
 return self::collect($p);}
 
 static function collect($p){$id=$p['id'];
-$p['b']=$p['db']??self::$db2; $p['bid']=$id; $p['w']='bid'; 
+$p['b']=$p['db']??static::$db2; $p['bid']=$id; $p['w']='bid'; 
 return admin_sql::call($p);}
 
 #stream
@@ -478,9 +477,9 @@ $ret.=div('','',$a.'tags');
 return $ret;}
 
 static function stream_r($p,$t,$pub,$edt,$spd,$lng,$cv){$ret=''; $w='';
-$a=self::$a; $db=self::$db; $uid=ses('uid');
+$a=static::$a; $db=static::$db; $uid=ses('uid');
 $tri=ses('apptri',$p['tri']??''); $tru=ses('apptru',$p['tru']??'');
-$cls='id,uid,'; if($cv)$cls.=implode(',',self::$cols);//sql::cols($db,3,1); 
+$cls='id,uid,'; if($cv)$cls.=implode(',',static::$cols);//sql::cols($db,3,1); 
 else $cls.=$t;
 if($pub)$cls.=',pub'; if($edt)$cls.=',edt';
 if($spd==2){$w='where uid="'.($uid?$uid:'').'" ';
@@ -495,7 +494,7 @@ return $r;}
 
 //0:private,1:clan-visible,2:usr-visible,3:net-visible
 static function stream_build($p){$rid=$p['rid']??''; $rt=[]; $w='';
-$a=self::$a; $cb=self::$cb; $cols=self::$cols;
+$a=static::$a; $cb=static::$cb; $cols=static::$cols;
 $t=$p['t']??$cols[0]; $uid=ses('uid');
 $dsp=ses('appdsp',$p['display']??''); if(!$dsp)$dsp=ses('appdsp',2);
 $spd=ses('appspd',$p['spread']??''); if(!$spd)$spd=ses('appspd',2); if(!$uid)$spd=ses('appspd',1);
@@ -542,7 +541,7 @@ static function cover($id,$v=[]){return span($v['ico']).span($v['bt']);}//,'dico
 static function stream($p){
 $cv=$p['cover']??''; $ls=$p['listing']??'';
 [$r,$rb]=self::stream_build($p); $ret='';
-$a=self::$a; $dsp=ses('appdsp');
+$a=static::$a; $dsp=ses('appdsp');
 if(isset($r['null']))return $r['null'];
 if($r)foreach($r as $k=>$v){//if(isset($v['j']))
 	if($dsp==2 && $cv)$ret.=bjk($v['j'],div($a::cover($k,$v)),'',$a.'/'.$v['id']);
@@ -556,22 +555,22 @@ if($r)foreach($r as $k=>$v){//if(isset($v['j']))
 if(!$ret)return $rb['head'].help('no element','txt');
 if($dsp==2 && $cv)$ret.=div('','clear');
 //if($dsp==1 && !$ls)$ret=div($ret,'table');
-return div($rb['head'].div($ret,$rb['c'],self::$cb.'stream'),'');}
+return div($rb['head'].div($ret,$rb['c'],static::$cb.'stream'),'');}
 
 #build
 static function build($p){$id=$p['id']??'';
-$a=self::$a; $cols=implode(',',self::$cols); //$cols=sql::cols($db,2);
-$r=sql('id,uid,'.$cols,self::$db,'ra',$id);
+$a=static::$a; $cols=implode(',',static::$cols); //$cols=sql::cols($db,2);
+$r=sql('id,uid,'.$cols,static::$db,'ra',$id);
 //tlex will use $conn; this var is sent by tlex::reader
 if(isset($r['txt']) && $a::$conn)$r['txt']=conn::com($r['txt'],1);
 return $r;}
 
 static function build2($p){$id=$p['id']??'';
-$db2=self::$db2; $cols=sql::cols($db2,2);
+$db2=static::$db2; $cols=sql::cols($db2,2);
 return sql($cols,$db2,'rr',['bid'=>$id]);}
 
 static function datasdb2($p){
-$r=sql('all',self::$db2,'ra',$p['idb']);
+$r=sql('all',static::$db2,'ra',$p['idb']);
 return tabler($r);}
 
 #play
@@ -581,15 +580,15 @@ static function template(){
 return '[[[tit:var]*[tit:class]:div][[txt:conn]*[txt:class],[cbck:id]:div]*[article:class]:div]';}
 
 static function play($p){$ret='';
-$r=self::build($p); $a=self::$a;
+$r=self::build($p); $a=static::$a;
 $ret=gen::com($a::template(),$r);//gen by default
-//if($qb=self::$qb && auth(6))$ret.=$qb::bt('datas/'.$a.$id);
+//if($qb=static::$boot && auth(6))$ret.=$qb::bt('datas/'.$a.$id);
 return $ret;}
 
 static function preview($p){
-$id=$p['id']??''; $a=self::$a; $ret=''; $txt=''; $dots=''; $max=440;
-$r=sql('all',self::$db,'ra',$id); //pr($r);
-$t=$p['t']??($r['tit']??($r[self::$cols[0]]??''));
+$id=$p['id']??''; $a=static::$a; $ret=''; $txt=''; $dots=''; $max=440;
+$r=sql('all',static::$db,'ra',$id); //pr($r);
+$t=$p['t']??($r['tit']??($r[static::$cols[0]]??''));
 $bt=pagup($a.',call|id='.$id,span(pic($a,32).' '.$t),'apptit');
 //$bt2=pagup($a.',call|id='.$id,lang('read more'),'bold');
 //$t.=lk('/'.$a.'/'.$id,pic('url'),'btxt');
@@ -605,7 +604,7 @@ return div($ret,'');}
 #interfaces
 //title (used by desktop and shares)
 static function tit($p){
-$id=$p['id']??''; $a=$p['a']??self::$a;
+$id=$p['id']??''; $a=$p['a']??static::$a;
 if(!isnum($id))$id=self::idmd5($id);
 $t=$p['t']??$a::$cols[0];
 if($id)return sql($t,$a::$db,'v',$id);}
@@ -614,16 +613,16 @@ static function usrnfo($n,$d){
 $date=span(date('Y-m-d',strtotime($d)),'small');
 return small($n).' '.span($date,'date');}//lang('by').' '.
 
-static function idsuj($d){return sql('id',self::$db,'v',['tit'=>$d]);}
-static function idlng($d){return sql('id',self::$db,'v',['md5'=>$d,'lang'=>ses('lng')]);}
-static function idmd5($d){return sql('id',self::$db,'v','where substring(md5(id),8,7)="'.$d.'"');}
-static function uid($id){return sql('uid',self::$db,'v',['id'=>$id]);}
-static function usr($id){return sql::inner('name',self::$db,'login','uid','v',$id);}
+static function idsuj($d){return sql('id',static::$db,'v',['tit'=>$d]);}
+static function idlng($d){return sql('id',static::$db,'v',['md5'=>$d,'lang'=>ses('lng')]);}
+static function idmd5($d){return sql('id',static::$db,'v','where substring(md5(id),8,7)="'.$d.'"');}
+static function uid($id){return sql('uid',static::$db,'v',['id'=>$id]);}
+static function usr($id){return sql::inner('name',static::$db,'login','uid','v',$id);}
 static function own($id){if(self::uid($id)==ses('uid'))return true;}
 
 static function getid($id){
-if(is_numeric($id))return sql('id',self::$db,'v',['id'=>$id]);
-elseif(in_array('md5',self::$cols) && in_array('lang',self::$cols))return self::idlng($id);
+if(is_numeric($id))return sql('id',static::$db,'v',['id'=>$id]);
+elseif(in_array('md5',static::$cols) && in_array('lang',static::$cols))return self::idlng($id);
 else return self::idmd5($id);}
 
 static function apphead($uid,$id,$a,$readable,$cb){
@@ -631,17 +630,17 @@ static function apphead($uid,$id,$a,$readable,$cb){
 //if($readable)$nm.=span(langp($readable),'grey');
 //$ref=self::tit(['id'=>$id]); if(strlen($ref)>12)$ref=$id; else $ref=urlencode($ref);
 $bt=lk('/'.$a.'/'.$id,ico('link'),'btn');//substr(md5($id),7,7)
-//$editable=self::perms(self::$db,$id,'edt');
+//$editable=self::perms(static::$db,$id,'edt');
 //if($editable)$bt.=bj($cb.$id.'|'.$a.',edit|edit=1,id='.$id,ico('edit'),'btn');//substr(md5($id),7,7)
 if($uid!=ses('uid') && ses('uid'))$bt.=popup('tlxf,dsksav|com='.$a.',p1='.$id.',tit='.$a::tit(['id'=>$id]),langp('keep'),'btn');
 return div($bt,'');}
 
 //call
 static function call($p){
-$a=self::$a; $cb=self::$cb; $id0=$p['id']??($p['p1']??''); $opn=$p['opn']??''; $bt='';
+$a=static::$a; $cb=static::$cb; $id0=$p['id']??($p['p1']??''); $opn=$p['opn']??''; $bt='';
 $id=self::getid($id0); $p['id']=$id; $readable='';
 $uid=self::uid($id);
-if($id)$readable=self::perms(self::$db,$id,'pub');
+if($id)$readable=self::perms(static::$db,$id,'pub');
 //if($id)$bt=self::apphead($uid,$id,$a,$readable,$cb);
 if($id0 && !$id)$ret=help('id not exists','board');// or !$uid
 elseif($id && !$readable)$ret=help('access not granted','board');
@@ -651,26 +650,33 @@ return div($ret.$bt,'',$cb.$id);}
 
 //com (write)
 static function com($p){//rid (will focus on tlex editor)
-$a=self::$a;
+$a=static::$a;
 $ret=$a::content($p);
 return $ret;}
 
-static function viewports($a,$id){
+static function viewports($p){
+[$a,$id]=vals($p,['app','id']);
 $ret=span(langp('connectors'),'nfo');
-$ret.=textarea('','['.$id.':'.$a.']','','1');
+$ret.=div(textarea('','['.$id.':'.$a.']','','1'));
 $ret.=lk('/frame/'.$a.'/'.$id,langp('iframe'),'nfo',1);
 if(method_exists($a,'iframe'))
-	$ret.=textarea('','<iframe src="'.host(1).'/frame/'.$a.'/'.$id.'"></iframe>','','1');
+	$ret.=div(textarea('','<iframe src="'.host(1).'/frame/'.$a.'/'.$id.'"></iframe>','','1'));
 if(method_exists($a,'api')){
 	$ret.=lk(host(1).'/api/'.$a.'/'.$id,langp('api'),'nfo',1);
-	$ret.=textarea('',host(1).'/api/'.$a.'/id:'.$id.'','','1');}
+	$ret.=div(textarea('',host(1).'/api/'.$a.'/id:'.$id.'','','1'));}
 return $ret;}
 
+static function html($p){
+[$a,$id]=vals($p,['app','id']);
+$f='usr/'.ses('usr').'/'.$a.$id.'.html';
+$d=$a::read(['id'=>$id,'ptag'=>1,'imax'=>1]);
+return html($f,$d);}
+
 static function iframe($p){
-$id=$p['p1']??''; $a=self::$a; $cb=self::$cb;
+$id=$p['p1']??''; $a=static::$a; $cb=static::$cb;
 $id=self::getid($id); $id=$p['id']??$id; $p['id']=$id;
 if(method_exists($a,'headers'))$a::headers();
-$readable=self::perms(self::$db,$id,'pub');
+$readable=self::perms(static::$db,$id,'pub');
 //$ret=app('admin',['app'=>$a,'id'=>$id]);
 if($readable)$ret=div($a::play($p),'',$cb.$id);
 else $ret=help('access not granted','board');
@@ -679,7 +685,7 @@ head::add('csslink','/css/apps.css');
 head::add('csslink','/css/pictos.css');
 head::add('csslink','/css/fa.css');
 head::add('jslink','/js/ajax.js');
-head::add('jslink','/js/utils.js');
+head::add('jslink','/js/core.js');
 $ret=div($ret,'board',$cb);
 $ret=tag('body',['onmousemove'=>'popslide(event)','onmouseup'=>'closebub(event)'],$ret);
 $ret.=tag('div',['id'=>'closebub','onclick'=>'bubClose()'],'');
@@ -688,7 +694,7 @@ return head::run().$ret;}
 
 //interface
 static function content($p){$ret=''; $bt='';
-$a=self::$a; $cb=self::$cb;
+$a=static::$a; $cb=static::$cb;
 $ida=$p['p1']??''; $rid=$p['rid']??''; 
 if($ida=='install')$a::install();
 $ida=$ida?$ida:$p['id']??'';

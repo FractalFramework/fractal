@@ -9,22 +9,18 @@ static $cols=['tit','event','pub'];
 static $typs=['var','var','int'];//var,text,int
 static $conn=0;//0,1(ptag),2(brut),no(br), using 'txt'
 
-function __construct(){
-	$r=['a','db','cb','cols','conn'];
-	foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
-	$r=array_combine(self::$cols,self::$typs);
-	appx::install($r);}
+$r=array_combine(self::$cols,self::$typs);
+appx::install($r);}
 
 static function admin($p){$p['o']='1';
-	return appx::admin($p);}
+return appx::admin($p);}
 
 static function titles($p){return appx::titles($p);}
 static function js(){return '';}
 static function headers(){
-	head::add('csscode','');
-	head::add('jscode',self::js());}
+head::add('csscode','');
+head::add('jscode',self::js());}
 
 #edit
 static function collect($p){return appx::collect($p);}
@@ -53,32 +49,32 @@ return $ret;}
 
 #play
 static function template(){
-	//return appx::template();
-	return '[[(tit)*class=tit:div][(txt)*class=txt:div]*class=paneb:div]';}
+//return appx::template();
+return '[[(tit)*class=tit:div][(txt)*class=txt:div]*class=paneb:div]';}
 
 static function play($p){
-	//return appx::play($p);
-	$r=self::build($p);
+//return appx::play($p);
+$r=self::build($p);
 }
 
 static function stream($p){
-	//$p['t']=self::$cols[0];
-	return appx::stream($p);}
+//$p['t']=self::$cols[0];
+return appx::stream($p);}
 
 #call (read)
 static function tit($p){
-	//$p['t']=self::$cols[0];
-	return appx::tit($p);}
+//$p['t']=self::$cols[0];
+return appx::tit($p);}
 
 static function call($p){
-	return div(self::play($p),'',self::$cb.$p['id']);}
+return div(self::play($p),'',self::$cb.$p['id']);}
 
 #com (edit)
 static function com($p){return appx::com($p);}
 
 #interface
 static function content($p){
-	//self::install();
-	return appx::content($p);}
+//self::install();
+return appx::content($p);}
 }
 ?>

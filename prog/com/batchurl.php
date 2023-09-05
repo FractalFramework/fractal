@@ -1,14 +1,10 @@
 <?php
-
 class batchurl{	
 static $private=6;
 static $a='batchurl';
 static $db='batchurl';
 static $cols=['dom'];
 static $typs=['var'];
-
-function __construct(){$r=['a','db','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
 
 static function install($p=''){
 appx::install(array_combine(self::$cols,self::$typs));}

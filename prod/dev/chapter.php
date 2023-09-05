@@ -10,10 +10,6 @@ static $conn=0;
 static $db2='chapter_vals';
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
 appx::install(array_combine(self::$cols,self::$typs));
 sql::create(self::$db2,['bid'=>'int','num'=>'int','tit'=>'var','txt'=>'text'],1);}

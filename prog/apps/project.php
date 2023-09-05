@@ -13,11 +13,7 @@ static $open=0;
 static $qb='';
 
 //first col,txt,answ,com(settings),code,day,clr,img,nb,cl,pub
-//$db2 must use col "bid" <-linked to-> id
-
-function __construct(){
-$r=['a','db','cb','cols','db2'];
-foreach($r as $v)parent::$$v=self::$$v;}
+//$db2 must use col "bid" <-linked to-> id}
 
 static function install($p=''){
 sql::create(self::$db2,['bid'=>'int','step'=>'var','app'=>'var','appid'=>'var','open'=>'int'],1);

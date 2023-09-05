@@ -11,10 +11,6 @@ static $tags=1;
 static $open=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));}
 

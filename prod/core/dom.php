@@ -59,6 +59,7 @@ $r=$dom->getElementsByTagName($tg); $c=str_replace('(ddot)',':',$c);
 foreach($r as $k=>$v){$attr=$v->getAttribute($at);
 	if(!$ret && ($c==$attr or ($c && strpos($attr,$c)!==false) or !$c))
 		$ret.=$g?domattr($v,$g):$v->nodeValue;}
+//$ret=utf2ascii($ret);
 return $ret;}
 
 static function extract_batch($d,$o){$ret='';
@@ -70,7 +71,7 @@ return $ret;}
 static function href($d){$lk=''; $va=''; $dom=dom($d);
 $r=$dom->getElementsByTagName('a');
 foreach($r as $k=>$v){$lk=domattr($v,'href'); $va=$v->nodeValue;}
-return '['.$lk.($va?'§'.$va:'').']';}
+return '['.$lk.($va?'|'.$va:'').']';}
 
 //dom2conn//dev
 /**/static function dc($v){$at=[];

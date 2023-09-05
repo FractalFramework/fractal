@@ -1,8 +1,12 @@
 <?php
-//draft
 class web{
+static $db='tlex_web';
+static $cols=['url','tit','txt','img'];
+static $typs=['var','var','var','var'];
 
-//sql::create('web',['url'=>'var','tit'=>'var','txt'=>'var','img'=>'var'],$n);
+static function install(){$n=0;
+//appx::install(array_combine(self::$cols,self::$typs));
+sql::create(self::$db,array_combine(self::$cols,self::$typs),$n);}
 
 static function metas($f,$d=''){
 if(!$d)$d=get_file($f); if(!$d)return; $dom=dom($d);//eco($d); 
@@ -34,7 +38,7 @@ if(!$r or $x){$ra=$r;// or !$r[0]
 	if($r[1])$r[1]=str_replace(['“','”'],'',$r[1]);//html_entity_decode
 	if($r[2])$r[2]=saveimg($r[2],'web','590','400');
 	$r=sql::vrf(array_combine(['tit','txt','img'],$r),'tlex_web'); $r=array_values($r);
-	if($ra)echo 'ee';
+	//if($ra)pr($ra);
 	if($ra)sql::up2('tlex_web',['tit'=>trim($r[0]),'txt'=>trim($r[1]),'img'=>$r[2]],$ra[3]);
 	elseif($r[0])sql::sav('tlex_web',[$d,trim($r[0]),trim($r[1]),$r[2]]);}
 return $r?$r:['','',''];}

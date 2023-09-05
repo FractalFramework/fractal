@@ -8,7 +8,6 @@ static $cols=['uid','insee','day','prm','res'];
 static $typs=['int','int','int','svar','text'];
 static $towns=['92012'=>'Boulogne-Billancourt','75101'=>'Paris','69381'=>'Lyon','67482'=>'Strasbourg','66136'=>'Perpignan','64102'=>'Bayonne','59350'=>'Lille','38185'=>'Grenoble','35238'=>'Rennes','34172'=>'Montpellier','33063'=>'Bordeaux','31555'=>'Toulouse','13210'=>'Marseille','06088'=>'Nice'];//,'63113'=>'Clermont-Ferrand''44109'=>'Nantes','29019'=>'Brest','2B033'=>'Bastia',
 
-function __construct(){}
 static function js(){}
 static function admin($p){}
 
@@ -164,15 +163,9 @@ return $d;}
 
 //com
 static function com_observation($r){//pr($r);
-$rb['station']=$r[0]['station']['city']; $ob=$r[0]['observation'];
-$rb['temperature']=[$ob['outside_temperature']['value'],$ob['outside_temperature']['unit']];
-$rb['barometer']=[$ob['barometer']['value'],$ob['barometer']['unit']];
-$rb['rainfall']=[$ob['rainfall']['value'],$ob['rainfall']['unit']];
-$rb['solar_radiation']=[$ob['solar_radiation']['value']??'',$ob['solar_radiation']['unit']??''];
-$rb['wind_speed']=[$ob['wind_speed']['value']??'',$ob['wind_speed']['unit']??''];
-$rb['windchill']=[$ob['windchill']['value']??'',$ob['windchill']['unit']??''];//tmp ressentie
-$rb['windgust_speed']=[$ob['windgust_speed']['value']??'',$ob['windgust_speed']['unit']??''];
-$rb['outside_humidity']=[$ob['outside_humidity']['value']??'',$ob['outside_humidity']['unit']??''];
+$rb['station']=$r[0]['station']['city']??''; $ob=$r[0]['observation']??[];
+$ra=['temperature','barometer','rainfall','solar_radiation','wind_speed','windchill','windgust_speed','outside_humidity'];
+foreach($ra as $k=>$v)$rb[$v]=[$ob[$v]['value']??'',$ob[$v]['unit']??''];
 return $rb;}
 
 static function com_forecast($r,$o=''){//pr($r);

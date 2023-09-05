@@ -19,10 +19,6 @@ static $cards=[];
 static $flop=[];
 static $find=[];
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 $r=['bid'=>'int','uid'=>'int','cards'=>'var','p1'=>'svar','p2'=>'svar','p3'=>'svar','p4'=>'svar','p5'=>'svar','p6'=>'svar','p7'=>'svar'];//

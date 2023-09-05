@@ -11,10 +11,6 @@ static $conn=1;
 static $tags=1;
 static $open=0;
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){//sql::cp('stx','stext');
 parent::install(array_combine(self::$cols,self::$typs));}
 

@@ -16,10 +16,6 @@ static $tags=1;
 static $qb='db';
 static $db2='graphics2';
 
-function __construct(){
-$r=['a','db','cb','cols','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function patch(){return;
 sql::create(self::$db2,['uid'=>'int','tit'=>'var','txt'=>'text','cfg'=>'json','pub'=>'int'],1);
 $r=sql('*',self::$db,''); $rb=[]; pr($r);

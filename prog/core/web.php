@@ -1,13 +1,8 @@
 <?php
-//draft
 class web{
 static $db='tlex_web';
 static $cols=['url','tit','txt','img'];
 static $typs=['var','var','var','var'];
-
-/*function __construct(){//informe parent
-$r=['a','db','cb','cols','conn'];//'db2',
-foreach($r as $v)parent::$$v=self::$$v;}*/
 
 static function install(){$n=0;
 //appx::install(array_combine(self::$cols,self::$typs));

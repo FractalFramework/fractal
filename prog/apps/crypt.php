@@ -12,10 +12,6 @@ static $open=0;
 static $tags=1;
 static $qb='';
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){parent::install(array_combine(self::$cols,self::$typs));}
 static function admin($p){$p['o']=1; return parent::admin($p);}
 static function titles($p){return parent::titles($p);}

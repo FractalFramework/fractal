@@ -5,10 +5,6 @@ static $db='tlex_ab';
 static $cols=['usr','ab','list','wait','block'];
 static $typs=['int','int','var','int','int'];
 
-/*function __construct(){//informe parent
-$r=['a','db','cb','cols','conn'];//'db2',
-foreach($r as $v)parent::$$v=self::$$v;}*/
-
 //install
 static function install(){$n=0;
 //appx::install(array_combine(self::$cols,self::$typs));

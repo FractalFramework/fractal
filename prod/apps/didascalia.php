@@ -14,10 +14,6 @@ static $db2='didascalia_r';
 static $open=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['bid'=>'int','perso'=>'var','dialog'=>'text'],1);//subcall case
 //sql::create(self::$db3,['bid'=>'int','perso'=>'tiny','description'=>'var'],1);

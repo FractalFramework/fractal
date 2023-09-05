@@ -177,7 +177,7 @@ if(self::$mnt)judgment::$mnt=self::$mnt; else judgment::$mnt=maxr($r);
 $rc=judgment::algo($r,$m,$ex);
 if(self::$rn)$rb=self::$rn;
 $ret.=div(judgment::results($rb,$rc,$ex,$rid),'',$rid);
-if(isset($pr[1]))$ret.=div(play_r(judgment::$rf),'scroll');
+if(isset($pr[1]))$ret.=div(tree(judgment::$rf),'scroll');
 if(isset($pr[2]))$ret.=textarea('codb',self::buildatas($r,$rb,';'));
 //else $ret.=hidden('codb',self::buildatas($r,$rb,';'));
 return $ret;}

@@ -12,10 +12,6 @@ static $open=0;
 static $qb='';//db
 static $obso='';
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['uid'=>'int','bid'=>'int','start'=>'int','end'=>'int','pad'=>'var','txt'=>'var'],1);
 parent::install(array_combine(self::$cols,self::$typs));}

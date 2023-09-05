@@ -38,7 +38,6 @@ ul,ol{}
 .inp{display:inline-block;}
 input,textarea,select,.inp{border:1px solid #777; padding:4px 6px; margin:2px 1px; font-size:small; color:var(--c2); background-color:var(--ce);}
 input:hover,input:focus,input:focus-visible{border-color:var(--c4); background-color:var(--cf); color:var(--c0);}
-/*input:focus-visible{border-radius:4px;}*/
 input:focus-visible{outline:none;}
 label.uplabel input[type=file]{position:fixed; top:-100px;}/*upload*/
 input[type=range]{border:0; vertical-align:middle; background:none;}
@@ -52,6 +51,8 @@ input:focus-visible{outline:none;}
 textarea{font-family:Arial; font-size:small; border-width:1px; border-style:solid; padding:4px 6px; margin:2px;}
 textarea.wd{width:100%;}
 textarea:focus-visible{outline:none;}
+div:focus-visible{outline:none; border:1px dashed var(--b7);}
+h1:focus-visible{outline:none; border:1px dashed var(--b7);}
 select{padding:2px 6px; margin:3px 0;}
 select:hover{background-color:var(--cd); color:var(--c2);}
 select:focus-visible{outline:none;}
@@ -200,6 +201,18 @@ a .pic:hover,a.active .pic{}
 .btk{border-color:#0099FF;}
 .btprm{color:var(--cd); }
 .btprm:hover,.btprm.active{color:var(--cb); background-color:var(--cf); border-color:var(--ca);}
+
+/*topology*/
+.topology ol {list-style-type:upper-roman;}
+.topology ol ol {list-style-type:upper-alpha;}
+.topology ol ol ol {list-style-type:lower-alpha;}
+.topology ol ol ol ol {list-style-type:decimal;}
+.topology ol ol ol ol ol {list-style-type:disclosure-closed;}
+.topology li a {background-color:var(--w4); padding:1px 2px;}
+.topology li a.active {background-color:var(--w4); padding:1px 2px;}
+.topology li ul {border-left:1px dotted #777777;}
+.topology li ul.on {display:block;}
+.topology li ul.off {display:none;}
 
 /*content*/
 .board,.article,.desktop{font-size:larger; color:var(--cf); padding:15px; border:0px solid #e1e8ed; border-radius:5px; word-wrap: break-word;}

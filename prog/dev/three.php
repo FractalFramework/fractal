@@ -10,10 +10,6 @@ static $tags=1;
 static $open=0;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);
 parent::install(array_combine(self::$cols,self::$typs));}

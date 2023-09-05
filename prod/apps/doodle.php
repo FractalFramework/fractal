@@ -15,10 +15,6 @@ static $qb='';
 //first col,txt,answ,com(settings),code,day,clr,img,nb,cl,pub
 //$db2 must use col "bid" <-linked to-> id
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['bid'=>'int','uid'=>'int','day'=>'int','ok'=>'int'],1);
 parent::install(array_combine(self::$cols,self::$typs));}

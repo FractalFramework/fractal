@@ -84,7 +84,7 @@ var ret=connectors(a);
 */
 
 function delconn(d,cn){
-	var na=d.lastIndexOf(':'); var nb=d.lastIndexOf('§'); var xt=d.substr(na+1);
+	var na=d.lastIndexOf(':'); var nb=d.lastIndexOf('|'); var xt=d.substr(na+1);
 	if((d.substr(nb)).indexOf(']')!=-1)nb=-1;
 	if(xt==cn || !cn){
 		if(d.substr(0,4)=='http' && !cn){

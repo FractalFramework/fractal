@@ -239,7 +239,7 @@ function exclude($d,$s,$e){$pa=strpos($d,$s);
 function combine($a,$b){$n=count($a); $r=[];
 	for($i=0;$i<$n;$i++)$r[$a[$i]]=$b[$i]??''; return $r;}//if(!empty($b[$i]))
 function merge($r,$rb){if(is_array($r) && $rb)return array_merge($r,$rb); elseif($rb)return $rb; else return $r;}
-function merger(...$r){$rt=[]; foreach($r[0] as $k=>$v)foreach($r as $ka=>$va)$rt[$k][]=$va[$k]; return $rt;}
+function merger(...$r){$rt=[]; foreach($r as $k=>$v)foreach($v as $ka=>$va)$rt[$ka][$k]=$va; return $rt;}
 function pushr($r,$rb){foreach($rb as $k=>$v)$r[]=$v; return $r;}
 function pushv($ra,...$rb){return array_merge($ra,$rb);}
 function split_one($s,$d,$o=''){$n=$o?strrpos($d,$s):strpos($d,$s);
@@ -279,7 +279,7 @@ function strid($p,$n=6){return substr(md5($p),2,$n);}
 function randid($p=''){return $p.base_convert(substr(microtime(),2,8),10,36);}
 function random($p='',$n=10){return $p.strid(microtime(),$n);}
 function http($d){return substr($d,0,4)!='http'?'http://'.$d:$d;}
-function nohttp($d){return str_replace(['https','http','://','www.'],'',$d);}
+function nohttp($d){return str_replace(['https','http','://','www.'],'',$d??'');}
 function domain($d){$d=nohttp($d); return strto($d,'/');}
 function nodomain($d){$d=nohttp($d); return strfrom($d,'/');}
 function reload($u=''){echo tag('script','','window.location='.($u?$u:'document.URL'));}
@@ -336,7 +336,7 @@ function prmp($p,$r){$rb=[]; foreach($r as $k=>$v)$rb[$v]=$p['p'.($k+1)]??''; re
 function prmr($d){$r=explode(',',$d); $rb=[];//explode_k
 	foreach($r as $k=>$v){[$ka,$va]=split_one('=',$v); if($ka)$rb[$ka]=$va;} return $rb;}
 function mkprm($p){foreach($p as $k=>$v)$rt[]=$k.'='.$v; if($rt)return implode('&',$rt);}
-function trims($r){foreach($r as $k=>$v)$r[$k]=trim($v); return $r;}
+function trims($r){foreach($r as $k=>$v)$r[$k]=trim($v,"&nbsp; "); return $r;}
 function trimv($d){return trim($d);}
 function trimr($r){return array_filter($r,'trimv');}
 function get($k,$v=''){$d=filter_input(INPUT_GET,$k); return $d?$d:$v;}
@@ -395,8 +395,7 @@ if($r)foreach($r as $k=>$v){if(is_array($v))$va=current($v);
 		case('meta'):$v=$v['meta']; $ret.=self::meta($v['attr'],$v['prop'],$v['content'])."\n"; break;
 		case('tag'):$v=$v['tag']; $ret.=tag($v[0],$v[1],$v[2])."\n"; break;}}
 	return $ret;}
-static function run(){$ret=self::build(); return self::html().tag('head','',$ret).n();}
-}
+static function run(){$ret=self::build(); return self::html().tag('head','',$ret).n();}}
 
 #parsers
 function substrpos($v,$a,$b){return substr($v,$a+1,$b-$a-1);}
@@ -449,6 +448,7 @@ function delr($d,$o=''){return str_replace("\r",$o,$d);}
 function delt($d,$o=''){return str_replace("\t",$o,$d);}
 function delsp($d){return str_replace("&nbsp;",' ',$d);}
 function cleansp($d){return preg_replace('/( ){2,}/',' ',$d);}
+function cleannl($d){return preg_replace('/(\n){2,}/',"\n\n",$d);}
 
 function clean_separator($d,$a,$b){
 if(strpos($d,$a) && strpos($d,$b))$d=str_replace($b,'',$d);
@@ -457,7 +457,7 @@ return $d;}
 
 function clean_lines($d){
 $d=delbr($d,"\n");
-$d=preg_replace('/(\n){2,}/',"\n\n",$d);
+$d=cleannl($d);
 $r=explode("\n",$d);
 foreach($r as $v)$rb[]=trim($v);
 return implode("\n",$rb);}
@@ -472,7 +472,7 @@ $d=str_replace("\n",'µ',$d);
 $d=str_replace('µµ',"\n\n",$d);
 $d=str_replace('µ',' ',$d);
 $d=clean_lines($d);
-$d=preg_replace('/( ){2,}/',' ',$d);
+$d=cleansp($d);
 return $d;}
 
 function clean_n($d){
@@ -481,8 +481,8 @@ $d=str_replace("\r","\n",$d);
 $d=str_replace('<br>'."\n","\n",$d);
 //$d=str_replace('<br>',"\n",$d);
 //$d=str_replace('<br />',"\n",$d);
-$d=preg_replace('/( ){2,}/',' ',$d);
-$d=preg_replace('/(\n){2,}/',"\n\n",$d);
+$d=cleansp($d);
+$d=cleannl($d);
 return trim($d);}
 
 function clean_br($d){
@@ -494,36 +494,36 @@ $d=cleansp($d);
 return trim($d);}
 
 function nbsp($d){$n=sp();
-$ra=['« ',' »',' !',' ?',' :',' ;'];
-$rb=['«'.$n,$n.'»',$n.'!',$n.'?',$n.':',$n.';'];
-return str_replace($ra,$rb,$d);}
+$a=['« ',' »',' !',' ?',' :',' ;'];
+$b=['«'.$n,$n.'»',$n.'!',$n.'?',$n.':',$n.';'];
+return str_replace($a,$b,$d);}
 
 function stripaccents($d){
-	$a='ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ0ÙÚÛÜİàáâãäåæçèéêëìíîïğñòóôõöøùúûüışÿ';
-	$b='AAAAAACEEEEIIIIDNOOOOO0UUUUYaaaaaaaceeeeiiiidnoooooouuuuyby';
-	return strtr($d,$a,$b);}
+$a=['À','Á','Â','Ã','Ä','Å','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ò','Ó','Ô','Õ','Ö','Ù','Ú','Û','Ü','İ','à','á','â','ã','ä','å','ç','è','é','ê','ë','ì','í','î','ï','ğ','ò','ó','ô','õ','ö','ù','ú','û','ü','ı','ÿ'];
+$b=['A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','O','O','O','O','O','U','U','U','U','Y','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','o','o','o','o','o','o','u','u','u','u','y','y'];
+return str_replace($a,$b,$d);}
 function accents($d,$o=0){
-	$a='àáâãäåæçèéêëìíîïğñòóôõöøùúûüışÿ';
-	$b='ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİŞß';
-	return $o?strtr($d,$a,$b):strtr($d,$b,$a);}
-function accents_b($d){
-	$a='àáâãäåæçèéêëìíîïòóôõöøùúûüı';
-	$b='AAAAAAÆCEEEEIIIIOOOOOØUUUUY';
-	return strtr($d,$a,$b);}
-function strtoupper_b($d){return strtoupper(accents_b($d,0));}
-function strtolower_b($d){return strtolower(accents($d,1));}
+$a=['À','Á','Â','Ã','Ä','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ñ','Ò','Ó','Ô','Õ','Ö','Ù','Ú','Û','Ü','İ'];
+$b=['à','á','â','ã','ä','ç','è','é','ê','ë','ì','í','î','ï','ñ','ò','ó','ô','õ','ö','ù','ú','û','ü','ı'];
+if($o)[$b,$a]=[$a,$b];
+return str_replace($a,$b,$d);}
+function strtolower_b($d){return strtolower(accents($d,0));}
+function strtoupper_b($d){return strtoupper(accents($d,1));}
 function ucfirst_b($d){return strtoupper_b(substr($d,0,1)).substr($d,1);}
-function normalize($d,$o=''){$d=stripaccents(utf8dec($d));
-	if($o)$d=str_replace(' ','_',$d); else $d=str_replace('_','',$d);
-	return str_replace(["'",'"','?','/','§',',',';',':','!','%','&','$','#','+','=','!',"\n","\r","\0","[\]",'~','(',')','[',']','{','}','«','»',"&nbsp;",'-','.'],'',$d);}
+function normalize($d,$o=''){$d=stripaccents($d);
+if($o)$d=str_replace(' ','_',$d); else $d=str_replace('_','',$d);
+return str_replace(["'",'"','?','/','§',',',';',':','!','%','&','$','#','+','=','!',"\n","\r","\0","[\]",'~','(',')','[',']','{','}','«','»',"&nbsp;",'-','.'],'',$d);}
 
 function ptag($d){$d=delr($d);
-$r=explode("\n\n","\n".$d."\n"); $ret=''; $ex='<h1<h2<h3<h4<br<hr<bl<pr<di<sp<if<fi<ce<di';
+$r=explode("\n\n","\n".$d."\n"); $ret=''; $ex='<h1<h2<h3<h4<h5<br<hr<bl<pr<di<sp<if<fi<ce<di';
 foreach($r as $k=>$v){$v=trim($v); if($v){$cn=substr($v,0,3);
 	if(strpos($ex,$cn)===false)$ret.='<p>'.$v.'</p>'; else $ret.=$v;}}
-$ret=cleansp($ret); $ret=nl2br($ret); return $ret;}//
+$ret=cleansp($ret); $ret=nl2br($ret); return $ret;}
 
 #conn
+function add_lines($d){
+return $d;}
+
 function cleanconn($d){
 $d=delt($d);
 //$d=clean_mail($d);
@@ -533,18 +533,17 @@ $d=clean_lines($d);
 //$d=conv::cleanhtml($d);
 $d=conv::cleanconn($d);
 //$d=delbr($d,"\n");
+//$d=conn::read($d,'conn','cleanup','');
+$d=cleannl($d);
 $d=clean_n($d);
-$d=cleansp($d);
+//$d=cleansp($d);
 return $d;}
 
-function connprm($d,$o=0){$s='§';
-$d=str_replace('Ã§','ç',$d);//patch
-$s=strpos($d,'Â§')?'Â§':'§';//used when § come from code
-//$d=str_replace(['$','Â§'],$s,$d);//patch//,'*'
-$d=str_replace('ç','Ã§',$d);
+function connprm($d,$o=0){$s='|';
+//$d=str_replace(['$','|'],$s,$d);//patch//,'*'
 return split_one_mb($s,$d,$o);}
 
-function readconn($d){//p§o:c
+function readconn($d){//p|o:c
 [$da,$c]=split_one(':',$d,1);
 [$p,$o]=connprm($da);
 return [$p,$o,$c,$da];}
@@ -634,7 +633,7 @@ $d=curl_getinfo($fp,CURLINFO_HTTP_CODE); curl_close($fp); return $d==200?1:0;}
 
 function write_file($f,$d){
 $h=fopen($f,'w+'); if(!$h)return 'error'; $w=fwrite($h,$d); fclose($h);
-opcache_invalidate($f);
+if(!sql::$lc)opcache_invalidate($f);
 if($w===false)return 'error';}
 
 function read_file($f){

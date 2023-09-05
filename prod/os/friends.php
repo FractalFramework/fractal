@@ -7,7 +7,8 @@ static $typs=['int','int','var','int','int'];
 
 //install
 static function install(){$n=0;
-appx::install(array_combine(self::$cols,self::$typs));}
+//appx::install(array_combine(self::$cols,self::$typs));
+sql::create(self::$db,array_combine(self::$cols,self::$typs),$n);}
 
 static function admin($p){}
 

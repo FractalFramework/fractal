@@ -7,10 +7,6 @@ static $db='twbot';
 static $cols=['twid','name','screen_name','date','text','media','reply_id','reply_name','favs','retweet','followers','friends','quote_id','quote_name','action'];
 static $typs=['int','var','var','var','var','var','int','var','var','int','int','int','int','var','var'];
 
-function __construct(){
-$r=['a','db','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
 appx::install(array_combine(self::$cols,self::$typs));}
 
