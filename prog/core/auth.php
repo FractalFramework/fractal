@@ -77,8 +77,8 @@ return 'loged_ok';}
 static function login($user='',$pass=''){
 //self::install();
 $uid=ses('uid'); //if($uid)return 'loged';
-$user=normalize($user);
-$pass=normalize($pass);
+$user=str::normalize($user);
+$pass=str::normalize($pass);
 //$uid=cookie('uid'); if($uid)$state='cookie_found';//login with cookies
 if(self::$noregister)$state='loged_private'; else $state='loged_out';
 if($user){

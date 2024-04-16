@@ -12,10 +12,6 @@ static $open=0;
 static $tags=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','db2','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 sql::create('freevote_args',['bid'=>'int','uid'=>'int','txb'=>'var'],1);

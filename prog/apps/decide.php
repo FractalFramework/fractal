@@ -10,9 +10,6 @@ static $typs=['var','bvar','int'];
 static $open=0;
 static $tags=1;
 
-function __construct(){$r=['a','db','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 sql::create('decide_args',['bid'=>'int','uid'=>'int','position'=>'int','txt'=>'bvar'],1);

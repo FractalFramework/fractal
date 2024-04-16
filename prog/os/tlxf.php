@@ -178,7 +178,7 @@ return $ret;}
 static function share($p){$id=$p['id']??''; $root=host(1).'/'.$id;
 $txt=sql('txt',self::$db,'v',$id);
 $txt=conn::call(['msg'=>$txt,'app'=>'conn','mth'=>'noconn','ptag'=>0]);
-$txt=(utf8enc(strip_tags($txt)));
+$txt=(str::utf8enc(strip_tags($txt)));
 //$obj=tlex::objects(); if($obj)$txt.=trim(strip_tags($obj));
 $tw='http://twitter.com/intent/tweet?original_referer='.$root.'&url='.$root.'&text='.utf8enc($txt).' #tlex'.'&title=Tlex:'.$id; $fb='http://www.facebook.com/sharer.php?u='.$root;
 $ptw=ico('twitter-square','24','twitter'); $pfb=ico('facebook-official','24','facebook');
@@ -194,7 +194,7 @@ return $ret;}
 //del
 static function del($p){$id=$p['did'];
 $uid=sql('uid',self::$db,'v',$id);
-if($uid!=ses('uid'))return lang('operation not permitted');
+if($uid!=ses('uid') && !auth(6))return lang('operation not permitted');
 if(empty($p['confirm'])){
 	//$cancel=bj('tlx'.$id.'|tlex,one|id='.$id,langp('cancel'),'btn');
 	$ja='cbck|tlxf,del|did='.$id.',confirm=1';

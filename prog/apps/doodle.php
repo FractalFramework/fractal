@@ -15,10 +15,6 @@ static $qb='';
 //first col,txt,answ,com(settings),code,day,clr,img,nb,cl,pub
 //$db2 must use col "bid" <-linked to-> id
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['bid'=>'int','uid'=>'int','day'=>'int','ok'=>'int'],1);
 parent::install(array_combine(self::$cols,self::$typs));}
@@ -94,7 +90,7 @@ $rb=sql('uid,day,ok',self::$db2,'kkv',['bid'=>$id]); //pr($rb);
 $start=strtotime($ra['date']); $n=$ra['nbdays'];
 setlng();//setlocale
 //echo date('ymd',$start);
-for($i=0;$i<$n;$i++)$re['_k'][]=utf8enc(date('Y-m-d',$start+86400*$i));//
+for($i=0;$i<$n;$i++)$re['_k'][]=str::utf8enc(date('Y-m-d',$start+86400*$i));//
 array_unshift($re['_k'],''); //pr($re);
 if($rb)foreach($rb as $k=>$v){//$re[$k][]=$k;
 	for($i=0;$i<$n;$i++){

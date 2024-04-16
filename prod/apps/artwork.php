@@ -11,10 +11,6 @@ static $db2='artwork_arts';
 static $tags=0;
 static $conn=0;
 
-function __construct(){
-$r=['a','db','cb','cols','db2'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create(self::$db2,['bid'=>'int','conn'=>'var'],1);}

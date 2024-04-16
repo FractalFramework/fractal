@@ -11,8 +11,8 @@ return $ret;}
 #content
 static function send($p){
 $to=val($p,'to');
-$sub=utf8enc(val($p,'subject',''));
-$msg=utf8enc(val($p,'message'));
+$sub=str::utf8enc(val($p,'subject',''));
+$msg=str::utf8enc(val($p,'message'));
 $from=val($p,'from','bot@'.host());
 $mode=val($p,'text');//html
 if($id=val($p,'tlex'))$msg=self::tlex($id);

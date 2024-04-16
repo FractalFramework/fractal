@@ -232,7 +232,7 @@ static function call($p){$ret='';
 	if($act=='add')$ret=self::add($prm);
 	if($act=='view')$ret=self::view($prm);
 	if($act=='checkout')$ret=self::checkout($prm);
-	if($ret)return play_r($ret);//play array
+	if($ret)return tree($ret);//play array
 	return help('nothing');}
 
 #call from url api/

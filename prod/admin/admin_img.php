@@ -56,7 +56,7 @@ static function feed($p){$ret='';
 //$ra=scan_dir('img/full'); echo count($ra);
 $rb=sql('uid,txt,id','tlex','','where txt like "%.jpg%" or like "%.png%" or txt like "%:img%"'); //pr($rb);
 foreach($rb as $k=>$v){
-	$r=connslct($v[1],':img');
+	$r=str::connslct($v[1],':img');
 	foreach($r as $vb){
 		if(strpos($vb,'http')===false)
 			if(strpos($vb,'.jpg') or strpos($vb,'.png') or strpos($vb,'.gof'))$rc[]=[$v[0],$vb,$v[2]];

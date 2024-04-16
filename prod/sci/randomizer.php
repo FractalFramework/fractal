@@ -11,11 +11,7 @@ static $gen=0;
 static $tags=0;
 static $db2='randomizer_r';
 static $open=1;
-static $qb='db';//
-
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
+static $qb='db';
 
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);//collect case

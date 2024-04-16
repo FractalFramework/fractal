@@ -14,10 +14,6 @@ static $credits=['red','blue','green'];//mass,time,space
 static $status=['used','for lent','for rent','for sale','loan','rented','sold','destroyed'];
 static $roles=['man','corp','rsrc','cmd'];
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 //red,blue,green credits//role: profile status

@@ -122,7 +122,7 @@ $r=sql('all',self::$db,'rr',['uid'=>ses('uid')]);
 return $r;}
 
 static function cod($d){//paq
-$d=clean_separator($d,';','\n'); $r=explode_r($d,';',',');
+$d=str::clean_separator($d,';','\n'); $r=explode_r($d,';',',');
 if(!is_numeric($r[0][0]))$rb=array_shift($r);//isole candidates
 if($rb[0])array_unshift($rb,''); self::$rn=$rb;//candidate 0 not exists
 return self::onpaq($r);}
@@ -177,7 +177,7 @@ if(self::$mnt)judgment::$mnt=self::$mnt; else judgment::$mnt=maxr($r);
 $rc=judgment::algo($r,$m,$ex);
 if(self::$rn)$rb=self::$rn;
 $ret.=div(judgment::results($rb,$rc,$ex,$rid),'',$rid);
-if(isset($pr[1]))$ret.=div(play_r(judgment::$rf),'scroll');
+if(isset($pr[1]))$ret.=div(tree(judgment::$rf),'scroll');
 if(isset($pr[2]))$ret.=textarea('codb',self::buildatas($r,$rb,';'));
 //else $ret.=hidden('codb',self::buildatas($r,$rb,';'));
 return $ret;}

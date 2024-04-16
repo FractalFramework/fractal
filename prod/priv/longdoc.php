@@ -45,17 +45,10 @@ static function build($p){$id=$p['id']??'';
 $r=sql('all',self::$db,'rr',$id);
 return $r;}
 
-static function lastagpos($v,$ab,$ba){$d=substrpos($v,$ab,$ba);
+/*static function lastagpos($v,$ab,$ba){$d=str::substrpos($v,$ab,$ba);
 $nb_aa=substr_count($d,'<'); $nb_bb=substr_count($d,'>'); $nb=$nb_aa-$nb_bb;
 if($nb>0){for($i=0;$i<$nb;$i++)$ba=strpos($v,'}',$ba+1); $ba=lastagpos($v,$ab,$ba);}
-return $ba;}
-
-static function goodend($d,$start,$end){
-$pa=strpos($d,'<'); $d=substr($d,$pa+1);
-$pb=strpos($d,'>'); $db=substr($d,0,$pb+1);
-$na=substr_count($db,'<'); $nb=substr_count($db,'>');
-if($na>$nb)$pb=lastagpos($d,$pa,$pb);
-return substr($d,0,$pb);}
+return $ba;}*/
 
 #read
 static function play($p){
@@ -67,7 +60,7 @@ $f='usr/dav/WaletHumm3.html';
 //echo array_sum(count_chars($d));
 $d=file_get_contents($f,NULL,NULL,$start,self::$sz);
 //$d=file_get_contents($f);
-//$d=self::goodend($d,$start,self::$sz);
+//$d=str::goodend($d,$start,self::$sz);
 //$d=conv::call(['txt'=>$d]);
 //$d=strip_tags($d);
 //sql::up('dbdoc','txt',$d,1);

@@ -38,7 +38,7 @@ function drag_sql::drop(ev,j){
 	var data=evd.getData("text"); //getbyid(data).className="dropper";
 	ev.target.className="dropper";
 	//ev.target.appendChild(getbyid(data));//1
-	//ajaxCall('div,divlist|drag,play','p1='+data+',p2='+ev.target.id,''); //pr(data);
+	//ajaxcall('div,divlist|drag,play','p1='+data+',p2='+ev.target.id,''); //pr(data);
 	var rt=reorderdiv(data,ev.target.id);
 	if(j!=undefined)ajx(j+rt);}
 

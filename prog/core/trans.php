@@ -21,7 +21,7 @@ curl_close($d);
 return $ret;}
 
 static function api($prm,$txt,$mode=''){
-$txt=utf8enc($txt); $r=[];
+$txt=str::utf8enc($txt); $r=[];
 $prm['auth_key']=self::getkey();
 $mode=$mode?$mode:'translate';
 $u='https://api-free.deepl.com/v2/'.$mode.'?'.implode_k($prm,'&','=');
@@ -79,8 +79,8 @@ return str_replace($ra,$rb,$d);}
 
 static function convhtml($d){
 $d=conv::com($d);
-$d=clean_br($d);
-$d=clean_lines($d);
+$d=str::clean_br($d);
+$d=str::clean_lines($d);
 return $d;}
 
 #translate

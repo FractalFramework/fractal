@@ -117,10 +117,10 @@ $r[$k]['x']=$x; $r[$k]['y']=$y;}
 return $r;}
 
 //add known infos to datas
-static function prep($r,$ra,$p1){new maths(20); $rb=[]; $rt=[]; //pr($r);
+static function prep($r,$ra,$p1){new maths(20); $rb=[]; $rt=[];
 $w=self::$w; $h=$w/2; $wi=$w/2; $hi=$h/2; $wr=$w/24; $hr=$h/180; $r2=[];
 $cols=['hd','hip','rarad','decrad','dist','spect','mag','lum','ra','dc'];//
-$cra=current($ra); if(count($cra)>8){
+$cra=current($ra); if($cra && count($cra)>8){
 $rc=array_flip(array_keys_r($ra,8)); //pr($rc);
 foreach($ra as $k=>$v){//known
 	$rad=maths::ra2deg($v[2]); $rag=deg2rad($rad); $rah=$rad/15;

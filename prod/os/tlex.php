@@ -46,11 +46,11 @@ head::add('jscode',self::js());}
 #ajax
 //1=quote,2=reply,3=like,4=subsc,5=chat,6=subsc-approve
 static function refresh($p){//pr($p);
-$p['count']=1; $n0=self::apisql($p); $w='where 4usr="'.ses('usr').'" and state=1';
-$n1=sql('count(id)','tlex_ntf','v',$w.' and typntf in (1,2,3)');//quote,reply,like
-$n2=sql('count(id)','tlex_ntf','v',$w.' and typntf in (4,6)');//subscr
-$n3=sql('count(id)','tlex_ab','v','where ab="'.ses('uid').'"');//subscr_nb
-$n4=sql('count(id)','tlex_ntf','v',$w.' and typntf=5');//chat
+$p['count']=1; $n0=self::apisql($p); $pr=['4usr'=>ses('usr'),'state'=>'1'];
+$n1=sql('count(id)','tlex_ntf','v',$pr+['typntf'=>[1,2,3]]);//quote,reply,like
+$n2=sql('count(id)','tlex_ntf','v',$pr+['typntf'=>[4,6]]);//subscr
+$n3=sql('count(id)','tlex_ab','v',$pr+['ab'=>ses('uid')]);//subscr_nb
+$n4=sql('count(id)','tlex_ntf','v',$pr+['typntf'=>'5']);//chat
 return $n0.'-'.$n1.'-'.$n2.'-'.$n3.'-'.$n4;}
 
 //load button
@@ -78,7 +78,7 @@ if($r)foreach($r as $k=>$v)if(isset($v[1]) && method_exists($v[0],'call')){
 	sql::savif('tlex_app',['tlxid'=>$id,'app'=>$v[0],'p'=>$v[1]]);} return $v[0]??'';}
 
 static function readntf($p){$n=$p['typntf']; $by=$p['byusr']; $st=$p['state']; $ret='';
-//$uname=sql('name','login','v','where usr="'.$p['byusr'].'"'); //if($n)$ret='@'.$by.' ';
+//$uname=sql('name','login','v',['usr'=>$p['byusr']]); //if($n)$ret='@'.$by.' ';
 if($p['state']==1)sql::up('tlex_ntf','state','0',$p['ntid']);
 if($n==1 && $p['ib'])$ret.=lang('has_reply',1);
 elseif($n==1)$ret.=lang('has_sent',1);
@@ -89,7 +89,7 @@ return span($ret,'nfo'.$c).' ';}
 
 #save
 static function build_conn($d,$o=''){$ret=[];
-$d=clean_n($d);
+$d=str::clean_n($d);
 $d=str_replace("\n",' (nl) ',$d);
 $r=explode(' ',$d);
 foreach($r as $v){
@@ -111,7 +111,7 @@ foreach($r as $v){
 	else $ret[]=$v;
 	$conn=substr($v,0,1)=='['?1:0;
 	if($conn && substr($v,-4)==':id]' && $id=substr($v,1,-4)){
-		$usr=sql::inner('name',self::$db,'login','uid','v','where '.self::$db.'.id='.$id);
+		$usr=sql::inner('name',self::$db,'login','uid','v',[self::$db.'.id'=>$id]);
 		if($usr)self::$ntr[$usr]=1;}//quotes
 	elseif($n=strrpos($v,':')){$cnn=substr($v,$n+1,-1); if($cnn)self::$lbl=$cnn;}}
 if($ret)$d=implode(' ',$ret);
@@ -120,13 +120,13 @@ return trim($d);}
 
 static function save($p){$ids=$p['ids']; $txa=$p[$ids]??''; self::$ntf=[];
 if($a=$p['a']??'')$txa='['.$ids.':'.$a.']'; $lg='';
-if($oAuth=$p['oAuth']??''){$ok=sql('puid','profile','v','where oAuth="'.$oAuth.'"');
+if($oAuth=$p['oAuth']??''){$ok=sql('puid','profile','v',['oAuth'=>$oAuth]);
 	if($ok)sez('uid',$ok); else return 'error';}
 if($txa){$txt=self::build_conn($txa,1); $ib=$p['ibs']??0; $pv=$p['pv']??0;
 	//$txb=conn::call(['msg'=>$txt,'mth'=>'realwords']);
 	$aps=conn::call(['msg'=>$txt,'mth'=>'appreader']);
 	$lbl=$p['lbl']??0;
-	//if($lbl && !is_numeric($lbl))$lbl=sql('id','labels','v','where ref="'.$lbl.'"');
+	//if($lbl && !is_numeric($lbl))$lbl=sql('id','labels','v',['ref'=>$lbl]);
 	//if(!$lbl && $lbl=post('lbl'))self::$lbl'=[];
 	if($txt)$lg=trans::detect(['txt'=>$txt]); if(!$lg)$lg=ses('lng');
 	if(!$lbl)$lbl=0; if(!$pv)$pv=0; if(!$ib)$ib=0;
@@ -210,7 +210,7 @@ return span($ret,'',$rid);}
 #follow
 static function followbt($p){$rid=$p['rid']??randid('flw');
 $usr=$p['usr']; $sz=$p['sz']??''; $ret='';//$wait=$p['wait'];//vcu
-$w='where usr="'.ses('uid').'" and ab="'.idusr($usr).'"';
+$w=['usr'=>ses('uid'),'ab'=>idusr($usr)];
 $id=sql('id','tlex_ab','v',$w);
 $rb=sql('wait,block','tlex_ab','ra',$w);//contexts:user see visitor (ucv),
 if($id){
@@ -226,9 +226,9 @@ return span($ret,$c,$rid);}
 #subscriptions
 static function subscribt($usr,$uid,$role){
 if(!$uid)$uid=idusr($usr);
-$n0=sql('count(id)',self::$db,'v','where uid="'.$uid.'"');
-$n1=sql('count(id)','tlex_ab','v','where usr="'.$uid.'"');
-$n2=sql('count(id)','tlex_ab','v','where ab="'.$uid.'"');
+$n0=sql('count(id)',self::$db,'v',['uid'=>$uid]);
+$n1=sql('count(id)','tlex_ab','v',['usr'=>$uid]);
+$n2=sql('count(id)','tlex_ab','v',['ab'=>$uid]);
 $bt=div(lang('post_published'),'subscrxt').div($n0,'subscrnb clr');
 $ret=div(self::loadtm('tm='.$usr.',noab=1',$bt),'subscrbt');
 $bt=div(lang('subscriptions'),'subscrxt').div(span($n1,'','tlxabs'),'subscrnb clr');//ab
@@ -240,7 +240,7 @@ return div($ret,'subscrstats').div('','clear');}
 
 #lists
 static function listbt(){$ret=self::loadtm('tm='.ses('usr'),lang('all'));
-$r=sql('distinct(list)','tlex_ab','rv','where usr="'.ses('uid').'" and wait=0 and block=0');
+$r=sql('distinct(list)','tlex_ab','rv',['usr'=>ses('uid'),'wait'=>'0','block'=>'0']);
 if($r)foreach($r as $v)$ret.=self::loadtm('tm='.ses('usr').',list='.$v,$v);
 return div($ret,'lisb');}
 
@@ -284,12 +284,12 @@ return div($ret,'lisb');}
 
 #thread
 static function thread_parents($id,$ret=[]){
-$ib=sql('ib',self::$db,'v','where '.self::$db.'.id="'.$id.'"',0);
+$ib=sql('ib',self::$db,'v',[self::$db.'.id'=>$id],0);
 if($ib){$ret[$ib]=1; $ret=self::thread_parents($ib,$ret);}
 return $ret;}
 
 static function thread_childs($id,$ret=[]){
-$r=sql('id',self::$db,'k','where ib='.$id,0); if($r)$ret+=$r;
+$r=sql('id',self::$db,'k',['ib'=>$id],0); if($r)$ret+=$r;
 if($r)foreach($r as $k=>$v)$ret=self::thread_childs($k,$ret);
 return $ret;}
 
@@ -335,7 +335,7 @@ if($fast)return $ret;
 if($tousr==$us && $pv==3)$ret.=langpi('private message').' ';
 elseif($pv)$ret.=langpi(self::$prvdsk[$pv]).' ';
 if($usid)$ret.=self::likebt($p).' ';
-if($ib){$to=sql::inner('name',self::$db,'login','uid','v','where '.self::$db.'.id='.$ib);
+if($ib){$to=sql::inner('name',self::$db,'login','uid','v',[self::$db.'.id'=>$ib]);
 	$ret.=pagup('tlex,wrapper|ia='.$id,lang('in-reply to',1).' '.$to,'grey small').' ';}
 if($nb=sql('count(id)',self::$db,'v',['ib'=>$id]))
 	$ret.=pagup('tlex,wrapper|ib='.$id,$nb.' '.lang($nb>1?'replies':'reply',1),'grey small').' ';
@@ -367,7 +367,7 @@ if($current==$id){self::$title=host(1).'/'.$id.' by @'.$usr;
 return div($ret,'post','tlx'.$id,'');}
 
 #rocketman
-static function apisql($p,$z=0){//pr($p);
+/**/static function apisql($p,$z=0){
 $ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
 [$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
 if($from=='wrp')return;
@@ -428,6 +428,63 @@ elseif($ntf)$ord=' order by ntid desc limit 20';
 $cols=implode(',',$sqcl); if($sqin)$in=implode("\n",$sqin); $w=implode(' and ',$sqnd);
 return sql::read($cols,self::$db,$vm,$in.' where '.$w.$gr.$ord,$z);}
 
+//select tlex.id,uid,txt,lg,pv,ib,ko,unix_timestamp(tlex.up) as now,name,pname,avatar,clr,privacy,tlex_lik.id as lid,ref,icon,lbl,list,tousr,app,p from tlex left join login on login.id=uid left join profile on puid=uid left join tlex_lik on tlex.id=lik left join labels on lbl=labels.id left join tlex_ab on tlex.uid=ab and wait=0 and block=0 and tlex_ab.usr="1" left join tlex_mnt on tlex.id=tlex_mnt.tlxid left join tlex_app on tlex.id=tlex_app.tlxid where (privacy="0" or 0=(select wait from tlex_ab where usr="1" and tlex_ab.ab=tlex.uid)) and ((pv=3 and tousr="dav") or (pv=2 and tlex_ab.usr="1") or pv<"2") group by tlex.id order by tlex.id desc limit 40
+
+
+static function sql_thread2($id,$o=''){$r=[];
+if($o!='parents')$ids=self::thread_childs($id); else $ids=[];
+if($o!='childs')$ids=self::thread_parents($id,$ids);
+if($o=='thread')$ids[$id]=1; ksort($ids);
+if($ids)$r=array_keys($ids);
+return $r;}
+
+static function apisql0($p,$z=0){
+$ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
+[$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
+if($from=='wrp')return;
+$vm='rr'; $gr=''; $ord=''; $db=self::$db; $sqin=[]; $us=ses('usr'); $usid=ses('uid');
+$cfg=['profile','like','labels'];
+if(!$noab){$cfg[]='members'; $cfg[]='mentions';}
+//if($labl or $see=='labl')$cfg[]='labels'; else
+if($tag or $see=='tag')$cfg[]='tags';
+//elseif($app or $see=='app')
+$cfg[]='apps';
+if(is_numeric($from))$sqnd[]=$pr['id<']=$from;
+elseif(is_numeric($since))$pr['id>']=$since;
+elseif($id)$pr['id']=$id;
+elseif($ib)$pr['id']=self::sql_thread2($ib,'childs');
+elseif($ia)$pr['id']=self::sql_thread2($ia,'parents');
+elseif($th)$pr['id']=self::sql_thread2($th,'thread');
+elseif($srh)$pr+=['|name'=>$srh,'%txt'=>$srh,'privacy'=>0,'uid'=>ses('uid')];
+
+$pr['_order']=$ord; $pr['_limit']='id desc';
+$ra=sql('id,uid,txt,lg,pv,ib,ko,unix_timestamp('.$db.'.up) as now','tlex','rr',$pr);
+$ids=array_column($ra,'id');
+$uids=array_column($ra,'uid');
+
+foreach($cfg as $k=>$v)//activations
+	if($v=='profile'){$rt['profile']=sql('pname,avatar,clr,privacy','profile','',['puid'=>$ids]);}
+	elseif($v=='like'){$pr=['lik'=>$ids]; if($liks)$pr['luid']=$usid;
+		$rt['tlex_lik']=sql('id as lid','tlex_lik','',$pr);}
+	elseif($v=='members'){$sqcl[]='list';//usr,ab
+		if($mode=='public' or $tag or $app)$pr=[]; else $pr=['usr'=>$usid];
+		$sqin[]='left join tlex_ab on '.$db.'.uid=ab and wait=0 and block=0'.$abs;
+		$pr['ab']=$uids;
+		$rt['members']=sql('id,usr,ab','tlex_ab','',$pr+['wait'=>'0','block'=>'0']);}
+	elseif($v=='labels'){$pr=['id'=>$lbl]; 
+		$rt['labels']=sql('id,ref,icon,lbl','labels','',$pr);}//$lbl??
+	elseif($v=='mentions'){$pr=['tlxid'=>$ids]; if($mnt)$pr['tousr']=$usr;
+		$rt['mentions']=sql('id,tousr','tlex_mnt','',$pr);}
+	elseif($v=='tags'){$pr=['tlxid'=>$ids]; if($tag)$pr['tag']=$tag;
+		$rt['tags']=sql('id,tag','tlex_tag','',$pr);}
+	elseif($v=='apps'){$pr=['tlxid'=>$ids]; if($app)$pr['app']=$app;
+		$rt['apps']=sql('id,app,p','tlex_app','',$pr);}
+
+if($ntf){$pr=['txid'=>$ids,'typntf'=>[1,2,3],'4usr'=>$us];
+	$rt[]=sql('id as ntid,byusr,typntf,state','tlex_ntf','',$pr);}
+
+return $ra;}
+
 #read
 static function read($p){//$id will be in popup
 $ret=''; $id=''; $r=[]; $pm=''; $bt=''; $tm='tm'; $p['us']=ses('usr'); $p['usid']=ses('uid');
@@ -450,11 +507,11 @@ return $bt.$ret;}
 
 static function readusr($p){//authorized to watch
 $usr=$p['usr']; $uid=$p['cuid'];
-$open=sql('auth','login','v','where id="'.$uid.'"');
+$open=sql('auth','login','v',['id'=>$uid]);
 if(!$open)return div(ico('lock').helpx('closed account'),'pane');
-$prv=sql('privacy','profile','v','where puid="'.$uid.'"');//
+$prv=sql('privacy','profile','v',['puid'=>$uid]);//
 //$cuid=idusr($usr);
-if($prv){$id=sql('id','tlex_ab','v','where usr="'.ses('uid').'" and ab="'.$uid.'" and wait=0 and block=0');
+if($prv){$id=sql('id','tlex_ab','v',['usr'=>ses('uid'),'ab'=>$uid,'wait'=>0,'block'=>0]);
 	if(!$id)return div(ico('lock').helpx('private account'),'pane');}
 return self::read(['tm'=>$usr,'noab'=>1]);}
 

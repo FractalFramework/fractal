@@ -13,10 +13,6 @@ static $open=1;
 static $tags=1;
 static $gen=1;
 
-function __construct(){
-$r=['a','db','cb','cols','db2'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create(self::$db2,['bid'=>'int','idn'=>'int','chapter'=>'var','txt'=>'long'],1);}
@@ -89,7 +85,7 @@ return lk('/'.$f,langp('download'),'btn');}
 static function dlop($p){
 $id=$p['id']??''; $op=$p['op']??'';
 [$r,$rb]=self::build($p); $ret='';
-$fa=normalize(utf8dec2($r['tit']),1); //$fa='book'.$id;
+$fa=str::normalize(str::utf8dec2($r['tit']),1); //$fa='book'.$id;
 switch($op){
 case('html'):$f='usr/'.$r['name'].'/'.$fa.'.html';
 	self::compile_html($p,$r,$rb,$f);//if(!is_file($f))

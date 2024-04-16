@@ -2,7 +2,7 @@
 
 class conv{
 static $conn=['b'=>'b','i'=>'i','u'=>'u','small'=>'s','em'=>'b','strike'=>'k','center'=>'c','sup'=>'e','sub'=>'n'];
-static $conb=['h1'=>'h1','h2'=>'h2','h3'=>'h3','h4'=>'h4','h5'=>'h5','h6'=>'h6','big'=>'h','blockquote'=>'q','ul'=>'list','ol'=>'numlist'];
+static $conb=['h1'=>'h1','h2'=>'h2','h3'=>'h3','h4'=>'h4','h5'=>'h5','h6'=>'h6','big'=>'h','blockquote'=>'q','ul'=>'list','ol'=>'numlist','table'=>'table'];
 static $th='';
 
 static function getxt($el,$ret=''){$attr='';
@@ -56,8 +56,8 @@ case('a'):$u=between($atb,'href="','"'); //$ub=between($atb,'data-j="','"');
 	if($d==domain($u))$d='';
 	if($u==$d && $u)return '['.trim($u).':url]';
 	$pv=video::provider($u); if($pv)return '['.video::extractid($u,$pv).($d?'|'.$d:'').':video]';
-	if(substr($u,0,3)=='#nh')return '['.substr($u,3).':nb]';
-	if(substr($u,0,3)=='#nb')return '['.substr($u,3).':nh]';
+	if($u && substr($u,0,3)=='#nh')return '['.substr($u,3).':nb]';
+	if($u && substr($u,0,3)=='#nb')return '['.substr($u,3).':nh]';
 	if($u)return '['.trim($u).($d?'|'.trim($d):'').':url]'; break;
 case('img'):$u=between($atb,'src="','"'); $b64='';
 	$w=between($atb,'width="','"'); $h=between($atb,'height="','"');
@@ -90,7 +90,7 @@ case('iframe'):$u=between($atb,'src="','"'); if($s=strpos($u,'?'))$u=substr($u,$
 		if($pv=video::provider($u))return '['.video::extractid($u,$pv).':video]';
 		else return '['.$u.':iframe]'."\n\n"; break;}
 $r=self::$conn; if($d && isset($r[$tag]))return '['.$d.':'.$r[$tag].']';
-$r=self::$conb; if($d && isset($r[$tag]))return "\n".'['.$d.':'.$r[$tag].']'."\n";
+$r=self::$conb; if($d && isset($r[$tag]))return "\n\n".'['.$d.':'.$r[$tag].']'."\n\n";
 return $d;}
 
 static function recursearch($v,$ab,$ba,$tag){//pousse si autre balise similaire
@@ -174,25 +174,26 @@ foreach($dom->childNodes as $k=>$el)$rt[]=self::getcnt($el);
 return join('',$rt);}
 
 static function call($p){
-$d=$p['txt']??'';
+$d=$p['txt']??''; //eco($d);
 //$d=unicode($d);
 //if(!$p['brut']??'')$d=deln($d);
 $d=delt($d);
 $d=delsp($d);
+$d=delr($d);
 $d=deln($d,' ');
-//$d=clean_mail($d);
+//$d=str::clean_mail($d);
 if(strpos($d,'<br>')!==false && strpos($d,"\n")!==false)$d=deln($d);
 if(strpos($d,'<br>')!==false && strpos($d,"\n")===false)$d=delbr($d,"\n");
 //$d=delp($d);
-$d=clean_lines($d);
+$d=str::clean_lines($d);
 $d=self::cleanhtml($d);
 $d=self::parse($d);
 //$d=self::parsedom(dom($d));
 $d=self::cleanconn($d);
 $d=delbr($d,"\n");
-$d=clean_n($d);
+$d=str::clean_n($d);
 $d=cleansp($d);
-$d=nbsp($d);
+$d=str::nbsp($d);
 //eco($d);
 return $d;}
 

@@ -10,10 +10,6 @@ static $typs=['var','bvar'];
 static $tags=1;
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));}
 
@@ -53,7 +49,7 @@ $r=['9','16'];//car-width,line-height
 $font=val($p,'font','Fixedsys');
 $clr=val($p,'clr');
 $url='img/full/'.self::$a.$id.'.png';
-$txt=utf8dec($p['txt']);
+$txt=str::utf8dec($p['txt']);
 self::imgtx($txt,$r[0],$r[1],$font,$clr,$url);
 return img('/'.$url.'?'.randid(),'','');}
 

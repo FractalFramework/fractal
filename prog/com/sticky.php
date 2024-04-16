@@ -12,10 +12,6 @@ static $open=0;
 static $qb='';//db
 static $obso='';
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['uid'=>'int','bid'=>'int','start'=>'int','end'=>'int','pad'=>'var','txt'=>'var'],1);
 parent::install(array_combine(self::$cols,self::$typs));}
@@ -138,7 +134,7 @@ return $ret;}
 
 static function stabilo($p){
 $r=self::build2($p); $txt=$p['txt']; //pr($r);
-$ret=$txt; $rb=[]; $rtb=utf8dec($ret);
+$ret=$txt; $rb=[]; $rtb=str::utf8dec($ret);
 if($r)foreach($r as $k=>$v){$ok=1;
 	$ex=strpos($txt,$v['pad']);
 	$ok=self::intersections($r,$v,$txt);

@@ -17,10 +17,6 @@ static $w=620;
 //first col,txt,answ,com(settings),code,lang,day,clr,img,nb,cl,pub,edt
 //$db2 must use col "bid" <-linked to-> id
 
-function __construct(){//informe parent
-$r=['a','db','cb','cols','conn'];//'db2',
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);//id,...,day
 parent::install(array_combine(self::$cols,self::$typs));}//id,uid,...,day
@@ -91,7 +87,7 @@ static function nod($id,$uid=''){//explorer::nod($app,$id)
 if(!$uid && is_numeric($id))$uid=sql('uid',self::$db,'v',$id);
 if($uid){$nm=usrid($uid); return 'usr/'.$nm.'/chronology/'.$id.'.php';}}
 
-static function algo($p,$r,$rb){$rt=[]; $xa=0; $xb=0;
+static function algo($p,$r,$rb){$rt=[]; $xa=0; $xb=0; //pr($rb);
 $rd=[]; foreach($rb as $k=>$v)$rd[$k]=mktime(0,0,0,1,1,$v[0]); //pr($rd);
 $min=min($rd); $max=max($rd); $diff=abs($max-$min); $w=self::$w; $ratio=$w/$diff;
 $rp=[]; foreach($rd as $k=>$v)$rp[$k]=round($v*$ratio); //pr($rp);

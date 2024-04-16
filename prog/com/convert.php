@@ -27,7 +27,7 @@ static function ascii2utf8($d){$ret='';
 $r=explode(';',$d);
 foreach($r as $v){
 	if(substr($v,0,2)=='&#'){$n=substr($v,2);
-		//$va='%u'.utf8enc(unicode(dechex($n)));
+		//$va='%u'.str::utf8enc(unicode(dechex($n)));
 		$va=mb_convert_encoding('&#'.intval($n).';','UTF-8','HTML-ENTITIES');}
 		else $va=$v;
 	$ret.=$va;}
@@ -76,12 +76,12 @@ return $ret;}
 static function exe($p,$d){$n=str_replace(' ','',$d);
 if($p)switch($p){
 	case('html2conn'):$d=conv::com($d); break;
-	case('clean_mail'):$d=self::clean_mail($d); break;
+	case('clean_mail'):$d=self::str::clean_mail($d); break;
 	case('url-decode'):$d=rawurldecode($d); break;
 	case('url-encode'):$d=rawurlencode($d); break;
-	case('utf8-decode'):$d=utf8dec($d); break;
+	case('utf8-decode'):$d=str::utf8dec($d); break;
 	//case('utf8-decode'):$d=mb_convert_encoding($d,'HTML-ENTITIES','UTF-8'); break;
-	case('utf8-encode'):$d=utf8enc($d); break;
+	case('utf8-encode'):$d=str::utf8enc($d); break;
 	case('base64-decode'):$d=base64_decode($d); break;
 	case('base64-encode'):$d=base64_encode($d); break;
 	case('htmlentities-encode'):$d=htmlentities($d,ENT_COMPAT,'UTF-8'); break;

@@ -10,11 +10,6 @@ static $typs=['var','var'];
 static $tags=0;
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-//self::$cols=sql::cols(self::$db,3,2);
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));}
 

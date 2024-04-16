@@ -16,7 +16,7 @@ $head.='Reply-To: '.$from.$n;
 $head.='Date: '.date("D, j M Y H:i:s").$n;
 $head.='X-mailer: PHP/' . phpversion();
 $subject=html_entity_decode($subject); $msg=html_entity_decode($msg);
-$subject=utf8dec($subject); $msg=utf8dec($msg);
+$subject=str::utf8dec($subject); $msg=str::utf8dec($msg);
 $ok=mail($to,$subject,$msg,$head);
 if($ok)return 'mail_sent'; else return 'mail_fail';}
 
@@ -25,7 +25,7 @@ $subject=html_entity_decode($subject);
 $head='From: '.$from."\n";
 $msg="\n\n".$msg."\n\n";
 $subject=html_entity_decode($subject); $msg=html_entity_decode($msg);
-$subject=utf8dec($subject); $msg=utf8dec($msg);
+$subject=str::utf8dec($subject); $msg=str::utf8dec($msg);
 $ok=mail($to,$subject,$msg,$head);
 if($ok)return 'mail_sent'; else return 'mail_fail';}
 

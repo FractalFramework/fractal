@@ -5,6 +5,7 @@ static $r=[];
 static $obj=[];
 static $opn=1;
 static $usd=0;
+static $imax=0;
 static $imgs=[];
 
 static function mklist($d,$o=''){
@@ -34,15 +35,17 @@ $r=explode(',',$d); $ret=''; //self::$obj['gallery'][]=[$d];
 foreach($r as $k=>$v)$ret.=playimg($v,$k==0?'full':'mini');
 return $ret;}
 
-static function img($d,$w='',$b=''){$h=''; self::$obj['img'][]=[$d,''];
+static function img($d,$w='',$b=''){
+$h=''; self::$obj['img'][]=[$d,''];
 [$p,$o]=connprm($d); if($o)return imgup($p,$o,'');
-if(strpos($w,'-'))[$w,$h]=explode('-',$w);
+if(strpos($w,'-'))[$w,$h]=explode('-',$w); if(self::$imax)$w=720;
 if(strpos($d,','))return self::gallery($d);
 if($b=='epub'){$f='usr/_epub/OEBPS/images/'.$d; $fa='img/full/'.$d;
 	if(!is_file($f) && is_file($fa))copy($fa,$f); return img($f);}
 elseif(is_numeric($b) && count(self::$obj['img'])>1)return playimg($d,'mini','','');//self::$one
-if(strpos($d,'/')===false)return playimg($d,'full','');
-else return img($d,$w,$h);}
+//if(strpos($d,'/')===false)return playimg($d,'full','');
+if(strpos($d,'/')===false)$d='/img/full/'.$d;
+return img($d,$w,$h);}
 
 static function video($p,$o){
 $pv=video::provider_from_id($p);
@@ -89,6 +92,12 @@ if($c && method_exists($c,'tit')){$q=new $c; $t=$q::tit(['id'=>$p]);
 	return $t.' : '.host(1).'/'.$c.'/'.$p;}
 if(substr($p,0,4)=='http')return $o?$o:$p.' ';
 return $o?$o:$p;}
+
+static function cleanup($d,$b){[$p,$o,$c]=readconn($d); $n='';
+$r=['h1','h2','h3','h4','h5','img','big','table'];
+if(in_array($c,$r))$n="\n";
+if(is_img($d))$n="\n\n";
+return $n.'['.$d.']'.$n;}
 
 static function form($da,$b){
 [$p,$o,$c,$d]=readconn($da);
@@ -161,7 +170,8 @@ switch($c){
 	case('var'):return self::$r[$p]??''; break;
 	case('on'):return '['.$da.']'; break;
 	case('no'):return; break;}
-if(is_img($da))return $b=='epub'?self::img($da,'',$b):img2($da,'');
+//if(is_img($da))return $b=='epub'?self::img($da,'',$b):img2($da,self::$imax?'med':'');
+if(is_img($da))return self::img($da,'',$b);
 if(substr($p,0,4)=='http')return self::url($da,'');
 return '['.$da.']';}
 
@@ -312,10 +322,11 @@ static function call($p){//p($p);
 $d=$p['msg']??''; if(!$d)$d=$p['p1']??''; //self::$usd=1;
 $opt=$p['opt']??'';//1=open apps,epub=copy img
 $ptag=$p['ptag']??''; self::$r=$p['r']??[]; //explode_k($p['vars']??'',',','=');
-$d=str_replace("<br />\n","\n",$d); $d=str_replace('<br />','',$d);
+//$d=str_replace("<br />\n","\n",$d); $d=str_replace('<br />','',$d);
 $app=$p['app']??'conn'; $mth=$p['mth']??'reader'; self::$one=0; self::$obj=[];
+if($p['imax']??''){self::$imax=1; $mth='minconn';}
 $ret=self::read($d,$app,$mth,$opt);
-if($ptag==1)$ret=ptag($ret);
+if($ptag==1)$ret=str::ptag($ret);
 elseif($ptag!='no')$ret=nl2br($ret??'');
 if($opt=='epub')$ret=str_replace("&nbsp;","&#160;",$ret); //self::$usd=0;
 return $ret;}

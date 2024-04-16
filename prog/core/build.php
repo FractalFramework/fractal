@@ -115,7 +115,7 @@ return div($ret);}
 
 static function cbt($rid,$r){
 $ret=btj('[]',atj('embed_slct',['[',']',$rid]),'btn').' ';
-foreach($r as $k=>$v)$ret.=btj($k,insert('['.utf8enc($v).':'.$k.']',$rid),'btn').' ';
+foreach($r as $k=>$v)$ret.=btj($k,insert('['.str::utf8enc($v).':'.$k.']',$rid),'btn').' ';
 return div($ret);}
 
 static function editconn($p){$id=$p['aid']??''; $txt=$p[$id]??''; $rid=randid('edc');
@@ -231,9 +231,18 @@ return $rb;}
 
 static function sample($p){//app,$rid,k
 $a=$p['a']; $b=$p['b']??''; $k=$p['k']??''; $ret=''; $d=''; $r=$a::ex();
-if($k)$d=$r[$k]??''; if($d)return utf8enc($d); elseif($k)return;
+if($k)$d=$r[$k]??''; if($d)return str::utf8enc($d); elseif($k)return;
 foreach($r as $k=>$v)$ret.=bj($b.'|build,sample|a='.$a.',k='.$k,$k,'');
 return div($ret,'nbp');}
+
+static function dcode($d){
+$r=str_split($d); $n=count($r); $n2=$n**4; $rt=[];
+for($i=0;$i<$n2;$i++){$r2=$r; $na=rand(1,$n);
+for($o=0;$o<$na;$o++){sort($r2); $nr2=count($r2)-1; $nc=rand(0,$nr2); //echo $nc; pr($r2);
+$rb[$i][$o]=$r2[$nc]; unset($r2[$nc]);}}
+foreach($rb as $k=>$v)$rt[]=implode('',$v);
+$rt=array_flip(array_flip($rt)); sort($rt);
+return $rt;}
 
 }
 ?>

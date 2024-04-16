@@ -32,11 +32,11 @@ return $r;}
 static function api_philum($u){
 $dom=domain($u); $id=strend($u,'/');
 $f='http://'.$dom.'/apicom/id:'.$id.',json:1';//,conn:1 //conn not works with json
-$d=get_file($f); //eco($d);//$d=html_entity_decode($d);
-//$d=utf8dec($d);
+$d=get_file($f); //eco($d);
 $r=json_decode($d,true); //echo upsql::error();
-if(isset($r[$id]))$r=$r[$id];// pr($r);
-if($r)foreach($r as $k=>$v)$r[$k]=html_entity_decode($v);
+if(isset($r[$id]))$r=$r[$id]; //pr($r);
+//if($r)foreach($r as $k=>$v)if(is_string($v))$r[$k]=html_entity_decode($v);
+$r['content']=str::striptags($r['content']);
 return $r;}
 
 #utf8
@@ -49,21 +49,21 @@ return strtolower($enc);}
 
 //com
 static function com($u,$o=''){$dom=domain($u); $mode='conn';//conn-html
-if($dom=='oumo.fr' or $dom=='newsnet.fr')$r=self::api_philum($u); else $r=self::api($u,$mode);
+if($dom=='oomo.ovh' or $dom=='oumo.fr' or $dom=='newsnet.fr')$phi=1; else $phi=0;
+if($phi==1)$r=self::api_philum($u); else $r=self::api($u,$mode);
 if(!$r)return ['','',''];
-if($dom=='oumo.fr' or $dom=='newsnet.fr')$phi=1; else $phi=0;
-$enc=self::utf8($u);
-$tit=val($r,'title');
-$img=val($r,'image');//lead_image_url
+$tit=$r['title']??'';
+$img=$r['image']??'';//lead_image_url
 //if($mode=='conn')$txt=val($r,'conn'); else //miss img+domain
 //$txt=conv::com(val($r,'content'));
-$txt=val($r,'content');
+$txt=$r['content']??'';
+/*$enc=self::utf8($u);
 if($enc=='utf-8'){
-	$tit=utfdec($tit);
-	$img=utfdec($img);
-	$txt=utfdec($txt);}
+	$tit=str::utfdec($tit);
+	$img=str::utfdec($img);
+	$txt=str::utfdec($txt);}*/
 if($mode=='conn'){
-	$txt=str_replace(htmlentities('�'),'*',$txt);//%A7
+	$txt=str_replace(htmlentities('§'),'|',$txt);
 	$txt=str_replace(':twitter',':twit',$txt);//eco($txt);
 	$txt=conn::com($txt,1);}
 else{$txt=conv::call(['txt'=>$txt]); $txt=conn::call(['msg'=>$txt,'ptag'=>1]);}

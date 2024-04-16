@@ -66,7 +66,7 @@ $r=$dom->getElementsByTagName('tr');
 foreach($r as $k=>$v){$rt[$k]=[];
 	//if($v->childNodes)foreach($v->childNodes as $kb=>$el){}
 	$rb=$v->getElementsByTagName('th'); if(!$rb['length'])$rb=$v->getElementsByTagName('td');
-	if($rb)foreach($rb as $kb=>$el)$rt[$k][$kb]=clean_br(self::getxt($el));}//html2conn
+	if($rb)foreach($rb as $kb=>$el)$rt[$k][$kb]=str::clean_br(self::getxt($el));}//html2conn
 return $rt;}
 
 static function call($p){

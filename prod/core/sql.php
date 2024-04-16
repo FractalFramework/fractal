@@ -1,17 +1,19 @@
 <?php
 class sql{
+static $lc;
 static $db;
 static $qr;
 static private $r;
 
-function __construct($r){$this->boot($r);}//if(!self::$qr)
+function __construct($r){self::boot($r);}//if(!self::$qr)
 
-private function boot($r){self::$db=$r[3]; self::$r=$r;
+private static function boot($r){self::$db=$r[3]; self::$r=$r;
+self::$lc=$r[0]=='localhost'?1:0;
 self::$qr=new mysqli($r[0],$r[1],$r[2],$r[3]) or die(pr($r));
 self::$qr->query('set names utf8mb4');
 self::$qr->query('set character set utf8mb4');}
 
-static function switch($db){$r=self::$r; $r[3]=$db; $this->boot($r);}
+static function switch($db){$r=self::$r; $r[3]=$db; self::boot($r);}
 
 #sql
 static function qr($sql,$z=''){if($z==1)echo $sql; $rq=mysqli_query(self::$qr,$sql);
@@ -67,25 +69,26 @@ return $d;}
 
 static function where($r,$o=''){
 $rb=[]; $rc=[]; $w=''; $ret='';
-foreach($r as $k=>$v)
+foreach($r as $k=>$v){
+	$p1=substr($k,0,1); $p2=substr($k,1);
 	if($k=='_order')$w.=' order by '.$v;
 	elseif($k=='_group')$w.=' group by '.$v;
 	elseif($k=='_limit')$w.=' limit '.$v;
 	elseif($k=='or')$rc=self::where($v,1);//'or'=>['!status'=>'3','!typ'=>'0']
-	elseif(substr($k,0,1)=='|')$rc[]=substr($k,1).'="'.self::escape($v).'"';//or
-	elseif(substr($k,0,1)=='!')$rb[]=substr($k,1).'!="'.self::escape($v).'"';
+	elseif($p1=='|')$rc[]=$p2.'="'.self::escape($v).'"';//or
+	elseif($p1=='!')$rb[]=$p2.'!="'.self::escape($v).'"';
 	elseif(substr($k,0,2)=='>=')$rb[]=substr($k,2).'>="'.self::escape($v).'"';
 	elseif(substr($k,0,2)=='<=')$rb[]=substr($k,2).'<="'.self::escape($v).'"';
-	elseif(substr($k,0,1)=='>')$rb[]=substr($k,1).'>"'.self::escape($v).'"';
-	elseif(substr($k,0,1)=='<')$rb[]=substr($k,1).'<"'.self::escape($v).'"';
-	elseif(substr($k,0,1)=='%')$rb[]=substr($k,1).' like "%'.self::escape($v).'%"';
+	elseif($p1=='>')$rb[]=$p2.'>"'.self::escape($v).'"';
+	elseif($p1=='<')$rb[]=$p2.'<"'.self::escape($v).'"';
+	elseif($p1=='%')$rb[]=$p2.' like "%'.self::escape($v).'%"';
 	elseif(substr($v,0,8)=='PASSWORD')$rb[]=$k.'='.$v;
-	elseif(is_array($v))$rb[]='("'.implode('","',$v).'")';
+	elseif(is_array($v))$rb[]=$k.' in ("'.implode('","',$v).'")';
 	elseif($k=='numday')$rb[]='date_format(up,"%y%m%d")="'.$v.'"';
 	elseif($v==='not null')$rb[]=$k.' is not null';
 	elseif($v==='is null')$rb[]=$k.' is null';
 	elseif(is_numeric($k))$rb[]=$v;
-	elseif($v)$rb[]=$k.'="'.self::escape($v).'"';
+	elseif($v)$rb[]=$k.'="'.self::escape($v).'"';}
 if($o)return $rb;
 if($rc)$rb[]='('.implode(' or ',$rc).')';
 if($rb)$ret=implode(' and ',$rb);
@@ -245,7 +248,7 @@ if($b==1)$rb=implode(',',$rb);
 return $rb;}
 
 static function utf8($t){$r=self::read('*',$t,'rr');//exec one time only on non-utf8 tables
-foreach($r as $k=>$v){foreach($v as $ka=>$va)$rb[$k][$ka]=utf8enc($va);
+foreach($r as $k=>$v){foreach($v as $ka=>$va)$rb[$k][$ka]=str::utf8enc($va);
 	self::up2($t,$rb[$k],$v['id']);}}
 
 //create

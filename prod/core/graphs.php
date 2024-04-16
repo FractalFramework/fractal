@@ -248,7 +248,7 @@ return $ret;}
 //$rp=vals($p,['typ','dk','dv','ad','dc','pr','lb','t','im']);
 static function com($r,$ra,$w=640,$h=320){self::$w=$w; self::$h=$h;
 $rb=['typ'=>'lines','dk'=>0,'dv'=>0,'ad'=>1,'dc'=>0,'pr'=>0,'t'=>'graph'];
-foreach($rb as $k=>$v)$rb[$k]=val($ra,$k,$v);
+foreach($rb as $k=>$v)$rb[$k]=$ra[$k]??$v;
 if(!is_array($r))$r=self::build($r);
 foreach($r as $k=>$v)if(!is_array($v))$r[$k]=[$v]; $rb['r']=$r;
 return self::call($rb);}

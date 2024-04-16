@@ -9,26 +9,22 @@ static $cols=['tit','txt','pub'];
 static $typs=['var','bvar','int'];//var,text,int
 static $config=['t'=>'','conn'=>0,'ptag'=>0,'views'=>1];
 
-function __construct(){
-	$r=['a','db','cb','cols'];
-	foreach($r as $v)appx::$$v=self::$$v;}
-
 /*specific cols:
 - first col is actually used for title ['t']
 - txt (var) will accept connectors ['conn']
 - last col as "pub" will assume privacy*/
 static function install($p=''){
-	$r=array_combine(self::$cols,self::$typs);
-	appx::install($r);}
+$r=array_combine(self::$cols,self::$typs);
+appx::install($r);}
 
 static function admin($p){$p['o']='1';
-	return appx::admin($p);}
+return appx::admin($p);}
 
 static function titles($p){return appx::titles($p);}
 static function js(){return '';}
 static function headers(){
-	head::add('csscode','');
-	head::add('jscode',self::js());}
+head::add('csscode','');
+head::add('jscode',self::js());}
 
 #edit
 static function collect($p){return appx::collect($p);}
@@ -44,31 +40,31 @@ static function build($p){return appx::build($p);}
 
 #play
 static function template(){
-	return appx::template();}
+return appx::template();}
 
 static function play($p){
-	//$r=self::build($p);
-	$p['conn']=0;//0,1(ptag),2(brut),no(br)
-	return appx::play($p);}
+//$r=self::build($p);
+$p['conn']=0;//0,1(ptag),2(brut),no(br)
+return appx::play($p);}
 
 static function stream($p){
-	$p['t']=self::$cols[0];
-	return appx::stream($p);}
+$p['t']=self::$cols[0];
+return appx::stream($p);}
 
 #call (read)
 static function tit($p){
-	$p['t']=self::$cols[0];//used is title
-	return appx::tit($p);}
+$p['t']=self::$cols[0];//used is title
+return appx::tit($p);}
 
 static function call($p){
-	return div(self::play($p),'',self::$cb.$p['id']);}
+return div(self::play($p),'',self::$cb.$p['id']);}
 
 #com (edit)
 static function com($p){return appx::com($p);}
 
 #interface
 static function content($p){
-	self::install();
-	return appx::content($p);}
+self::install();
+return appx::content($p);}
 }
 ?>

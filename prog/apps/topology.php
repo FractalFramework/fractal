@@ -14,10 +14,6 @@ static $tags=1;
 static $open=0;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db3,['cid'=>'int','bid'=>'int','val'=>'var'],1);
 sql::create(self::$db2,['bid'=>'int','uid'=>'int','root'=>'bvar','element'=>'text','tag'=>'int'],1);

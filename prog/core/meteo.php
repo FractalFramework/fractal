@@ -8,7 +8,6 @@ static $cols=['uid','insee','day','prm','res'];
 static $typs=['int','int','int','svar','text'];
 static $towns=['92012'=>'Boulogne-Billancourt','75101'=>'Paris','69381'=>'Lyon','67482'=>'Strasbourg','66136'=>'Perpignan','64102'=>'Bayonne','59350'=>'Lille','38185'=>'Grenoble','35238'=>'Rennes','34172'=>'Montpellier','33063'=>'Bordeaux','31555'=>'Toulouse','13210'=>'Marseille','06088'=>'Nice'];//,'63113'=>'Clermont-Ferrand''44109'=>'Nantes','29019'=>'Brest','2B033'=>'Bastia',
 
-function __construct(){}
 static function js(){}
 static function admin($p){}
 

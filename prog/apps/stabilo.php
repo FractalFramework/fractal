@@ -13,10 +13,6 @@ static $open=0;
 static $qb='';//db
 static $obso=[];
 
-function __construct(){
-$r=['a','db','cb','cols','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,['uid'=>'int','bid'=>'int','start'=>'int','end'=>'int','pad'=>'var','txt'=>'bvar'],1);
 parent::install(array_combine(self::$cols,self::$typs));}
@@ -154,7 +150,7 @@ else return $ret;}
 
 static function build_stick($p){
 $r=self::build2($p,1); $txt=$p['txt'];
-$ret=$txt; $rb=[]; $rtb=utf8dec($ret);
+$ret=$txt; $rb=[]; $rtb=str::utf8dec($ret);
 if($r)foreach($r as $k=>$v){$ok=1;
 	$ok=self::intersections($r,$v,$txt);
 	if($ok)$ret=self::detection($ret,$v);

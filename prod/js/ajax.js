@@ -81,7 +81,7 @@ else if(wait==0){wait=1;
 	//if(mth=='after')mpop('Loading...');
 }
 //else if(opt=='z'){var d=getbyid('mpo');
-	//if(d)ajaxCall('mpo|upload,progress','rid='+tg);}//progress
+	//if(d)ajaxcall('mpo|upload,progress','rid='+tg);}//progress
 }
 
 function jsonput(keys,res){var cb,k,typ;
@@ -127,7 +127,7 @@ for(var key in ra)rb.push(key+':'+ra[key]);
 return rb.join(',');}
 
 //ajaxCall
-function ajaxCall(call,params,inputs,el){//na=0;
+function ajaxcall(call,params,inputs,el){//na=0;
 if(params){var prm=jra(params);} else var prm=new Object();
 if(typeof xc!='undefined')clearTimeout(xc);//stop pending actions
 var p=call.split('|');
@@ -199,7 +199,7 @@ function ajb(p,el){
 		else if(bt.type=='input')cbk[0]='input';
 		else if(bt==null)cbk[0]='socket';}
 	var com=cbk.join(',');
-	return ajaxCall(com+'|'+app,prm,inp,el);}
+	return ajaxcall(com+'|'+app,prm,inp,el);}
 
 function ajbt(el){var p2='';
 	if(el.dataset.prmtm){var ptm=getbyid('prmtm'); var pm=el.dataset.prmtm;
@@ -219,7 +219,7 @@ function ajxt(d,el){if(typeof xc!='undefined')clearTimeout(xc);
 //center of gravity of universe
 function aju(el){var com=el.href; var r=com.split('/'); var call=r[3]+','+r[4]; var prm,u3;
 	//if(r[5]!='undefined'){var r5=r[5]; if(r5.indexOf(':')!=-1)var prm=r5; else var u3=r5;}
-	if(j)ajaxCall('cbk|'+call,r[5]!='undefined'?r[5]:'','',el); return false;}
+	if(j)ajaxcall('cbk|'+call,r[5]!='undefined'?r[5]:'','',el); return false;}
 
 //toggle
 function togcl(ob){var p=ob.parentNode.childNodes; var bid=ob.dataset.bid;
@@ -281,7 +281,7 @@ return fd;}
 
 //login
 function verifusr(e){//input,user//loadjs
-ajaxCall("returnVar,usrxs|login,verifusr","user="+e.value,e);
+ajaxcall("returnVar,usrxs|login,verifusr","user="+e.value,e);
 setTimeout(function(){usrexist(e);},100);}
 function usrexist(e){var bt=getbyid('usrexs',e);
 if(usrxs){bt.style.display='inline-block'; e.style.bordeColor='red';}
@@ -521,7 +521,7 @@ for(var i=0;i<ob.length;i++)if(ob[i]==e)ob[i].className='active'; else ob[i].cla
 //composants
 function strreplace(rep,by,val){return val.split(rep).join(by);}
 function jurl(val,n){//encodeURIComponent
-var arr=['|','§'];//"\n","\t",'\'',"'",'"','*','#','+','=','&','?','.',':',',',,' ','<','>','/','%u'
+var arr=['|','|'];//"\n","\t",'\'',"'",'"','*','#','+','=','&','?','.',':',',',,' ','<','>','/','%u'
 var arb=['(-bar)','(-par)'];//'(-n)','(-t)','(-asl)','(-q)','(-dq)','(-star)','(-dz)','(-add)','(-eq)','(-and)','(-qm)','(-dot)','(-ddot)','(-coma)',,'(-sp)','(-b1)','(-b2)','(-sl)','(-pu)'
 if(n){var ra=arb; var rb=arr;}else{var ra=arr; var rb=arb;}
 var rgx=new RegExp(/([^A-Za-z0-9\-])/);

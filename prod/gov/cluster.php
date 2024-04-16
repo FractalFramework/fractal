@@ -20,10 +20,6 @@ static $open=0;
 static $tags=0;
 static $rc=[];
 
-function __construct(){
-$r=['a','db','cb','cols','conn','db2','db3','db4','db5'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 //props: actions(r)/job(b)/maintenance(g), atid: attr id, unid: unit id

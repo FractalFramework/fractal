@@ -41,10 +41,6 @@ static $qb='db';//associated nosql-table ; works with collected datas
 - col "prm" will cause troubles
 - col "hid" not editable*/
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);//collect case
 sql::create(self::$db2,['bid'=>'int','tit2'=>'var','txt2'=>'var'],1);//subcall case

@@ -15,7 +15,7 @@ head::add('jscode',self::js());}
 static function call($p){
 $f=imgroot($p['inp2']);
 $r=exif_read_data($f); //pr($r);
-$ret=play_r($r);
+$ret=tree($r);
 return $ret;}
 
 #content

@@ -21,10 +21,6 @@ static $at=0;
 static $remain=0;
 static $bkc=0;
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn','db3','db4'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,self::$inc_donations,1);
 sql::create(self::$db3,self::$inc_members,1);

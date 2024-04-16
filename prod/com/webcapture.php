@@ -25,10 +25,6 @@ static $qb='db';//associated nosql-table (type db/json) - dB is the internal no-
 - col "pub" will assume privacy
 $db2 must use col "bid" <-linked to-> id*/
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn','qb'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);
 appx::install(array_combine(self::$cols,self::$typs));}

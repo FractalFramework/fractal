@@ -1,7 +1,7 @@
 <?php
 class form{
 
-static function ex(){return ['input'=>'label§title','textarea'=>'label2§text','select'=>'choice§a/b/c','checkbox'=>'options§a/b','radio'=>'choose one§a/b','bar'=>'evaluation§1-10','submit'=>'form0§'.ses('usr')];}
+static function ex(){return ['input'=>'label|title','textarea'=>'label2|text','select'=>'choice|a/b/c','checkbox'=>'options|a/b','radio'=>'choose one|a/b','bar'=>'evaluation|1-10','submit'=>'form0|'.ses('usr')];}
 
 static function usave($p){//from conn
 $u=$p['u']; $b=$p['b']; $h=$p['h']; unset($p['u']); unset($p['b']); unset($p['h']);
@@ -12,7 +12,7 @@ else db::add($f,[date('ymd:Hi'),ses('uid')]+$p,$rh);
 return help('form_filled').$bt;}
 
 static function build($r){$rt=[]; //$rk=array_keys(uns($r,0));
-foreach($r as $k=>$v){$k=normalize($k,1); $d='';
+foreach($r as $k=>$v){$k=str::normalize($k,1); $d='';
 	['type'=>$ty,'value'=>$va,'label'=>$lbl,'opt'=>$o]=$v;
 	switch($ty){
 		case('input'):$d=input($k,$va,20,$lbl,$o); break;

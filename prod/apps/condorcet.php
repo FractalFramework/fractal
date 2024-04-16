@@ -17,10 +17,6 @@ static $rc=[];//reached
 static $rm=[];//mentions
 static $rf=[];//verbose
 
-function __construct(){
-$r=['a','db','db2','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));

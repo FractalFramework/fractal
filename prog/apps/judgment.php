@@ -17,10 +17,6 @@ static $rc=[];//reached
 static $rm=[];//mentions
 static $rf=[];//verbose
 
-function __construct(){
-$r=['a','db','db2','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
@@ -74,7 +70,7 @@ return $ret;}
 
 static function paqsav($p){
 $id=$p['id']??''; $d=$p['datas']??''; $b=self::$db2;
-$d=clean_separator($d,';',"\n"); $r=explode_r($d,';',','); $com=array_shift($r);
+$d=str::clean_separator($d,';',"\n"); $r=explode_r($d,';',','); $com=array_shift($r);
 if(auth(6))sql::up(self::$db,'com',implode('|',$com),$id);
 if(auth(6))sql::del($b,$id,'bid');
 $rb=referendum::onpaq($r); $rc=[];

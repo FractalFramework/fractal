@@ -78,7 +78,7 @@ $d='1 alpha
 56 brother
 57 omega';
 $r=explode("\n",$d);
-foreach($r as $k=>$v){$rb=explode(' ',$v); sql::sav(self::$db,[utf8enc($rb[1])]);}}
+foreach($r as $k=>$v){$rb=explode(' ',$v); sql::sav(self::$db,[str::utf8enc($rb[1])]);}}
 
 #build
 static function build($p){$id=$p['id']??'';

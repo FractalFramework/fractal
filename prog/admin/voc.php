@@ -14,10 +14,6 @@ static $lang=['tit'=>1,'txt'=>1];
 //first col,txt,answ,com(settings),code,day,clr,img,nb,cl,pub
 //$db2 must use col "bid" <-linked to-> id
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db,['uid'=>'int','t_fr'=>'var'],1);//appx::install
 //sql::create(self::$db2,['uid'=>'int','t_en'=>'var'],1);

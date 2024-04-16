@@ -52,7 +52,7 @@ foreach($ra as $v){
 	$fnc=strto($v,'{');
 	$vr=explode('(',$fnc); $func=$vr[0];
 	$vars=(isset($vr[1])?substr($vr[1],0,-1):'');
-	$code=utf8enc(trim(accolades($v)));
+	$code=str::utf8enc(trim(str::accolades($v)));
 	if($func && $code)$rb[]=['func'=>$func,'vars'=>$vars,'code'=>$code,'txt'=>'','lang'=>ses('lng')];}
 return $rb;}
 

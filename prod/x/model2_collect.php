@@ -13,10 +13,6 @@ static $db2='model_r';
 static $open=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 //sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'var'],1);//collect case
 sql::create(self::$db2,['bid'=>'int','tit2'=>'var','txt2'=>'var'],0);//subcall case

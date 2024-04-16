@@ -30,7 +30,7 @@ return ret;}
 
 function search2(id){
 	var d=getbyid(id).value; var $chk=checkcases('srchopt');//id+'opt'
-	if(d){getbyid('prmtm').value='srh='+d; ajaxCall("div,cbck|tlex,search_txt","",id);}}
+	if(d){getbyid('prmtm').value='srh='+d; ajaxcall("div,cbck|tlex,search_txt","",id);}}
 function Search(old,id){
 	var ob=getbyid(id); if(ob!=null)var src=ob.value;
 	if(!src||src.length<2)return;

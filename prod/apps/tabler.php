@@ -11,10 +11,6 @@ static $tags=1;
 static $open=1;
 static $qb='db';
 
-function __construct(){
-$r=['a','db','cb','cols','qb'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));}
 
@@ -97,7 +93,7 @@ $r=self::build($p);
 //$ret=lk('/api/db/f:/usr/'.$f,pic('api'),'btn',1);
 //if($r['uid']==ses('uid'))$ret.=bj(self::$cb.'|tabler,edit|id='.$id,langpi('edit'),'btn');
 $f=self::nod($id,$r['uid']); $rb=db::read($f);
-$fb=self::nod(normalize($r['tit']),ses('uid'));
+$fb=self::nod(str::normalize($r['tit']),ses('uid'));
 if(ses('uid'))$ret.=popup('explorer,opsav|op=export,f='.$f.',nm='.$fb,langp('save datas'),'btsav');
 $ret=div($ret,'right');
 $ret.=div($r['tit'],'tit');

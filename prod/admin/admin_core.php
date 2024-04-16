@@ -49,7 +49,7 @@ foreach($ra as $v){
 	$fnc=struntil($v,'{');
 	$vr=explode('(',$fnc); $func=$vr[0];
 	$vars=(isset($vr[1])?substr($vr[1],0,-1):'');
-	$code=trim(accolades($v));
+	$code=trim(str::accolades($v));
 	if($code)$rb[]=['func'=>$func,'vars'=>$vars,'code'=>$code,'txt'=>'','lang'=>ses('lng')];}
 return $rb;}
 

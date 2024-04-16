@@ -11,10 +11,6 @@ static $conn=1;
 static $tags=1;
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols','db2'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 //install
 static function install($p=''){
 $r=['bid'=>'int','idn'=>'int','idp'=>'int','t2'=>'var','bkg'=>'var','txt'=>'text','rel'=>'int'];

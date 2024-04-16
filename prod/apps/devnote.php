@@ -9,10 +9,6 @@ static $cols=['tit','txt'];
 static $typs=['var','text'];
 static $open=1;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db,['uid'=>'int','tit'=>'var','txt'=>'text'],1);}
 

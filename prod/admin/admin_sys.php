@@ -57,8 +57,8 @@ foreach($r as $k=>$v){
 		if($na!=$nb){$nc=strrpos($v,'}'); $v=substr($v,0,$nc);}
 		$na=substr_count($v,'{'); $nb=substr_count($v,'}');
 		if($na!=$nb){echo $app.'/'.$fnc.':'.$na.'-'.$nb.br(); return;}
-		$code=trim(accolades($v));
-		if($func && $code)$rb[]=['dir'=>$rf[1],'app'=>$app,'func'=>$func,'vars'=>$vars,'code'=>utf8enc($code),'txt'=>'','lang'=>$lg];}}
+		$code=trim(str::accolades($v));
+		if($func && $code)$rb[]=['dir'=>$rf[1],'app'=>$app,'func'=>$func,'vars'=>$vars,'code'=>str::utf8enc($code),'txt'=>'','lang'=>$lg];}}
 return $rb;}
 
 //dirs

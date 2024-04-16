@@ -14,10 +14,6 @@ static $open=0;
 static $db2='twapi_vals';
 static $db2_cols=['bid'=>'int','aid'=>'bint'];
 
-function __construct(){
-$r=['a','db','cb','cols','db2','conn'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 sql::create(self::$db2,self::$db2_cols,1);
 parent::install(array_combine(self::$cols,self::$typs));}

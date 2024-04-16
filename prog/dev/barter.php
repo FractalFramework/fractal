@@ -10,10 +10,6 @@ static $typs=['var','var','int','int','int'];
 static $unit=3;
 static $length=86400;
 
-function __construct(){
-$r=['a','db','cb','cols'];
-foreach($r as $v)appx::$$v=self::$$v;}
-
 //install
 static function install(){
 appx::install(array_combine(self::$cols,self::$typs));

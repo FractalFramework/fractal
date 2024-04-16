@@ -14,10 +14,6 @@ static $open=1;
 static $price=10;
 static $ty=0;
 
-function __construct(){
-$r=['a','db','db2','db3','cb','cols'];
-foreach($r as $v)parent::$$v=self::$$v;}
-
 static function install($p=''){
 parent::install(array_combine(self::$cols,self::$typs));
 sql::create(self::$db2,['bid'=>'int','uid'=>'int','val'=>'int','bet'=>'int'],1);
