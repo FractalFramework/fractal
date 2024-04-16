@@ -7,7 +7,7 @@ return help($ref,$c,$cn,$b);}
 //static function no($p){return '';}
 static function val($p){return $p['p1']??'';}
 static function send($p){return $p[$p['v']]??'';}
-static function com($p){return com($p['app'],$p['id']);}
+//static function com($p){return com($p['app'],$p['id']);}
 static function app($p){return app($p['app']??'',$p['p']??'');}
 static function mkbcp($p){return sql::backup($p['b'],$p['o']??'');}
 static function rsbcp($p){return sql::rollback($p['b']);}

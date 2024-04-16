@@ -17,15 +17,15 @@ foreach($r as $v)if($v){
 return tag($b,'',implode('',$ret));}
 
 static function tabler($d,$o=''){
-if(strpos($d,'¬')===false && strpos($d,"\n"))$d=str_replace("\n",'¬',$d);
-$d=str_replace(['|¬',"¬\n",' ¬'],'¬',$d);
-if(substr(trim($d),-1)=='¬')$d=substr(trim($d),0,-1);
-$tr=explode('¬',$d);
+if(strpos($d,'ï¿½')===false && strpos($d,"\n"))$d=str_replace("\n",'ï¿½',$d);
+$d=str_replace(['|ï¿½',"ï¿½\n",' ï¿½'],'ï¿½',$d);
+if(substr(trim($d),-1)=='ï¿½')$d=substr(trim($d),0,-1);
+$tr=explode('ï¿½',$d);
 foreach($tr as $k=>$row)$ret[]=explode('|',$row);
 return tabler($ret,$o);}
 
 static function url($d,$c='',$e=''){
-[$p,$o]=connprm($d); //echo $p.'--'.$o.br();
+[$p,$o]=cprm($d); //echo $p.'--'.$o.br();
 if(is_img($p))return playimg($d,'full','',$o);
 elseif(strpos($p,'.mp4'))return pagup('video,call|headers=1,id='.jurl($p),pic('movie',16).$p,'appicon');//
 else return lk($p,$o,$c,$e);}
@@ -37,7 +37,7 @@ return $ret;}
 
 static function img($d,$w='',$b=''){
 $h=''; self::$obj['img'][]=[$d,''];
-[$p,$o]=connprm($d); if($o)return imgup($p,$o,'');
+[$p,$o]=cprm($d); if($o)return imgup($p,$o,'');
 if(strpos($w,'-'))[$w,$h]=explode('-',$w); if(self::$imax)$w=720;
 if(strpos($d,','))return self::gallery($d);
 if($b=='epub'){$f='usr/_epub/OEBPS/images/'.$d; $fa='img/full/'.$d;

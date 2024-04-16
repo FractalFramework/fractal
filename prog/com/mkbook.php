@@ -25,12 +25,12 @@ return $r;}
 
 #play
 static function play($p){$ret=''; //pr($r);
-//$r=self::build($p);
+$r=self::build($p);
 //$f=val($p,'inp2');
 $nm=$p['inp2']??'ebook';
 $f='disk/usr/'.ses('usr').'/'.$nm.'.epub';
-$r=[];
-$ret=epub::build($r,$rb);
+$rb=[];
+$ret=epub::build($r,$rb,$nm);
 return $ret;}
 
 #call
