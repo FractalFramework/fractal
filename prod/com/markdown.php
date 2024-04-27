@@ -39,7 +39,7 @@ case(':numlist'):$r=explode("\n",$d); foreach($r as $k=>$v)$ret.=$k.'. '.$v.n();
 case(':php'):$r=explode("\n",$d); foreach($r as $k=>$v)$ret.="\t".$v.n(); break;
 case(':code'):$ret='`'.$d.'`'; break;
 case('--'):$ret='`---'; break;}
-if(is_img($d)){$ret='![]('.gcim($d).')';}
+if(is_img($d)){$ret='![]('.($d).')';}
 [$p,$o]=cprm($d);
 if(substr($p,0,4)=='http' or substr($p,0,2)=='//')$ret=($o?'['.$o.']':'').'('.$p.')';
 return $ret?$ret:$da;}

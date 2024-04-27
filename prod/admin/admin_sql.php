@@ -141,7 +141,7 @@ if(auth(6))$bt.=download::mkcsv($r,$b.($id?'_'.$id:''));
 //core,mkbcp|b='.$db.',o='.date('ymd')
 if($b)return $bt.div(self::read($p),'',$p['did']);}
 
-static function menu($p){$ret;
+static function menu($p){
 $r=sql::query('show tables','rv'); $b=$p['b']??'';
 foreach($r as $k=>$v)if(substr($v,0,2)=='z_')unset($r[$k]);
 return batch($r,'asq|admin_sql,call|b=$v',$b);}

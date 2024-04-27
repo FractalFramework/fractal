@@ -280,8 +280,8 @@ elseif(ses('uid')){$p['lid']=sql::sav('tlex_lik',[ses('uid'),$id]); self::savent
 return tlex::likebt($p);}
 
 //new user
-static function one($p){$r=tlex::api($p);
-if($r)return self::pane(current($r),$p['id']);}
+static function one($p){$d=tlex::api($p);
+if($d)return self::pane($d,$p['id']);}
 
 static function pane($v,$current=''){$id=$v['id']; $usr=$v['name'];
 $v['idv']='tlx'.$id; $tg='popup';

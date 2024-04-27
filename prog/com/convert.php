@@ -16,11 +16,11 @@ $r[]=['editors','pop','pad','','pad'];
 $r[]=['editors','pop','convert','','convert'];
 return $r;}
 
-static function clean_mail($ret){
-$ret=str_replace(".\n",'.��',$ret);
-$ret=str_replace("\n",'�',$ret);
-$ret=str_replace('��',"\n\n",$ret);
-$ret=str_replace('�',' ',$ret);
+static function clean_mail($ret){//!?
+$ret=str_replace(".\n",'. ',$ret);
+$ret=str_replace("\n",' ',$ret);
+$ret=str_replace('<br>',"\n\n",$ret);
+$ret=str_replace('\n',' ',$ret);
 return $ret;}
 
 static function ascii2utf8($d){$ret='';
@@ -33,9 +33,10 @@ foreach($r as $v){
 	$ret.=$va;}
 return $ret;}
 
-static function parser($d,$m){$d=str_replace("\n",' ',$d);
-$r=explode(' ',$d); foreach($r as $v)if($v)$ret[]=$m($v);
-return implode(' ',$ret);}
+static function parser($d,$m){$rt=[];
+$d=str_replace("\n",' ',$d);
+$r=explode(' ',$d); foreach($r as $v)if($v)$rt[]=$m($v);
+return implode(' ',$rt);}
 
 static function bin2ascii($d){$ret='';
 $d=str_replace("\n",'',$d); $d=str_replace(' ','',$d);
@@ -76,7 +77,7 @@ return $ret;}
 static function exe($p,$d){$n=str_replace(' ','',$d);
 if($p)switch($p){
 	case('html2conn'):$d=conv::com($d); break;
-	case('clean_mail'):$d=self::str::clean_mail($d); break;
+	case('clean_mail'):$d=str::clean_mail($d); break;
 	case('url-decode'):$d=rawurldecode($d); break;
 	case('url-encode'):$d=rawurlencode($d); break;
 	case('utf8-decode'):$d=str::utf8dec($d); break;
@@ -136,6 +137,7 @@ return $d;}
 
 static function call($p){$ret='';
 $conv=$p['mode']; $txt=$p['code'];
+ses('cnvmode',$conv);
 return self::exe($conv,$txt);}
 
 static function r(){return ['filters'=>['translate','table2array','html2conn','clean_mail','php','reverse'],'codage'=>['url-decode','url-encode','utf8-decode','utf8-encode','htmlentities-decode','htmlentities-encode','base64-decode','base64-encode','json-decode','unicode (%u)','unicode (\\u)','ord','iconv'],
@@ -157,8 +159,9 @@ return $rb;}
 #content
 static function content($p){$ret='';
 $ret=div(menu::call(['app'=>'convert','mth'=>'menu','mode'=>1]));
-$ret.=textarea('code','','40','10','','','');
+$ret.=textarea('code','','40','10','','','','input,res|convert,call|mode='.ses('cnvmode').'|code');
 $ret.=textarea('res','','40','10','','','');
+$ret.=hidden('cnvmode','');
 $ret.div('','clear');
 return $ret;}
 }

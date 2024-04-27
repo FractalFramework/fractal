@@ -408,13 +408,13 @@ function cleansp($d){return preg_replace('/( ){2,}/',' ',$d);}
 function cleannl($d){return preg_replace('/(\n){2,}/',"\n\n",$d);}
 
 #conn
-function connprm($d,$o=0){$s='|';
+function cprm($d,$o=0){$s='|';
 //$d=str_replace(['$','|'],$s,$d);//patch//,'*'
 return split_one_mb($s,$d,$o);}
 
 function readconn($d){//p|o:c
 [$da,$c]=split_one(':',$d,1);
-[$p,$o]=connprm($da);
+[$p,$o]=cprm($da);
 return [$p,$o,$c,$da];}
 
 function readgen($d){//p*o:c
@@ -545,7 +545,7 @@ curl_setopt($ch,CURLOPT_REFERER,'');
 $ret=curl_exec($ch); curl_close($ch); return $ret;}
 
 function get_file($f){
-try{$d=curl($f);}catch(Exception $e){echo $e->message();}
+$d=curl($f);//try{}catch(Exception $e){echo $e->message();}
 //if(!$d)$ret=read_context($f);
 //if(!$d)$ret=read_file($f);
 return $d;}

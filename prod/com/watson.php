@@ -61,7 +61,7 @@ if(isset($r))return $r['output'];}
 
 //com (apps)
 static function com($p,$o=''){
-[$txt,$lang]=self::build($p);
+[$txt,$lang]=self::read($p);
 $_POST['lng']=$lang;
 $ret=rawurldecode($txt);//if($o)
 if(val($p,'dtc'))$ret.=' ('.$lang.')';

@@ -25,8 +25,8 @@ $i=date('i',$t)/60;
 $s=date('s',$t)/60;
 return [$y,round($m),round($d/1.2),$h,$i,$s];}
 
-static function angle($t){
-return [$y,round($m),round($d/1.2),$h,$i,$s];}
+/*static function angle($t){
+return [$y,round($m),round($d/1.2),$h,$i,$s];}*/
 
 #call
 static function call($p){

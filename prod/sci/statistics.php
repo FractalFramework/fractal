@@ -2,47 +2,47 @@
 class statistics{
 
 //correlation
-function Correlation($ra,$rb){
+static function Correlation($ra,$rb){
 $correlation=0;
-$k=SumProductMeanDeviation($ra,$rb);
-$ssmd1=SumSquareMeanDeviation($ra);
-$ssmd2=SumSquareMeanDeviation($rb);
+$k=self::SumProductMeanDeviation($ra,$rb);
+$ssmd1=self::SumSquareMeanDeviation($ra);
+$ssmd2=self::SumSquareMeanDeviation($rb);
 $product=$ssmd1 * $ssmd2;
 $res=sqrt($product);
 $correlation=$k / $res;
 return $correlation;}
 
-function SumProductMeanDeviation($ra,$rb){
+static function SumProductMeanDeviation($ra,$rb){
 $sum=0;$num=count($ra);
-for($i=0;$i<$num;$i++)$sum=$sum + ProductMeanDeviation($ra,$rb,$i);
+for($i=0;$i<$num;$i++)$sum=$sum + self::ProductMeanDeviation($ra,$rb,$i);
 return $sum;}
 
-function ProductMeanDeviation($ra,$rb,$item){
-return(MeanDeviation($ra,$item)* MeanDeviation($rb,$item));}
+static static function ProductMeanDeviation($ra,$rb,$item){
+return(self::MeanDeviation($ra,$item)*self::MeanDeviation($rb,$item));}
 
-function SumSquareMeanDeviation($arr){
+static function SumSquareMeanDeviation($arr){
 $sum=0;$num=count($arr);
-for($i=0;$i<$num;$i++)$sum=$sum + SquareMeanDeviation($arr,$i);
+for($i=0;$i<$num;$i++)$sum=$sum + self::SquareMeanDeviation($arr,$i);
 return $sum;}
 
-function SquareMeanDeviation($arr,$item){
-return MeanDeviation($arr,$item)* MeanDeviation($arr,$item);}
+static function SquareMeanDeviation($arr,$item){
+return self::MeanDeviation($arr,$item)*self::MeanDeviation($arr,$item);}
 
-function SumMeanDeviation($arr){
+static function SumMeanDeviation($arr){
 $sum=0;$num=count($arr);
-for($i=0;$i<$num;$i++)$sum=$sum + MeanDeviation($arr,$i);
+for($i=0;$i<$num;$i++)$sum=$sum + self::MeanDeviation($arr,$i);
 return $sum;}
 
-function MeanDeviation($arr,$item){
-$average=Average($arr);
+static function MeanDeviation($arr,$item){
+$average=self::Average($arr);
 return $arr[$item]- $average;}
 
-function Average($arr){
-$sum=Sum($arr);
+static function Average($arr){
+$sum=self::Sum($arr);
 $num=count($arr);
 return $sum/$num;}
 
-function Sum($arr){
+static function Sum($arr){
 return array_sum($arr);}
 
 }

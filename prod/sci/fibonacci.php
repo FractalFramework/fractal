@@ -66,11 +66,11 @@ return $r;}
 #call
 static function fibo($i){//!
 $ra[0]=$i;
-$ra[1]=$v;
+//$ra[1]=$v;
 $ra=self::build($ra);
 foreach($ra as $k=>$v){
 	$a=self::numerology($v);
-	$c=self::clr($a);
+	$c=self::clr($v,$a);
 	$ret[$i]=$c;}
 return $ret;}
 

@@ -312,7 +312,7 @@ $rt[]=toggle($pr.'|tlxf,share|id='.$id,langpi('share',$sz));
 if(conn::$obj)$rt[]=toggle($pr.'|tlxf,keep|idv='.$idv.',id='.$id,langpi('keep',$sz));//
 if($own or auth(6))$rt[]=toggle($pr.'|tlxf,redit|id='.$id,langpi('modif'),'');
 else $rt[]=toggle($pr.'|tlxf,report|idv='.$idv.',id='.$id.',cusr='.$usr,langpi('report'),'');
-$rt[]=tlxf::app_action($obj);
+$rt[]=tlxf::app_action($obj,$pr);
 if($own)$rt[]=toggle($pr.'|tlxf,editpv|idv='.$idv.',id='.$id.',pv='.$pv,langpi('privacy'),'');
 //if($own)$rt[]=bj($pr.'|tlxf,editlbl|idv='.$idv.',id='.$id.',lbl='.$lbl,langp('label'),'');
 $n=chat::count($id);
@@ -419,7 +419,7 @@ elseif($mode=='private')$sqnd[]='name="'.$usr.'"';
 else $sqnd[]='(privacy="0" or 0=(select wait from tlex_ab where usr="'.$usid.'" and tlex_ab.ab=tlex.uid))';//name!="'.$usr.'" and
 if(!$noab && !$th)$sqnd[]='((pv=3 and tousr="'.$us.'") or (pv=2 and tlex_ab.usr="'.$usid.'") or pv<"'.($usid?2:1).'")';//(pv=4 and uid="'.$usid.'") or uid="'.$usid.'" or
 //if(!$noab && !$th && !$app && !$tag && !$id && !$ntf)$sqnd[]='name!="'.$usr.'"';
-if(!$id && !$see)$gr=' group by '.$db.'.id';//if(!$count)
+//if(!$id && !$see)$gr=' group by '.$db.'.id';//if(!$count)
 if($ia or $ib or $th)$ord=' order by '.$db.'.id asc limit 40';
 elseif(!$count && !$id && !$th && !$see && !$ntf)$ord=' order by '.$db.'.id desc limit 40';
 elseif($ntf)$ord=' order by ntid desc limit 20';
@@ -430,7 +430,6 @@ return sql::read($cols,self::$db,$vm,$in.' where '.$w.$gr.$ord,$z);}
 
 //select tlex.id,uid,txt,lg,pv,ib,ko,unix_timestamp(tlex.up) as now,name,pname,avatar,clr,privacy,tlex_lik.id as lid,ref,icon,lbl,list,tousr,app,p from tlex left join login on login.id=uid left join profile on puid=uid left join tlex_lik on tlex.id=lik left join labels on lbl=labels.id left join tlex_ab on tlex.uid=ab and wait=0 and block=0 and tlex_ab.usr="1" left join tlex_mnt on tlex.id=tlex_mnt.tlxid left join tlex_app on tlex.id=tlex_app.tlxid where (privacy="0" or 0=(select wait from tlex_ab where usr="1" and tlex_ab.ab=tlex.uid)) and ((pv=3 and tousr="dav") or (pv=2 and tlex_ab.usr="1") or pv<"2") group by tlex.id order by tlex.id desc limit 40
 
-
 static function sql_thread2($id,$o=''){$r=[];
 if($o!='parents')$ids=self::thread_childs($id); else $ids=[];
 if($o!='childs')$ids=self::thread_parents($id,$ids);
@@ -438,7 +437,7 @@ if($o=='thread')$ids[$id]=1; ksort($ids);
 if($ids)$r=array_keys($ids);
 return $r;}
 
-static function apisql0($p,$z=0){
+/*static function apisql0($p,$z=0){
 $ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
 [$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
 if($from=='wrp')return;
@@ -483,7 +482,7 @@ foreach($cfg as $k=>$v)//activations
 if($ntf){$pr=['txid'=>$ids,'typntf'=>[1,2,3],'4usr'=>$us];
 	$rt[]=sql('id as ntid,byusr,typntf,state','tlex_ntf','',$pr);}
 
-return $ra;}
+return $ra;}*/
 
 #read
 static function read($p){//$id will be in popup

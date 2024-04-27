@@ -419,7 +419,7 @@ elseif($mode=='private')$sqnd[]='name="'.$usr.'"';
 else $sqnd[]='(privacy="0" or 0=(select wait from tlex_ab where usr="'.$usid.'" and tlex_ab.ab=tlex.uid))';//name!="'.$usr.'" and
 if(!$noab && !$th)$sqnd[]='((pv=3 and tousr="'.$us.'") or (pv=2 and tlex_ab.usr="'.$usid.'") or pv<"'.($usid?2:1).'")';//(pv=4 and uid="'.$usid.'") or uid="'.$usid.'" or
 //if(!$noab && !$th && !$app && !$tag && !$id && !$ntf)$sqnd[]='name!="'.$usr.'"';
-if(!$id && !$see)$gr=' group by '.$db.'.id';//if(!$count)
+//if(!$id && !$see)$gr=' group by '.$db.'.id';//if(!$count)
 if($ia or $ib or $th)$ord=' order by '.$db.'.id asc limit 40';
 elseif(!$count && !$id && !$th && !$see && !$ntf)$ord=' order by '.$db.'.id desc limit 40';
 elseif($ntf)$ord=' order by ntid desc limit 20';
