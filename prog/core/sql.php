@@ -362,7 +362,82 @@ return self::qfrw(self::qr('select count(*) as nbr_doublon, '.$c.' from '.$b.' g
 static function killdoublons($b,$c){$b=$_SESSION[$b]; if(auth(6))
 return self::qfrw(self::qr('delete t1 from '.$b.' as t1, '.$b.' as t2 where t1.id > t2.id and t1.'.$c.' = t2.'.$c.''));}
 
-//repair
+//update structure
+static function trigger($b,$ra){
+if(!self::ex($b))return;
+$rb=self::cols($b); $rnew=[]; $rold=[];
+if(isset($rb['id']))unset($rb['id']); if(isset($rb['up']))unset($rb['up']);
+if($rb){$rnew=array_diff_assoc($ra,$rb); $rold=array_diff_assoc($rb,$ra);}//old
+if($rnew or $rold){//pr([$rnew,$rold]);
+	$bb=self::backup($b,date('ymdHis')); self::drop($b);
+	$rtwo=array_intersect_assoc($ra,$rb);//common
+	$rak=array_keys($ra); $rav=array_values($ra);
+	$rnk=array_keys($rnew); $rnv=array_values($rnew); $nn=count($rnk);
+	$rok=array_keys($rold); $rov=array_values($rold); $no=count($rok);
+	$na=count($rnew); $nb=count($rold); $ca=array_keys($rtwo); $cb=array_keys($rtwo);
+	if($na==$nb)for($i=0;$i<$nn;$i++)if($rnv[$i]==$rov[$i] or $rnv[$i]!='int'){
+		$ca[]=$rnk[$i]; $cb[]=$rok[$i];}
+	return 'insert into '.$b.'(id,'.implode(',',$ca).',up) select id,'.implode(',',$cb).',up from '.$bb;}}
+
+//columns
+static function types($b){$rb=[];
+$rq=self::qr('select distinct(COLUMN_NAME),DATA_TYPE,CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS where table_name="'.$b.'"');//16777215
+while($r=mysqli_fetch_assoc($rq)){$type=$r['DATA_TYPE']; $sz=$r['CHARACTER_MAXIMUM_LENGTH'];
+	//echo $r['COLUMN_NAME'].'-';
+	if($type=='varchar'){
+		if($sz<64)$type='svar';
+		elseif($sz>1000)$type='bvar';
+		else $type='var';}
+	if($type=='longtext')$type='long';
+	if($type=='mediumtext')$type='text';
+	if($type=='tinytext')$type='tiny';
+	if($type=='bigint')$type='bint';
+	if($type=='decimal')$type='dec';
+	if($type=='float')$type='float';
+	if($type=='double')$type='double';
+	if($type=='json')$type='json';
+	if($type=='date')$type='date';
+	$rb[$r['COLUMN_NAME']]=$type;}
+return $rb;}
+
+//$a=0:[id],[uid],xxx,[up]; $a=1:[uid],xxx; $a=2:xxx; $a=3:[uid],xxx,[up]; $a=4:xx
+//$b=0:array; $b=1:string; $b=2:array_values
+static function cols($db,$a=0,$b=0){//modes
+$rb=self::types($db); if(!$rb)return []; //pr($rb);
+if($a==4 or $a==3 or $a==2 or $a==1)unset($rb['id']);//full
+if($a==4 or $a==3 or $a==2)unset($rb['up']);//all
+if($a==4 or $a==3)unset($rb['uid']);//used
+if($a==4)array_shift($rb);
+if($b==1 or $b==2)$rb=array_keys($rb);
+if($b==1)$rb=implode(',',$rb);
+return $rb;}
+
+static function utf8($t){$r=self::read('*',$t,'rr');//exec one time only on non-utf8 tables
+foreach($r as $k=>$v){foreach($v as $ka=>$va)$rb[$k][$ka]=utf8enc($va);
+	self::up2($t,$rb[$k],$v['id']);}}
+
+//create
+static function create_cols($r){$ret=''; $end='';
+//$collate='collate utf8mb4_uniocode_ci'; $set='CHARACTER SET utf8mb4';
+foreach($r as $k=>$v)
+if($v=='int')$ret.='`'.$k.'` int(11) default NULL,'."\n";
+elseif($v=='bint')$ret.='`'.$k.'` bigint(36) NULL default NULL,'."\n";
+elseif($v=='dec')$ret.='`'.$k.'` decimal(20,20) NULL default NULL,'."\n";
+elseif($v=='float')$ret.='`'.$k.'` float(20,2) NULL default NULL,'."\n";
+elseif($v=='double')$ret.='`'.$k.'` double NULL default NULL,'."\n";
+elseif($v=='var')$ret.='`'.$k.'` varchar(255) NOT NULL default "",';
+elseif($v=='bvar')$ret.='`'.$k.'` varchar(1020) NOT NULL default "",';
+elseif($v=='svar')$ret.='`'.$k.'` varchar(60) NOT NULL default "",';
+elseif($v=='tiny')$ret.='`'.$k.'` tinytext,';
+elseif($v=='text')$ret.='`'.$k.'` mediumtext,';//'.$set.'
+elseif($v=='long')$ret.='`'.$k.'` longtext,';
+elseif($v=='date')$ret.='`'.$k.'` date NOT NULL,';
+elseif($v=='time')$ret.='`'.$k.'` datetime NOT NULL,';
+elseif($v=='json')$ret.='`'.$k.'` json,';
+//elseif($v=='json'){$ret.='`'.$k.'` mediumtext,'."\n"; $end='CHECK ('.$k.' IS NULL OR JSON_VALID('.$k.')),'."\n";}
+//elseif($v=='enum')$ret.=''.$k.'` enum ("'.implode('","',$k).'") NOT NULL,';
+return $ret.$end;}
+
 static function jsoncolfromattr($b,$c,$k){//add col from json attr k in new col c//attr_colour
 self::qr('ALTER TABLE '.$b.' ADD '.$c.'_'.$k.' VARCHAR(32) AS (JSON_VALUE('.$c.', "$.'.$k.'"));');
 self::qr('CREATE INDEX '.$b.'_'.$c.'_'.$k.'_ix ON '.$b.'('.$c.'_'.$k.');');}

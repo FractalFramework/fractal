@@ -1,6 +1,7 @@
 <?php
 
 //namespace admin;
+//namespace admin;
 //use \admin\my_function();
 
 class admin_ascii{
@@ -112,3 +113,4 @@ return div($ret,'board','admm');}
 }
 
 ?>
+

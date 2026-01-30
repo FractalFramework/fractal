@@ -58,14 +58,22 @@ $rid='upfile'.$p['rid']??''; $ty=$p['ty']??'';
 if(isset($_FILES[$rid]))return fsize($_FILES[$rid]['tmp_name'],1);
 else return 'uploading...';}
 
+<<<<<<< HEAD
 static function save($p){$error=''; $rid='upfile'.($p['rid']??''); $ty=$p['ty']??'';
 ini_set('upload_max_filesize','200M'); ini_set('post_max_size','220M');
+=======
+static function save($p){$error=''; $rid='upfile'.($p['rid']??''); $ty=$p['ty']??''; 
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
 $f=$_FILES[$rid]['name']??''; $f_tmp=$_FILES[$rid]['tmp_name']??''; //pr($p);
 //if(!$f)return 'no file uploaded ';
 $xt=ext($f); $f=str::normalize(struntil($f,'.'));
 $goodxt='.mp4.m4a.mov.mpg.mp3.wav.wmv.jpg.png.gif.pdf.txt.xls.csv.json.docx.7z.zip.tar.gz.mid.xhtml.html';
 if(stristr($goodxt,$xt)===false)$error=$xt.'=forbidden; authorized='.$goodxt.br();
+<<<<<<< HEAD
 $fsize=$_FILES[$rid]['size']/1024; $uplimit=200000;
+=======
+$fsize=$_FILES[$rid]['size']/1024; $uplimit=250000;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
 if($fsize>=$uplimit || $fsize==0)$error.=$fsize.'<'.($uplimit/1024).'Mo ';
 if(!$ty)$ty=self::goodir($xt);
 if($ty=='img')$dir='img/full/';

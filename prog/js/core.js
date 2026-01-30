@@ -106,9 +106,10 @@ window.onpopstate=function (e){var j=e.state.j; ajx(j?j:'page|root');}
 window.onload=function (e){startstate(index);}
 
 //fullscreen
-function getFullscreenElement(){
-//|| document.webkitFullscreenElement || document.mozFullscreenElement || document.msFullscreenElement;
-return document.fullscreenElement;}
+function getFullscreenElement() {
+	//|| document.webkitFullscreenElement || document.mozFullscreenElement || document.msFullscreenElement;
+	return document.fullscreenElement;
+}
 
 function toggleFullscreen(id){
 if(getFullscreenElement()){document.exitFullscreen();}
@@ -190,8 +191,9 @@ var clientVer=parseInt(navigator.appVersion);
 var is_ie=((clientPC.indexOf('msie')!= -1)&& (clientPC.indexOf('opera')== -1));
 var is_win=((clientPC.indexOf('win')!= -1)|| (clientPC.indexOf('16bit')!= -1));
 
-function storeCaret(d){//insert at Caret position
-if(d.createTextRange)d.caretPos=document.selection.createRange().duplicate();}
+function storeCaret(d) {//insert at Caret position
+	if (d.createTextRange) d.caretPos = document.selection.createRange().duplicate();
+}
 
 function setSelectionRange(input,start,end){
 if(input.setSelectionRange){
@@ -383,7 +385,7 @@ function reposfocus(){
 var d=getrange(idd);
 this.selectionStart=d.en;}
 
-function myTrim(d){return d.replace(/^\s+|\s+$/gm,'');}
+function myTrim(d) { return d.replace(/^\s+|\s+$/gm, ''); }
 
 function dom_r(ob,o=0){
 if(o==10)return;
@@ -576,7 +578,7 @@ else {
 	getbyid("edt"+id).style.display="inline-block";}}
 
 //editable
-function striptags(d){return d.replace(/<\/?[^>]+(>|$)/g,"");}
+function striptags(d) { return d.replace(/<\/?[^>]+(>|$)/g, ""); }
 
 function savecell(id,j,e){
 var prm=j.split('|'); var t=getbyid('d'+id,e).innerHTML;
@@ -738,18 +740,19 @@ d=strreplace(',',',',d);
 d=strreplace(' . ','.',d);
 getbyid(id).innerHTML=d;}
 
-function cleanmail(id){
-d=getbyid(id).innerHTML;
-d=strreplace("\r","\n",d);
-d=strreplace('<br>',"\n",d);
-d=strreplace('<br />',"\n",d);
-$d=strreplace("M.\n",'M. ',d);
-$d=strreplace(".\n",'.��',d);
-$d=strreplace("\n",'�',d);
-$d=strreplace('��',"\n\n",d);
-$d=strreplace('�',' ',d);
-//console.log(d);
-getbyid(id).innerHTML=d;}
+function cleanmail(id) {
+	d = getbyid(id).innerHTML;
+	d = strreplace("\r", "\n", d);
+	d = strreplace('<br>', "\n", d);
+	d = strreplace('<br />', "\n", d);
+	$d = strreplace("M.\n", 'M. ', d);
+	$d = strreplace(".\n", '.��', d);
+	$d = strreplace("\n", '�', d);
+	$d = strreplace('��', "\n\n", d);
+	$d = strreplace('�', ' ', d);
+	//console.log(d);
+	getbyid(id).innerHTML = d;
+}
 
 //li.ul
 function act(ob,a){

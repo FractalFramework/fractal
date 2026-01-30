@@ -122,6 +122,7 @@ function radio($id,$r,$ck,$o=''){$ret='';
 $rk=explode('-',$ck); $rk=array_flip($rk);
 foreach($r as $k=>$v){$ka=$k;
 	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
+	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	$atb=['type'=>'radio','name'=>$id,'id'=>$kb,'value'=>$k];
 	if(isset($rk[$k]))$atb['checked']='checked';
 	$ret.=span(tagb('input',$atb).label($kb,lang($v)),'btn');}
@@ -129,6 +130,7 @@ foreach($r as $k=>$v){$ka=$k;
 function checkbox($id,$r,$ck='',$o=''){$ret='';
 $rk=explode('-',$ck); $rk=array_flip($rk);
 foreach($r as $k=>$v){$ka=$k;
+	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	$atb=['type'=>'checkbox','name'=>$id,'id'=>$kb,'value'=>$k];
 	if(isset($rk[$ka]))$atb['checked']='checked';
@@ -417,12 +419,14 @@ function cleanrl($d){return cleannl(delr($d,"\n"));}
 
 #conn
 function cprm($d,$o=0){$s='|';
+function cprm($d,$o=0){$s='|';
 //$d=str_replace(['$','|'],$s,$d);//patch//,'*'
 return split_one_mb($s,$d,$o);}//
 
 function readconn($d){//p|o:c
 //return poc($d);
 [$da,$c]=split_one(':',$d,1);
+[$p,$o]=cprm($da);
 [$p,$o]=cprm($da);
 return [$p,$o,$c,$da];}
 
@@ -565,6 +569,7 @@ return curl_exec($ch);}
 
 function get_file($f){
 $d=curl($f);//try{}catch(Exception $e){echo $e->message();}
+$d=curl($f);//try{}catch(Exception $e){echo $e->message();}
 //if(!$d)$ret=read_context($f);
 //if(!$d)$ret=read_file($f);
 return $d;}
@@ -576,6 +581,7 @@ return $d;}
 
 function dom($d,$f=''){
 if($f)$d=curl($f);
+//$d=str::utf8dec($d);
 //$d=str::utf8dec($d);
 $dom=new DomDocument('2.0');//,'UTF-8'
 $dom->validateOnParse=true;
@@ -748,3 +754,4 @@ function chrono($d='chrono',$n=5){static $s;
 if(!$s)$s=$_SERVER['REQUEST_TIME_FLOAT']; $s1=microtime(1); $res=$s1-$s; $s=$s1;
 return $d.':'.round($res,$n);}
 ?>
+

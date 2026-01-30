@@ -37,6 +37,7 @@ elseif($tg=='meta')$dest->nodeValue=$v->getAttribute('content');
 elseif($v->childNodes)foreach($v->childNodes as $k=>$el)$dest->appendChild($rec->importNode($el,true));
 return $rec;}
 
+<<<<<<< HEAD
 static function capture($dom,$va,$rec,$strict=0){//todo:iterate it
 [$c,$at,$tg,$cn]=expl(':',$va,4); if(!$at)$at='class'; if(!$tg)$tg='div'; //id,a,...
 $r=$dom->getElementsByTagName($tg); $n=0;
@@ -44,6 +45,14 @@ foreach($r as $k=>$v){$attr=$v->getAttribute($at); $ok=0;//domattr($v,$at) //ech
 	if($strict && $c==$attr)$ok=1; elseif(!$strict && $c && strpos($attr,$c)!==false)$ok=1;
 	if($ok or !$c){$n++;//nb of similar captures
 		if($n==$cn or !$cn)self::importnode($dom,$rec,$v,$tg);}}
+=======
+static function capture($dom,$va,$rec){//todo:iterate it
+[$c,$at,$tg,$cn]=expl(':',$va,4); if(!$at)$at='class'; if(!$tg)$tg='div'; //id,a,...
+$r=$dom->getElementsByTagName($tg); $n=0;
+foreach($r as $k=>$v){$attr=$v->getAttribute($at);//domattr($v,$at) //echo $v->nodeName.'-';
+if(($c && strpos($attr,$c)!==false) or !$c){$n++;//nb of similar captures
+	if($n==$cn or !$cn)self::importnode($dom,$rec,$v,$tg);}}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
 return $rec;}
 
 static function detect($d,$o){
@@ -52,6 +61,7 @@ if($dom)foreach($r as $k=>$va)self::capture($dom,$va,$rec);//var_dump($rec);
 $ret=$rec->saveHTML();
 if($ret)return trim($ret);}
 
+<<<<<<< HEAD
 static function getfrom($d,$va,$st=0){
 $dom=dom($d); $rec=dom(''); $rec->formatOutput=true;
 if($dom)self::capture($dom,$va,$rec);
@@ -66,6 +76,17 @@ foreach($r as $k=>$v){$attr=$v->getAttribute($at); $ok=0;
 	if($strict && $c==$attr)$ok=1; elseif(!$strict && $c && strpos($attr,$c)!==false)$ok=1;
 	if(!$ret && ($ok or !$c))
 		$ret.=$g?domattr($v,$g):$v->nodeValue;}
+=======
+//dom2
+static function extract($dom,$va){$ret='';//all-in-one
+[$c,$at,$tg,$g]=expl(':',$va,4); if(!$at)$at='class'; if(!$tg)$tg='div';//id,href,...
+if(!$g){if($tg=='img')$g='src'; elseif($tg=='meta')$g='content';}//props
+$r=$dom->getElementsByTagName($tg); $c=str_replace('(ddot)',':',$c);
+foreach($r as $k=>$v){$attr=$v->getAttribute($at);
+	if(!$ret && ($c==$attr or ($c && strpos($attr,$c)!==false) or !$c))
+		$ret.=$g?domattr($v,$g):$v->nodeValue;}
+//$ret=str::utf2ascii($ret);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
 return $ret;}
 
 static function extract_batch($d,$o){$ret='';
@@ -149,4 +170,8 @@ $bt=self::menu($p);
 $ret=self::call($p);
 return $bt.div($ret,'',$rid);}
 }
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb

@@ -180,6 +180,7 @@ static function share($p){$id=$p['id']??''; $root=host(1).'/'.$id;
 $txt=sql('txt',self::$db,'v',$id);
 $txt=conn::call(['msg'=>$txt,'app'=>'conn','mth'=>'noconn','ptag'=>0]);
 $txt=(str::utf8enc(strip_tags($txt)));
+$txt=(str::utf8enc(strip_tags($txt)));
 //$obj=tlex::objects(); if($obj)$txt.=trim(strip_tags($obj));
 $tw='http://twitter.com/intent/tweet?original_referer='.$root.'&url='.$root.'&text='.urlencode($txt).' #tlex'.'&title=Tlex:'.$id; $fb='http://www.facebook.com/sharer.php?u='.$root;
 $ptw=ico('twitter-square','24','twitter'); $pfb=ico('facebook-official','24','facebook');
@@ -195,6 +196,7 @@ return $ret;}
 //del
 static function del($p){$id=$p['did'];
 $uid=sql('uid',self::$db,'v',$id);
+if($uid!=ses('uid') && !auth(6))return lang('operation not permitted');
 if($uid!=ses('uid') && !auth(6))return lang('operation not permitted');
 if(empty($p['confirm'])){
 	//$cancel=bj('tlx'.$id.'|tlex,one|id='.$id,langp('cancel'),'btn');
@@ -281,6 +283,8 @@ elseif(ses('uid')){$p['lid']=sql::sav('tlex_lik',[ses('uid'),$id]); self::savent
 return tlex::likebt($p);}
 
 //new user
+static function one($p){$d=tlex::api($p);
+if($d)return self::pane($d,$p['id']);}
 static function one($p){$d=tlex::api($p);
 if($d)return self::pane($d,$p['id']);}
 
@@ -372,3 +376,4 @@ return bj($ja,langph('publish'),'btsav',$prm).hidden('tx'.$rid,'['.$v.']');}
 
 }
 ?>
+

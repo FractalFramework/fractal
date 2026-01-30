@@ -28,6 +28,7 @@ $current=bcdiv(1,1+$i);
 if($o)$pi4=bcsub($pi4,$current); else $pi4=bcadd($pi4,$current);
 //if($o)echo $pi4.'+'.$current.br(); else echo $pi4.'-'.$current.br();
 if($i<$n)return self::build($i,$n); else return $pi4;}
+if($i<$n)return self::build($i,$n); else return $pi4;}
 
 //build
 static function clr(){return ['ff0000','ff7f00','ffff00','80ff00','00ff80','00ffff','0080ff','0000ff','8000ff','ff00ff','ff007f'];}//4=>'00ff00',
@@ -75,3 +76,4 @@ $ret=self::call($p);
 return $bt.div($ret,'pane',self::$cb);}//
 }
 ?>
+

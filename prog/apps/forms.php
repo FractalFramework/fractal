@@ -66,7 +66,11 @@ return self::play($p);}
 static function sav_lead($p){$id=$p['id']??'';
 $r=valk($p,['tit','txt','com']);
 $r['com']=str_replace("\n",'',$r['com']);
+<<<<<<< HEAD
 if($id)sql::upd(self::$db,$r,$id);
+=======
+if($id)sql::up2(self::$db,$r,$id);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
 else $bid=sql::sav(self::$db,[ses('uid'),$r['tit'],$r['txt'],$r['com'],'']);
 return self::create($p);}
 

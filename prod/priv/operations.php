@@ -32,11 +32,13 @@ return $ret;}
 //
 static function strainer($d,$a){$ret=[];
 $d=str::clean_n($d); $d=str_replace("\n",' (nl) ',$d); $r=explode(' ',$d);
+$d=str::clean_n($d); $d=str_replace("\n",' (nl) ',$d); $r=explode(' ',$d);
 foreach($r as $v)if(substr($v,0,1)==$a)$ret[]=substr($d,1);
 if($ret)$d=implode(' ',$ret); $d=str_replace(' (nl) ',"\n",$d);
 return trim($d);}
 
 static function captor($d,$a){$ret=[]; if(substr($d,0,1)==$a)echo $d; echo $d;
+$d=str::clean_n($d); $d=str_replace("\n",' ',$d); $r=explode(' ',$d);
 $d=str::clean_n($d); $d=str_replace("\n",' ',$d); $r=explode(' ',$d);
 foreach($r as $v)if(substr($v,0,1)==$a)$ret[]=substr($d,1);
 return $ret;}

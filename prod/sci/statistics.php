@@ -15,6 +15,7 @@ return $correlation;}
 static function SumProductMeanDeviation($ra,$rb){
 $sum=0;$num=count($ra);
 for($i=0;$i<$num;$i++)$sum=$sum + self::ProductMeanDeviation($ra,$rb,$i);
+for($i=0;$i<$num;$i++)$sum=$sum + self::ProductMeanDeviation($ra,$rb,$i);
 return $sum;}
 
 static static function ProductMeanDeviation($ra,$rb,$item){
@@ -30,6 +31,7 @@ return self::MeanDeviation($arr,$item)*self::MeanDeviation($arr,$item);}
 
 static function SumMeanDeviation($arr){
 $sum=0;$num=count($arr);
+for($i=0;$i<$num;$i++)$sum=$sum + self::MeanDeviation($arr,$i);
 for($i=0;$i<$num;$i++)$sum=$sum + self::MeanDeviation($arr,$i);
 return $sum;}
 
