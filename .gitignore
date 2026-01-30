@@ -42,6 +42,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 *.xml
+*.7z
 _bckp
 _sql
 _old
@@ -58,5 +59,3 @@ _trash.php
 fonts/_old
 fonts/ttf
 _trash.php
-*.sh
-ffw.7z
