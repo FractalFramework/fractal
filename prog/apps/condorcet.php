@@ -58,7 +58,7 @@ $answers=sql('com',self::$db,'v',$id); $rb=explode('|',$answers); $nb=count($rb)
 $rn=sql('choice,val',self::$db2,'kv',['bid'=>$id,'uid'=>ses('uid')]);
 foreach($rn as $k=>$v)if($k!=$ka && $v==$va)$ex=$k;
 if($ex){for($i=1;$i<=$nb;$i++)$ri[]=$i; $rd=array_diff($ri,$rn);
-$rn[$ex]=current($rd); sql::up(self::$db2,'val',$rn[$ex],['choice'=>$ex]);}}
+$rn[$ex]=current($rd); sql::upd(self::$db2,['val'=>$rn[$ex]],['choice'=>$ex]);}}
 
 //drag
 static function note($p){$id=$p['id']; $rn=[]; $uid=ses('uid');
@@ -66,7 +66,7 @@ $rv=explode(';',$p['vals']??''); $mnt=count($rv);//pr($rv); //$rv=array_reverse(
 $r=sql('choice,id',self::$db2,'kv',['bid'=>$id,'uid'=>$uid,'_order'=>'val'],0); //pr($r);
 foreach($rv as $k=>$v){$va=substr($v,2); $ka=$k+1;//$ka:order, $va=candidate (choice)
 	if(!isset($r[$ka]))sql::sav(self::$db2,[$id,$uid,$va,$ka]);
-	else sql::up(self::$db2,'val',$mnt-$k,$r[$va],'',0);}
+	else sql::upd(self::$db2,['val'=>$mnt-$k],$r[$va]);}
 return self::build($p);}
 
 static function pane($rb,$closed,$rn,$nb,$id){$rt=[]; //pr($rn);

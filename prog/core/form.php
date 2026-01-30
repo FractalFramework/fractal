@@ -12,7 +12,7 @@ else db::add($f,[date('ymd:Hi'),ses('uid')]+$p,$rh);
 return help('form_filled').$bt;}
 
 static function build($r){$rt=[]; //$rk=array_keys(uns($r,0));
-foreach($r as $k=>$v){$k=normalize($k,1); $d='';
+foreach($r as $k=>$v){$k=str::normalize($k,1); $d='';
 	['type'=>$ty,'value'=>$va,'label'=>$lbl,'opt'=>$o]=$v;
 	switch($ty){
 		case('input'):$d=input($k,$va,20,$lbl,$o); break;

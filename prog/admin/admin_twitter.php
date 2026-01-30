@@ -23,7 +23,7 @@ return self::menu($p);}
 static function modif($p){$id=$p['id']??'';
 $cols=self::cols(); $r=['uid'=>ses('uid')];
 foreach($cols as $v)$r[$v]=$p[$v]??'';
-sql::up2(self::$db,$r,$id);
+sql::upd(self::$db,$r,$id);
 return self::edit($p);}
 
 static function save($p){

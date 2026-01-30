@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="110px" height="110px" >
+<circle cx="100" cy="100" r="10" fill="navajowhite" stroke="gold"><animate attributeName="r" attributeType="XML" values="1;100;1" begin="0s" dur="10s" repeatCount="10" fill="darkseagreen" stroke="gold"></animate><animate attributeName="fill-opacity" attributeType="css" values="0.1;1;0.1" begin="0s" dur="10s" repeatCount="10" fill="limegreen" stroke="gold"></animate></circle>
+
+</svg>

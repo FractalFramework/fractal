@@ -2,7 +2,7 @@
 
 class tree{
 #sample
-static function trees(){
+static function r(){
 //['folder','/j/lk/in/t','app,action','picto','text']//txt use lang
 $r[]=['root','in','app,mth','text','textpad'];
 return $r;}
@@ -50,12 +50,12 @@ if(!$mode)$ico=span($ico,'ico').' '; else $ico=$ico.' ';
 //if(!$mode)$chevron=span(ico('chevron-right'),'grey right'); else $chevron='';$chevron.
 $btn=$ico.span($btn);
 $call='sub'.$rid.'|tree,call';//,,y
-$p='app='.$app.',mth='.$mth.',dir='.$dir.',drop='.$drop.',bid='.$bid.',a='.$a;
+$prm='app='.$app.',mth='.$mth.',dir='.$dir.',drop='.$drop.',bid='.$bid.',a='.$a;
 //if($drop)$attr='';
 //$attr['id']=$rid;
 //$attr['onmousedown']='ajbt(this);'; $attr['data-j']=$call.'|'.$p;
 //$ret=tag('a',$attr,$btn);
-$ret=div(toggle($call.'|'.$p,$btn));
+$ret=div(toggle($call.'|'.$prm,$btn));
 $ret.=div('','sub','sub'.$rid);
 return $ret;}
 
@@ -94,14 +94,12 @@ if(isset($ret))return implode('',$ret);}
 
 #call
 static function call($p){
-$dir=val($p,'dir'); $app=$p['app']??''; $mth=val($p,'mth'); $drop=val($p,'drop'); 
-$bid=$p['bid']??''; $a=val($p,'a'); $css=val($p,'css'); $rid=$p['rid']??'';
-if(method_exists($app,$mth)){$q=new $app;
+[$dir,$app,$mth,$drop,$bid,$a,$rid]=vals($p,['dir','app','mth','drop','bid','a','css','rid']);
+if(method_exists($app,$mth)){
 	$r=$app::$mth(['dir'=>$dir,'drop'=>$drop,'bid'=>$bid,'rid'=>$rid]);}
 if(isset($r))$ret=self::build($r,$dir,$app,$mth,$drop,$bid,$a); else $ret='';//no datas found
-$attr['class']='lisb'; $attr['onclick']='popz++; this.style.zIndex=popz;';
-if(!$dir && $css)$attr['class'].=' '.$css;
-if($dir)$attr['class'].=' ablock';//css for sublevels
+$attr['class']='lisb'.($dir?' ablock':'');//css for sublevels
+$attr['onclick']='popz++; this.style.zIndex=popz;';
 return tag('div',$attr,$ret);}
 
 static function load($app,$mth,$dir='',$drop='',$bid='',$a=''){$rid=randid('dsk');

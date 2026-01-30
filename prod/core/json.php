@@ -28,6 +28,10 @@ $d=file_get_contents($u);
 $r=json_decode($d,true);
 return $r;}
 
+static function val($f,$k){
+$r=json::read($f);
+return $r[$k]??'';}
+
 static function save($p){$f=$p['f']; $k=$p['k']; $v=val($p,'v'.$k);
 [$a,$b]=explode('-',$k); $u=struntil($f,'.');
 $r=self::read($u); $r[$a][$b]=$v; self::write($u,$r);

@@ -32,17 +32,18 @@ return $ret;}
 static function importnode($dom,$rec,$v,$tg){
 if($tg=='img' or $tg=='meta')$tag='div'; else $tag=$tg;
 $dest=$rec->appendChild($rec->createElement($tag));
-if($tg=='img')$dest->nodeValue=urlroot($v->getAttribute('src'));
+if($tg=='img')$dest->nodeValue=($v->getAttribute('src'));//urlroot
 elseif($tg=='meta')$dest->nodeValue=$v->getAttribute('content');
 elseif($v->childNodes)foreach($v->childNodes as $k=>$el)$dest->appendChild($rec->importNode($el,true));
 return $rec;}
 
-static function capture($dom,$va,$rec){//todo:iterate it
+static function capture($dom,$va,$rec,$strict=0){//todo:iterate it
 [$c,$at,$tg,$cn]=expl(':',$va,4); if(!$at)$at='class'; if(!$tg)$tg='div'; //id,a,...
 $r=$dom->getElementsByTagName($tg); $n=0;
-foreach($r as $k=>$v){$attr=$v->getAttribute($at);//domattr($v,$at) //echo $v->nodeName.'-';
-if(($c && strpos($attr,$c)!==false) or !$c){$n++;//nb of similar captures
-	if($n==$cn or !$cn)self::importnode($dom,$rec,$v,$tg);}}
+foreach($r as $k=>$v){$attr=$v->getAttribute($at); $ok=0;//domattr($v,$at) //echo $v->nodeName.'-';
+	if($strict && $c==$attr)$ok=1; elseif(!$strict && $c && strpos($attr,$c)!==false)$ok=1;
+	if($ok or !$c){$n++;//nb of similar captures
+		if($n==$cn or !$cn)self::importnode($dom,$rec,$v,$tg);}}
 return $rec;}
 
 static function detect($d,$o){
@@ -51,15 +52,20 @@ if($dom)foreach($r as $k=>$va)self::capture($dom,$va,$rec);//var_dump($rec);
 $ret=$rec->saveHTML();
 if($ret)return trim($ret);}
 
+static function getfrom($d,$va,$st=0){
+$dom=dom($d); $rec=dom(''); $rec->formatOutput=true;
+if($dom)self::capture($dom,$va,$rec);
+return $rec;}
+
 //dom2
-static function extract($dom,$va){$ret='';//all-in-one
+static function extract($dom,$va,$strict=0){$ret='';//all-in-one
 [$c,$at,$tg,$g]=expl(':',$va,4); if(!$at)$at='class'; if(!$tg)$tg='div';//id,href,...
 if(!$g){if($tg=='img')$g='src'; elseif($tg=='meta')$g='content';}//props
 $r=$dom->getElementsByTagName($tg); $c=str_replace('(ddot)',':',$c);
-foreach($r as $k=>$v){$attr=$v->getAttribute($at);
-	if(!$ret && ($c==$attr or ($c && strpos($attr,$c)!==false) or !$c))
+foreach($r as $k=>$v){$attr=$v->getAttribute($at); $ok=0;
+	if($strict && $c==$attr)$ok=1; elseif(!$strict && $c && strpos($attr,$c)!==false)$ok=1;
+	if(!$ret && ($ok or !$c))
 		$ret.=$g?domattr($v,$g):$v->nodeValue;}
-//$ret=utf2ascii($ret);
 return $ret;}
 
 static function extract_batch($d,$o){$ret='';

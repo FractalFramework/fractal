@@ -1,6 +1,7 @@
 <?php
 //api/app/a:1,b:2
 session_start();
+header('Content-Type: application/json');
 require('boot.php'); $ret=''; $prm=get('p');
 if(is_numeric($prm))$p['id']=$prm;
 elseif(strpos($prm,':'))$p=_jrb($prm);

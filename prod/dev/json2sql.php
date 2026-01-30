@@ -92,7 +92,7 @@ return $rb;}
 #call
 static function call($p){$ret='';
 $from=val($p,'from'); $fa=val($p,'inp1');
-//$dba=strfrom($fa,'/'); $dba=normalize(strto($fa,'.')); $db=self::$db.'_'.$dba;
+//$dba=strfrom($fa,'/'); $dba=str::normalize(strto($fa,'.')); $db=self::$db.'_'.$dba;
 //sql::savif(self::$db,['tit'=>$fa,'txt'=>$db]);
 //$r=json::read($u);
 $cols=[]; //pr($r);

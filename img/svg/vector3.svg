@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="140px" height="180px" >
+<rect x="10" y="10" width="30" height="20" fill="lavenderblush" stroke="black" stroke-width="1"></rect>
+<ellipse cx="100" cy="100" rx="40" ry="80" fill="mediumpurple" stroke="black" stroke-width="1"></ellipse>
+<line x1="25" y1="20" x2="100" y2="100" fill="blanchedalmond" stroke="black" stroke-width="1"></line>
+
+<a data-j="popup|core,txt|txt=hello" onclick="ajbt(this);" title="popup|core,txt|txt=hello"><text x="40" y="20" fill="red">hello</text></a></svg>

@@ -31,7 +31,7 @@ static function goodid($p){
 return sql('id',self::$db,'v',['ref'=>$p['ref'],'lang'=>$p['lang']]);}
 
 static function insertup($p){$id=self::goodid($p);
-if($id)sql::up(self::$db,'txt',$p['txt'],$id);
+if($id)sql::upd(self::$db,['txt'=>$p['txt']],$id);
 else sql::sav(self::$db,[$p['ref'],$p['txt'],$p['lang']]);}
 
 static function translate($p){$voc=''; $txt=''; $copy=val($p,'copy');
@@ -55,8 +55,9 @@ foreach($rb as $k=>$v)
 return self::com($p);}
 
 //save
-static function update($p){$rid=$p['rid'];
-sql::up(self::$db,'txt',val($p,$rid),$p['id']);
+static function update($p){
+$rid=$p['rid']; $txt=$p[$rid];
+sql::upd(self::$db,['txt'=>$txt],$p['id']);
 return self::com($p);}
 
 static function del($p){
@@ -69,7 +70,7 @@ return self::com($p);}
 
 static function edit($p){$rid=randid('ref');
 $to=val($p,'to')?'socket,,x':'admcnn,,x';
-$r=sql('ref,txt,lang',self::$db,'ra','where id='.$p['id']);
+$r=sql('ref,txt,lang',self::$db,'ra',$p['id']);
 $ret=label($rid,$r['ref'].' ('.$r['lang'].')');
 $ret.=bj($to.'|'.self::$ad.',update|id='.$p['id'].',rid='.$rid.',lang='.$r['lang'].'|'.$rid,lang('save'),'btsav');
 $ret.=bj($to.'|'.self::$ad.',del|id='.$p['id'].',lang='.$r['lang'],lang('del'),'btdel');

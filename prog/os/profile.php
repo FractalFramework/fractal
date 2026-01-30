@@ -24,7 +24,7 @@ return sesr('clr',$usr,$clr);}
 //privacy
 static function privbt($p){$state=$p['privacy']; $sav=$p['sav']??'';
 if($sav){$state=$state==1?'0':'1';
-	sql::up(self::$db,'privacy',$state,ses('uid'),'puid');}
+	sql::upd(self::$db,['privacy'=>$state],['puid'=>ses('uid')]);}
 if($state==1){$ic='toggle-on'; $bt='private'; $hlp=help('privacy_on','alert');}
 else{$ic='toggle-off'; $bt='public'; $hlp=help('privacy_off','valid');}
 return bj('edtprv|profile,privbt|sav=1,privacy='.$state,ico($ic,22).lang($bt));}//.div($hlp)
@@ -32,25 +32,25 @@ return bj('edtprv|profile,privbt|sav=1,privacy='.$state,ico($ic,22).lang($bt));}
 //notifs
 static function ntfbt($p){$state=$p['ntf']; $sav=$p['sav']??'';
 if($sav){$state=$state==1?'0':'1';
-	sql::up(self::$db,'ntf',$state,ses('uid'),'puid');}
+	sql::upd(self::$db,['ntf'=>$state],['puid'=>ses('uid')]);}
 if($state==0){$ic='toggle-on'; $bt='on'; $hlp=help('notifs_on','valid');}
 else{$ic='toggle-off'; $bt='off'; $hlp=help('notifs_off','alert');}
 return bj('edtntf|profile,ntfbt|sav=1,ntf='.$state,ico($ic,22).lang($bt));}//.div($hlp)
 
 //oAuth
 static function oAuthsav($p){$ret=keygen::build([]);
-if($id=$p['id'])sql::up(self::$db,'oAuth',$ret,$id);
+if($id=$p['id'])sql::upd(self::$db,['oAuth'=>$ret],$id);
 return $ret;}
 
 static function oAuth($p){
 $srv=host(); $oauth=$p['oAuth'];
 $ret=span($oauth,'grey','oath').' ';
 $ret.=bj('oath|profile,oAuthsav|id='.$p['id'],langp('gen oAuth'),'btn').' ';
-$ret.=tag('h4','',lang('call_timeline'));
+$ret.=h2(lang('call_timeline'));
 $ret.=div('http://'.$srv.'/api/tlex/tm:'.ses('usr'),'console');
-$ret.=tag('h4','',lang('call_post'));
+$ret.=h2(lang('call_post'));
 $ret.=div('http://'.$srv.'/api/tlex/id:312','console');
-$ret.=tag('h4','',lang('send_post'));
+$ret.=h2(lang('send_post'));
 $ret.=div('http://'.$srv.'/api.php?oAuth='.$oauth.'&msg=hello','console');
 return $ret;}
 
@@ -58,7 +58,7 @@ return $ret;}
 static function modifpass($p){
 $op=$p['oldpsw']??''; $np=$p['newpsw']??'';
 if($op && $np){
-	$ok=sql('id','login','v','where id='.ses('uid').' and password=password("'.$op.'")');
+	$ok=sql('id','login','v','where id='.ses('uid').' and password=password("'.$op.'")');//??
 	if($ok){
 	qr('update login set password=password("'.$np.'") where id="'.ses('uid').'"');
 	//update('login','password','password("'.$np.'")',ses('uid'));
@@ -70,16 +70,16 @@ return $ret;}
 
 static function deleteaccount($p){$ret='';
 $prm='edtcls|profile,deleteaccount|id='.$p['id'];
-$open=sql('auth','login','v','where name="'.ses('usr').'"');
+$open=sql('auth','login','v',['name'=>ses('usr')]);
 if($p['confirm']??''){
-	//sql::up('profile','privacy',2,ses('uid'),'puid');
-	sql::up('login','auth',1,ses('uid'));
+	//sql::upd('profile',['privacy'=>2,ses('uid')],['puid'=>ses('uid')]);
+	sql::upd('login',['auth'=>1],ses('uid'));
 	return help('account disactivated');}
 elseif($p['del']??''){$prm.=',confirm=1';
 	$ret.=help('tlex_remove_account','alert').br();
 	$ret.=bj($prm,langp('confirm deleting'),'btdel');}
 elseif($p['restore']??''){
-	sql::up('login','auth',2,ses('uid'));
+	sql::upd('login',['auth'=>2],ses('uid'));
 	$ret.=bj($prm.',del=1',langp('remove account'),'btdel');}
 elseif($open==1)$ret.=bj($prm.',restore=1',langp('restore account'),'btdel');
 else $ret.=bj($prm.',del=1',langp('remove account'),'btdel');
@@ -88,9 +88,9 @@ return $ret;}
 //gps
 static function gpsav($p){$gps=$p['gps'];
 $id=sql('id',self::$db,'v','where puid='.ses('uid'));
-sql::up(self::$db,'gps',$gps,$id);
+sql::upd(self::$db,['gps'=>$gps],$id);
 if($gps)$loc=gps::com(['coords'=>$gps]); else $loc='';
-sql::up(self::$db,'location',$loc,$id);
+sql::upd(self::$db,['location'=>$loc],$id);
 return self::gps(['pusr'=>ses('usr'),'gps'=>$gps,'location'=>$loc]);}
 
 static function gps($r){$ret='';
@@ -103,7 +103,7 @@ return div($ret,'','edtgps');}
 
 //mail_edit
 static function mail_edit($p){
-if($p['sav']??''){sql::up('login','mail',$p['mail'],ses('uid')); sez('mail',$p['mail']);}
+if($p['sav']??''){sql::upd('login',['mail'=>$p['mail']],ses('uid')); sez('mail',$p['mail']);}
 $mail=sql('mail','login','v',['id'=>ses('uid')]);
 $ret=input('mail',$mail);
 $ret.=bj('edtmail|profile,mail_edit|sav=1|mail',langpi('save'),'btsav').' ';
@@ -112,7 +112,7 @@ return $ret;}
 #banner		
 /*static function banner_save($p){$f=$p['bkgim'];
 if(substr($f,0,4)=='http')$f=saveimg($f,'ban','300','100');
-sql::up(self::$db,'banner',$f,ses('uid'),'puid');
+sql::upd(self::$db,['banner'=>$f],['puid'=>ses('uid')]);
 return self::standard(['usr'=>ses('usr'),'uid'=>ses('uid')]);}*/
 
 static function banner_edit($p,$sz){
@@ -141,7 +141,7 @@ return $f;}
 
 /*static function avatar_save($p){$f=$p['avtim']; $usr=$p['pusr'];
 if(substr($f,0,4)=='http')$f=saveimg($f,'avt','140','140');
-sql::up(self::$db,'avatar',$f,ses('uid'),'puid'); $p['avatar']=$f;
+sql::upd(self::$db,['avatar'=>$f],['puid'=>ses('uid')]); $p['avatar']=$f;
 return self::avatar($p,'big');}*/
 
 static function avatar_edit($p,$sz){
@@ -202,7 +202,7 @@ $rk=['pname','status','web','gps','clr','role','avatar','banner'];
 $r=valk($p,$rk); $r=sql::vrf($r,self::$db);//ses('clr'.$p['usr'],$p['clr']);
 if(substr($r['avatar'],0,4)=='http')$r['avatar']=saveimg($r['avatar'],'avt','140','140');
 if(substr($r['banner'],0,4)=='http')$r['banner']=saveimg($r['banner'],'ban','300','100');
-sql::up2(self::$db,$r,['puid'=>ses('uid')]);
+sql::upd(self::$db,$r,['puid'=>ses('uid')]);
 sesr('clr',$p['usr'],$r['clr']);
 return self::standard($p);}
 
@@ -253,8 +253,8 @@ $ret.=h2(lang('twitter')).div(admin_twitter::content([]));
 return $ret;}
 
 #edit
-static function calledt($p){$op=$p['op']??'';
-$usr=$p['usr']??ses('usr'); $r=self::datas($usr); $ret='';
+static function calledt($p){$op=$p['op']??''; $ret='';
+$usr=$p['usr']??ses('usr'); $r=self::datas($usr);
 if($op)$ret=self::$op($r);
 return $ret;}
 
@@ -262,9 +262,16 @@ static function edit($p){
 $usr=$p['usr']??ses('usr'); $r=self::datas($usr); $rt=[];
 //$r=['identity'=>'status','mail'=>'mail_edit','notifications'=>'ntfbt','privacy'=>'privbt','Api'=>'oAuth','twitterApi'=>'twitter','modif password'=>'modifpass','remove account'=>'deleteaccount'];
 $r=['identity','account','Apis'];
-foreach($r as $k=>$v)$rt[]=toggle('edtprf|profile,calledt|op='.$v,lang($v),'',[],active($v,'identity'),1);
-$main=self::calledt($p);
-return div(implode('',$rt),'lisb').div($main,'board','edtprf');}
+foreach($r as $k=>$v)$rt[]=toggle('cbck|profile,calledt|op='.$v,lang($v),'',[],active($v,'identity'),1);
+return join(' ',$rt);}
+
+static function calledit($p){
+$edit=self::edit($p); $main=self::calledt($p);
+return div($edit,'lisb').div($main,'board','cbck');}
+
+static function comedit($p){
+$edit=self::edit($p); $main=self::calledt($p);
+return [$edit,$main];}
 
 #follow
 static function follow($p){
@@ -294,7 +301,7 @@ $ret=valk($r,['puid','pusr','role']);
 $ret['banner']=div(self::banner($r,$sz),'banr');
 $ret['avatar']=span(self::avatar($r,$sz),'','avt');
 if(ses('usr') && ses('usr')!=$p['usr'])$ret['follow']=self::follow($p);
-else $ret['follow']='';//bj('cbck|profile,edit',langp('profile'),'btn');
+else $ret['follow']='';//bj('cbck|profile,calledit',langp('profile'),'btn');
 //$ret['subscribe']=tlex::subscribt($p['usr'],$uid,$r['role']);
 $ret['username']=self::username($r);
 $rol=$r['role']??0; $rol=profile::$roles[$rol]; $ret['role']=span(langp($rol),'role');
@@ -318,7 +325,7 @@ $role=sql('role','profile','v','where pusr="'.$usr.'"');
 $bt=langph($role?'members':'subscribers').' '.span($n2,'nbntf','tlxabs');
 $ret.=toggle('cbck|friends,subscriptions|type=ber,usr='.$usr.'|tlxsub',$bt,'',$rp);
 $ret.=hidden('tlxabsnb',$n2);//.hidden('tlxsubnb',$n1)
-$ret.=toggle('cbck|profile,edit',langph('profile'),'',$rp);
+$ret.=toggle('cbck|profile,calledit',langph('profile'),'',$rp);
 return $ret;}
 
 #render

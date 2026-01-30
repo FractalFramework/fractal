@@ -72,7 +72,7 @@ return $ret;}
 static function check($p){$bid=$p['id']??''; $day=$p['day']??'';
 $id=sql('id',self::$db2,'v',['bid'=>$bid,'uid'=>ses('uid'),'day'=>$day]);
 if(!$id)sql::sav(self::$db2,[$bid,ses('uid'),$day,1]);
-else sql::up(self::$db2,'ok',$p['go']??'',$id);
+else sql::upd(self::$db2,['ok'=>$p['go']??''],$id);
 return self::play($p);}
 
 #build
@@ -90,7 +90,7 @@ $rb=sql('uid,day,ok',self::$db2,'kkv',['bid'=>$id]); //pr($rb);
 $start=strtotime($ra['date']); $n=$ra['nbdays'];
 setlng();//setlocale
 //echo date('ymd',$start);
-for($i=0;$i<$n;$i++)$re['_k'][]=utf8enc(date('Y-m-d',$start+86400*$i));//
+for($i=0;$i<$n;$i++)$re['_k'][]=str::utf8enc(date('Y-m-d',$start+86400*$i));//
 array_unshift($re['_k'],''); //pr($re);
 if($rb)foreach($rb as $k=>$v){//$re[$k][]=$k;
 	for($i=0;$i<$n;$i++){

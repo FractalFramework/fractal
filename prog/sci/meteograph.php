@@ -21,11 +21,13 @@ head::add('jscode',self::js());}
 
 #build
 static function mode($r){
+if(!is_array($r))return 0;
 $rb=array_count_values($r);
 $rb=array_flip($rb); ksort($rb);
 return array_pop($rb);}
 
 static function average($r){
+if(!is_array($r))return 0;
 return round(array_sum($r)/count($r));}
 
 static function middle($r){sort($r);
@@ -33,12 +35,12 @@ $n=floor(count($r)/2); $odd=$n%2;
 return $odd?$r[$n]:($r[$n-1]+$r[$n])/2;}
 
 static function mediane($r,$nq=2){sort($r); $ns=0; $range=0;
-$n=count($r); $sum=array_sum($r); $odd=$sum%2; $n2=floor($sum/$nq)+1;//middle value
+$n=count($r); $sum=array_sum($r); $odd=round($sum)%2; $n2=floor($sum/$nq)+1;//middle value
 foreach($r as $k=>$v){$ns+=$v; if($ns<$n2)$range=$k;}//search range
-return [$range,$r[$range]];}
+return [$range,$r[$range]??0];}
 
-static function boxplot($r){sort($r);//p($r);
-$n=count($r); $min=$r[0]; $max=$r[$n-1];
+static function boxplot($r){sort($r); //p($r);
+$n=count($r); $min=$r[0]??0; $max=$r[$n-1]??1;
 //[$rn2,$qv2]=self::mediane($r,2);//median
 [$rn1,$qv1]=self::mediane($r,4);//first quartile
 [$rn3,$qv3]=self::mediane($r,4/3);//last quartile
@@ -47,7 +49,7 @@ return [$min,$qv1,$qv3,$max];}
 
 static function build($p){
 $day=date('ymdH'); $insee=$p['insee']??''; if(!$insee)$insee=75101;//92012
-$r=sql('day,res','meteo','kv',['|1insee'=>$insee,'|2insee'=>92012],0); //pr($r);
+$r=sql('day,res','meteo','kv',['insee'=>$insee],0); //pr($r);
 if($r)foreach($r as $k=>$v){$rb=json_decode($v,true); $ka=substr($k,0,6); $kb=substr($k,6);
 	$rc[$ka][]=[$rb['weather'],$rb['temperature'][0],$rb['barometer'][0],$rb['outside_humidity'][0],$rb['probarain'],$rb['solar_radiation'][0],$rb['wind_speed'][0]];}
 return $rc;}
@@ -58,14 +60,14 @@ $rb=[]; $rc=[]; if(!is_numeric($m))$rc['_']=self::$rh;
 if($r)foreach($r as $k=>$v)foreach($v as $ka=>$va)foreach($va as $kb=>$vb)if($vb)$rb[$k][$kb][]=$vb; //pr($rb);
 if($rb)foreach($rb as $k=>$v){//pr($v[0]);
 	if(isset($v[0]))$rc[$k][0]=self::mode($v[0]);//weather
-	if($m==1)$rc[$k][1]=self::boxplot($v[1]);//temp
-	elseif($m==2){if($v[1]??'')$rc[$k][]=$v[1];}//alltemp
-	else $rc[$k][1]=self::average($v[1]);//temp
-	$rc[$k][2]=self::average($v[2]);//baro
-	$rc[$k][3]=self::average($v[3]);//hum
+	if($m==1)$rc[$k][1]=self::boxplot($v[1]??[]);//temp
+	elseif($m==2){if($v[1]??'')$rc[$k][]=$v[1]??[];}//alltemp
+	else $rc[$k][1]=self::average($v[1]??[]);//temp
+	$rc[$k][2]=self::average($v[2]??0);//baro
+	$rc[$k][3]=self::average($v[3]??0);//hum
 	$rc[$k][4]=isset($v[4])?self::average($v[4]):0;//rain
 	$rc[$k][5]=isset($v[5])?max($v[5]):'';//radiations
-	$rc[$k][6]=self::mode($v[6]);}//wind
+	$rc[$k][6]=self::mode($v[6]??0);}//wind
 return $rc;}
 
 #play

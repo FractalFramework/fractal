@@ -1,0 +1,1 @@
+{"translations":[{"text":"Thank you for your inquiry; the amount is one dollar.","detected_source_language":"FR","billed_characters":2}]}

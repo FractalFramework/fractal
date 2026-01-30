@@ -1,5 +1,5 @@
 <?php
-//Fractal@2016-2022 gnu/gpl v3+
+//Fractal@2015-2026 gnu/gpl v3+
 //session_name('frct');
 ini_set('session.cookie_lifetime',0);
 ini_set('session.use_only_cookies','on');

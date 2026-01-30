@@ -27,7 +27,7 @@ head::add('jscode',self::js());}
 static function iq(){$ip=sesf('ip'); $cuid=ses('uid',0);
 $r=sql('id,uid',self::$db,'rw',['ip'=>$ip],0); [$iq,$uid]=arr($r,2);
 if(!$iq)$iq=sql::sav(self::$db,['ip'=>$ip,'uid'=>$cuid?$cuid:0],0);
-elseif(!$uid && $cuid)sql::up2(self::$db,['uid'=>$cuid],$iq,0);
+elseif(!$uid && $cuid)sql::upd(self::$db,['uid'=>$cuid],$iq);
 return $iq;}
 
 #operations

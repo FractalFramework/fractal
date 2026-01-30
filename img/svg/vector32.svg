@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="800px" height="400px" >
+
+<rect x="0" y="0" width="800" height="400" fill="white" stroke="black" stroke-width="1"></rect>
+
+<defs fill="indianred" stroke="black" stroke-width="2"><g id="gr1" fill="orange" stroke="black" stroke-width="2"><rect x="0" y="0" width="40" height="80" fill="tan" stroke="black" stroke-width="2"></rect></g></defs>
+<defs fill="palegreen" stroke="black"><g id="gr2" fill="dodgerblue" stroke="black"><rect x="0" y="0" width="80" height="40" fill="forestgreen" stroke="black"></rect></g></defs>
+
+
+
+
+<rect x="240" y="200" width="40" height="80" fill="red" stroke="black"></rect>
+<rect x="280" y="200" width="40" height="80" fill="red" stroke="black"></rect>
+
+<rect x="240" y="280" width="80" height="40" fill="green" stroke="black"></rect>
+<rect x="240" y="160" width="80" height="40" fill="green" stroke="black"></rect>
+<rect x="320" y="240" width="40" height="80" fill="green" stroke="black"></rect>
+<rect x="200" y="160" width="40" height="80" fill="green" stroke="black"></rect>
+<rect x="320" y="160" width="40" height="80" fill="green" stroke="black"></rect>
+<rect x="200" y="240" width="40" height="80" fill="green" stroke="black"></rect></svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="160px" height="160px" >
+
+
+
+//obj1
+<polygon points="0,0 60,0 60,20 20,20 20,60 0,60 0,0" fill="black"></polygon>
+//obj2
+<polygon points="100,0 160,0 160,60 140,60 140,20 100,20 100,0" fill="black"></polygon>
+//obj3
+<polygon points="0,100 20,100 20,140 60,140 60,160 0,160 0,100" fill="black"></polygon>
+//obj4
+<polygon points="160,100 160,160 100,160 100,140 140,140 140,100 160,100" fill="black"></polygon></svg>

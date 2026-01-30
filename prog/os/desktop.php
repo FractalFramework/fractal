@@ -91,7 +91,7 @@ if($rb)return div('deleted','tit').tabler($rb);}
 
 //rename
 static function savemdfbt($p){
-if(auth(6) && $p['id'])sql::up(self::$db,'bt',$p['mdfbt'],$p['id']);
+if(auth(6) && $p['id'])sql::upd(self::$db,['bt'=>$p['mdfbt']],$p['id']);
 return desk::load('desktop','build',$p['dir']);}
 
 static function modifbt($p){
@@ -110,7 +110,7 @@ return self::manage($p);}
 //update
 static function update($p){
 $keys='dir,type,com,picto,bt'; $r=explode(',',$keys);
-foreach($r as $k=>$v)sql::up(self::$db,$v,$p[$v],$p['id']);
+foreach($r as $k=>$v)sql::upd(self::$db,[$v=>$p[$v]],$p['id']);
 //return lang('updated').' '.self::reload();
 return self::manage($p);}
 
@@ -149,7 +149,7 @@ if($p['col']=='picto')$btn=ico($p['val']).' '; else $btn=$p['val'];
 return bj($p['cbk'].'|desktop,modif|id='.$p['id'].',col='.$p['col'].',val='.jurl($p['val']).',cbk='.$p['cbk'],$btn,'btn');}
 
 static function savemdf($p){$p['val']=$p[$p['idv']];
-sql::up(self::$db,$p['col'],$p['val'],$p['id']);
+sql::upd(self::$db,[$p['col']=>$p['val']],$p['id']);
 return self::mdfbt($p);}
 
 static function modif($p){
@@ -161,10 +161,10 @@ return $ret;}
 
 //manage
 static function manage($p){$ret=''; $ra=[]; $dir=$p['dir']??'';
-if(isset($p['addrow'])){$r=sql::cols(self::$db,1,0);
+if(isset($p['addrow'])){$r=sql::cols(self::$db,2,0);
 	foreach($r as $k=>$v)$rb[$k]='';
-	$rb['uid']=ses('uid'); $rb['dir']=$dir;
-	$nid=sql::sav(self::$db,$rb);}
+	$rb['uid']=ses('uid'); $rb['dir']=$dir; $rb['auth']=0;
+	$nid=sql::sav(self::$db,$rb,'','',1);}
 if(auth(2))$ret=bj('dskmg|desktop,manage|dir='.$dir.',addrow=1',langp('add'),'btn');
 //if(auth(2))$ret=bj('popup|desktop,add|dir='.$dir,langp('add'),'btn');
 //$ret.=bj('dskmg|desktop,manage|dir='.$dir,langp('refresh'),'btn');

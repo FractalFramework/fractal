@@ -122,7 +122,7 @@ $r=sql('all',self::$db,'rr',['uid'=>ses('uid')]);
 return $r;}
 
 static function cod($d){//paq
-$d=clean_separator($d,';','\n'); $r=explode_r($d,';',',');
+$d=str::clean_separator($d,';','\n'); $r=explode_r($d,';',',');
 if(!is_numeric($r[0][0]))$rb=array_shift($r);//isole candidates
 if($rb[0])array_unshift($rb,''); self::$rn=$rb;//candidate 0 not exists
 return self::onpaq($r);}

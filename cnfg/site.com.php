@@ -1,8 +1,4 @@
 <?php
-$dbq=new mysqli('localhost','root','database','password');
-$r=['index'=>'mac','boot'=>'','utf8'=>1,'noadmin'=>0,'sitename'=>'Fractal'];
-$index='mac';//app to call
-$macboot='';//force specific usr under app mac
-$noadmin=0;//admin for owner only
-$site='supersite';//name of site
+$s=['localhost','root','database','password'];
+$r=['site'=>'Site','index'=>'mac','noadmin'=>0,'usrboot'=>'','srv'=>'ffw.ovh','favicon'=>1,'tz'=>'Europe/Paris','lang'=>'fr'];
 ?>

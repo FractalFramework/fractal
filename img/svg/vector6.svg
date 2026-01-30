@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="211px" >
+<rect x="0" y="0" width="200" height="15" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="15" width="200" height="14" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="30" width="200" height="13" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="45" width="200" height="12" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="60" width="200" height="11" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="75" width="200" height="10" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="90" width="200" height="9" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="105" width="200" height="8" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="120" width="200" height="7" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="135" width="200" height="6" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="150" width="200" height="5" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="165" width="200" height="4" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="180" width="200" height="3" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="195" width="200" height="2" fill="black" stroke="0" stroke-width="0"></rect>
+<rect x="0" y="210" width="200" height="1" fill="black" stroke="0" stroke-width="0"></rect></svg>

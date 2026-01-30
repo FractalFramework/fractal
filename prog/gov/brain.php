@@ -72,7 +72,7 @@ $d1=($te/100); $d2=($te/100); $d3=$d1+$d2;
 $r['p1']=$p1-$d1;
 $r['p2']=$p2-$d2;
 $r['p3']=$p3+$d3; pr($r);
-return json_enc($r);}
+return ($r);}//json_enc
 
 #build
 static function build($p){$id=$p['id']??''; return [];

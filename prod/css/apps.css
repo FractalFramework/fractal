@@ -23,7 +23,7 @@ background-repeat:no-repeat; background-attachment:fixed;}
 .padarea{font-size:large; color:; padding:15px; border:1px solid #e1e8ed; border-radius:5px; min-width:240px; max-width:900px; min-height:400px; border:0; background-color:var(--w6);}
 .editarea{width:100%; word-wrap:break-word; height:144px; min-height:41px; margin:0; padding:4px 8px; background-color:var(--ce); resize:vertical; font-size:16px; border-radius:4px; max-width:640px; min-width:365px; scrollbar-width:thin;}
 .editarea div{padding:0 0 8px 0;}
-.resizearea{width:100%; word-wrap:break-word; height:36px; min-height:36px; margin:0; padding:4px 8px; background-color:var(--ce); resize:vertical; font-size:16px; border-radius:4px; max-width:640px; min-width:365px; scrollbar-width:thin;}
+.resizearea{width:100%; word-wrap:break-word; height:108px; min-height:36px; margin:0; padding:4px 8px; background-color:var(--ce); resize:vertical; font-size:16px; border-radius:4px; max-width:640px; min-width:365px; scrollbar-width:thin;}
 .semiarea{border:1px dotted grey; padding:8px 12px; width:40%; height:300px; overflow-y:auto; word-wrap:break-word;}
 .tlexarea{width:100%; word-wrap:break-word; height:41px; min-height:41px; margin:0; padding:7px 8px; background-color:var(--c2); resize:vertical; font-size:16px; border-radius:4px;}
 
@@ -80,6 +80,7 @@ a.nbntf{color:var(--c2);}
 .artim{float:left; margin:4px 10px 0 0;}
 .hdash{margin-top:-150px;}
 .htime{margin-top:0px;}
+.mayatime{font-size:72px; font-family:Arial; margin:40px;}
 .timeline{width:auto; margin:0px 0 0 0;}
 .timeline .btit{margin-bottom:10px;}
 .tmpop{width:500px; margin:10px;}
@@ -89,7 +90,7 @@ a.nbntf{color:var(--c2);}
 /*post*/
 .post_content{width:auto; vertical-align:top; text-align:left; padding:10px; color:var(--b8);}
 .post_header{padding:4px 2px 0 4px; color:var(--b8); display:inline-block;}
-.post_text{margin:0px 0; padding:4px 20px; font-size:16px; word-wrap:anywhere; max-width:680px; color:var(--c2);}
+.post_text{margin:0px 0; padding:4px 4px; font-size:16px; word-wrap:anywhere; max-width:680px; color:var(--c2);}
 .post_text .panec{overflow-x:auto;}
 .post_redit{padding:0px; background-color:var(--b1);}
 .post{margin:4px 0 0 0; border-width:1px 0 0 0; border-style:solid; border-color:var(--b2);}
@@ -167,10 +168,10 @@ a:hover .subscrxt{color:#00519f;}
 /*art*/
 .wrapper{width:(100% - 40px); margin:0 0px;}
 .article{border:0px solid var(--c1); min-height:52px;}
-.sticky-edt{position:sticky; top:20px; background:var(--b2); padding:0px; margin:4px;}
+.sticky-edt{position:sticky; top:20px; background:var(--cd); padding:0px; margin:4px;}
 
 /*stickers*/
-.stickin{padding:10px;}
+.stickin{padding:10px; font-family:Ubuntu; font-size:18px; padding:6px 10px;}
 
 /*book*/
 .book{padding:10px; font-family:Times New Roman,serif; font-size:20px;}
@@ -182,7 +183,7 @@ a:hover .subscrxt{color:#00519f;}
 .bookcov h1{font-size:x-large; color:var(--c2); text-shadow:1px 1px 2px var(--c4);}
 .bookcov h2{font-size:small; color:var(--c2); text-shadow:0;}
 .bookcov h3{font-size:small; color:#eeeeee; text-shadow:0;}
-.booktxt{font-family:Times New Roman,serif; text-align:justify; font-size:20px; background:var(--w1); color:var(--c2); padding:0 20px; overflow:auto; height:calc(100vh - 270px); scrollbar-width:thin;}
+.booktxt{font-family:Times New Roman,serif; text-align:justify; font-size:20px; background:var(--w1); color:var(--c2); padding:0 20px; overflow:auto; height:calc(100vh - 270px);}
 .booknfo{padding:2px; text-align:center; font-size:large;}
 
 /*chat*/
@@ -233,7 +234,7 @@ a:hover .subscrxt{color:#00519f;}
 .pollinp input{color:var(--c2); padding:5px; margin:0px; border-radius:2px; width:calc(100% - 36px);}
 
 /*vote*/
-.ansprop{display:inline-block; border:0px solid #ccc; text-align:center; padding:2px 0;}
+.ansprop{display:inline-block; border:0px solid #ccc; text-align:center; padding:2px 0; color:black;}
 .pllcnt{min-width:280px; color:var(--c2);}
 .pllcnt span{display:inline-block;}
 .score1{background-color:#ddaaaa;}
@@ -293,9 +294,11 @@ a:hover .subscrxt{color:#00519f;}
 .text{background:var(--c2); border-radius:2px; padding:10px; margin:10px 0; font-size:medium;}
 
 /*pray*/
-.minibtn{padding:4px;}
+.minibtn{padding:4px; color:black;}
 .minibtn tr:nth-of-type(1n){background:none;}
 .minibtn tr:nth-of-type(2n){background:none;}
+.minicon .pic{color:black;}
+a .minicon .pic{color:black;}
 .minicon,.success{display:block; background:none; text-align:center; padding:10px;}
 .minicon.active{background:lightgreen; color:#ddd; border:1px solid green; padding:10px;}
 .minicon.disactive{background:#efa2a2; color:#ddd; border:1px solid red; padding:10px;}
@@ -303,6 +306,7 @@ a:hover .subscrxt{color:#00519f;}
 .minicon.active:hover{background:palegreen;}
 .minicon.disactive:hover{background:#ffb2b2;}
 .minicon.off{background:#cfcfcf;}
+.success{color:black;}
 .success.yes{background:lightgreen;}
 .success.no{background:#ffb2b2;}
 .text{background:var(--c2); border-radius:2px; padding:10px; margin:10px 0; font-size:medium;}

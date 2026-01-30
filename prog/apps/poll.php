@@ -36,19 +36,19 @@ static function vote($p){$id=$p['id'];//single
 $idv=sql('id','poll_valid','v','where bid="'.$id.'" and uid="'.ses('uid').'"');
 if(isset($idv))$p['val']=$p['val']!=$p['current']?$p['val']:'0';
 if(!isset($idv))$idv=sql::sav('poll_valid',[$id,ses('uid'),$p['val']]);
-else sql::up('poll_valid','val',$p['val'],$idv);
+else sql::upd('poll_valid',['val'=>$p['val']],$idv);
 return self::play($p);}
 
 static function vote2($p){$id=$p['id'];//multiple
 $idv=sql('id','poll_valid','v','where bid="'.$id.'" and uid="'.ses('uid').'"');
 if(isset($idv))$p['val']=$p['val']!=$p['current']?$p['val']:'0';
 if(!isset($idv))$idv=sql::sav('poll_valid',[$id,ses('uid'),$p['val']]);
-else sql::up('poll_valid','val',$p['val'],$idv);
+else sql::upd('poll_valid',['val'=>$p['val']],$idv);
 return self::play($p);}
 
 static function formcompub($p){
 $id=$p['id']; $ok=$p['fcp'.$id]??'';
-if($ok){$com=sql('com',self::$db,'v',$id); sql::up(self::$db,'com',$com.'|'.$ok,$id);}
+if($ok){$com=sql('com',self::$db,'v',$id); sql::upd(self::$db,['com'=>$com.'|'.$ok],$id);}
 return self::play($p);}
 
 static function pane($rb,$rs,$i,$sum,$closed,$vote,$com){$ret='';

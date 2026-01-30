@@ -27,7 +27,7 @@ return $ret.span('','','cbmap');}
 
 static function modif($p){
 $r=valk($p,['txt','day','loc']);
-if($p['id'])sql::up2(self::$db,$r,$p['id']);
+if($p['id'])sql::upd(self::$db,$r,$p['id']);
 return self::edit($p);}
 
 #editor
@@ -56,8 +56,8 @@ return $ret;}
 
 #check
 static function checkDay($p){//p($p);
-if($p['status']==1)sql::up('meet_valid','ok',2,$p['uid']);
-elseif($p['status']==2)sql::up('meet_valid','ok',1,$p['uid']);
+if($p['status']==1)sql::upd('meet_valid',['ok'=>2],$p['uid']);
+elseif($p['status']==2)sql::upd('meet_valid',['ok'=>1],$p['uid']);
 return self::rendezvous($p);}
 
 #rendezvous

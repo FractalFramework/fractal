@@ -77,8 +77,8 @@ $res=sql('res',self::$db2,'v',['bid'=>$id,'prm'=>$prm],0);  $res=str_replace('u0
 if($res)$rb=json_decode($res,true); //pr($rb);
 if(!$rb or $x){[$rb,$ra]=meteo::$va($vr); $rs=json_encode($rb); //pr($rb);//eco($rs);
 	$time=$rb['time'][0]??($rb['time']??''); if(!$time)$time=$r['up'];
-	if($x){$id=sql('id',self::$db2,'v',['bid'=>$id]); sql::up2(self::$db2,['res'=>$rs],$id,0);} else
-	sql::sav(self::$db2,[$id,strtotime($time),$prm,$rs],0);
+	if($x){$id=sql('id',self::$db2,'v',['bid'=>$id]); sql::upd(self::$db2,['res'=>$rs],$id);} 
+	else sql::sav(self::$db2,[$id,strtotime($time),$prm,$rs],0);
 	$f=explorer::nod('weather2',$id); db::save($f,$rb);}
 if(self::own($id))$bt=bj(self::$cb.$id.'|weather2,play|id='.$id.',x=1',pic('refresh'),'');
 if(is_array($rb)){

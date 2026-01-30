@@ -82,7 +82,7 @@ return div($s.'-'.$e,'wyg');}
 
 static function editor($p){
 $rid=$p['rid']??''; $ret=self::wsgbt($rid);
-$j='ajx(\'div,'.$rid.'|build,areaconn|aid='.$rid.'|'.$rid.'\');';//strcount(\''.$rid.'\',768); 
+$j=ajx('div,'.$rid.'|build,areaconn|aid='.$rid.'|'.$rid);//strcount(\''.$rid.'\',768); 
 $r=['contenteditable'=>'true','id'=>$rid,'class'=>'article scroll','onkeyup'=>$j,'onmousedown'=>$j,'placeholder'=>lang('message')];
 $ret.=tag('div',$r,'');
 $ret.=span('','btko','strcnt'.$rid,'display:none;').' ';
@@ -98,7 +98,7 @@ return conn::call(['msg'=>$d,'mth'=>'minconn','ptag'=>1]);}
 static function connbt($id,$o=''){$ns='';//ns();
 $ret=btj('[]',atj('embed_slct',['[',']',$id]),'btn').$ns;
 //$r=['h','b','i','u','q','k','video','web','twit'];//,'url','code'
-$r=['h'=>'big','b'=>'bold','i'=>'italic','u'=>'underline','k'=>'strike','list'=>'list','q'=>'indent'];//'c'=>'center','nh'=>'refnote','nb'=>'footnote','as'=>'aside',,'url','code','video'=>'video','web'=>'web','twit'=>'twitter'
+$r=['url'=>'url','h'=>'big','b'=>'bold','i'=>'italic','u'=>'underline','k'=>'strike','list'=>'list','q'=>'indent','nh'=>'refnote','nb'=>'footnote','aside'=>'aside',];//'c'=>'center','url','code','video'=>'video','web'=>'web','twit'=>'twitter'
 foreach($r as $k=>$v)$ret.=btj(langpi($v),atj('embed_slct',['[',':'.$k.']',$id]),'btn').$ns;
 $ret.=bj($id.'|core,clean_mail|x='.$id.'|'.$id,pic('clean'),'btn',['title'=>helpx('eraser')]);
 if($o==2)$ret.=bubble('images,pick|o=1,id='.$id,pic('img'),'btn');
@@ -115,7 +115,7 @@ return div($ret);}
 
 static function cbt($rid,$r){
 $ret=btj('[]',atj('embed_slct',['[',']',$rid]),'btn').' ';
-foreach($r as $k=>$v)$ret.=btj($k,insert('['.utf8enc($v).':'.$k.']',$rid),'btn').' ';
+foreach($r as $k=>$v)$ret.=btj($k,insert('['.str::utf8enc($v).':'.$k.']',$rid),'btn').' ';
 return div($ret);}
 
 static function editconn($p){$id=$p['aid']??''; $txt=$p[$id]??''; $rid=randid('edc');
@@ -204,16 +204,15 @@ if(!$a)$a='build'; $j=$rid.'|'.$a.',scorebt|'.prm($p);
 for($i=1;$i<6;$i++)$ret.=bj($j.',v='.$i,ico($i<=$v?'star':'star-o'),'star');
 return $ret.$lbl.hidden($k,$v);}
 
-static function code($d,$o=''){
-$d=str_replace(['<?php','?>'],'',$d); $d=trim($d);
+static function code($d){$d=trim($d);
 ini_set('highlight.comment','gray');
 ini_set('highlight.default','white');
 ini_set('highlight.html','red');
 ini_set('highlight.keyword','orange');
 ini_set('highlight.string','lightblue');
-$d=highlight_string('<'.'?php'."\n".$d,true);
-$d=str_replace(['&lt;?php','?>','<span style="color: white"><br /></span>'],'',$d); $d=trim($d);
-return div(trim($d),'','','overflow:auto; wrap:true; background:#222244; padding:0 20px;');}
+$d=highlight_string('<?php'."\n".$d,true);
+$d=str_replace(['&lt;?php'."\n",'?>','<br />'],'',$d);
+return div(trim($d),'code','','');}
 
 //iterable me,u (vector,bitmap)
 static function iterbt($p,$ra,$r,$b,$a){$rb=[]; $rid=$p['bid'];
@@ -231,7 +230,7 @@ return $rb;}
 
 static function sample($p){//app,$rid,k
 $a=$p['a']; $b=$p['b']??''; $k=$p['k']??''; $ret=''; $d=''; $r=$a::ex();
-if($k)$d=$r[$k]??''; if($d)return utf8enc($d); elseif($k)return;
+if($k)$d=$r[$k]??''; if($d)return str::utf8enc($d); elseif($k)return;
 foreach($r as $k=>$v)$ret.=bj($b.'|build,sample|a='.$a.',k='.$k,$k,'');
 return div($ret,'nbp');}
 

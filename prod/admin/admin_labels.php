@@ -13,7 +13,7 @@ sql::create(self::$db,['ref'=>'var','icon'=>'var']);}
 
 //save
 static function update($p){$rid=$p['rid'];
-sql::up(self::$db,'icon',$p[$rid],$p['id']);
+sql::upd(self::$db,['icon'=>$p[$rid]],$p['id']);
 return self::com($p);}
 
 static function del($p){
@@ -25,7 +25,7 @@ $nid=sql::sav(self::$db,[$p['ref'],$p['icon']]);
 return self::com($p);}
 
 static function edit($p){$rid=randid('labels');//id
-$r=sql('ref,icon',self::$db,'ra','where id='.$p['id']);
+$r=sql('ref,icon',self::$db,'ra',$p['id']);
 $ret=label($rid,$r['ref']);
 $ret.=goodinput($rid,$r['icon']);
 $ret.=bj('admm,,x|admin_labels,update|id='.$p['id'].',rid='.$rid.'|'.$rid,lang('save'),'btsav');
@@ -70,7 +70,7 @@ static function conv(){
 $r=sql('id,ref','labels_all','kv','order by ref'); //pr($r);
 foreach($r as $k=>$v){
 	$voc=trans::com(['from'=>'fr','to'=>'en','txt'=>$v]);
-	sql::up('labels_all','ref',$voc,$k,'id');}}
+	sql::upd('labels_all',['ref'=>$voc],$k);}}
 
 static function fusion(){
 $r=sql('ref,icon','labels_all','kv','order by ref'); //pr($r);

@@ -105,19 +105,20 @@ $id=$p['id']; $idv=$p['idv']; $pr='pn'.$idv; $usr=$p['usr']; $uid=$p['uid'];
 $lg=$p['lg']; $pv=$p['pv']; $lbl=$p['lbl']; $own=$usr==$us?1:0;
 if($id)$txt=sql('txt',self::$db,'v',$id);
 if($txt)$obj=conn::call(['msg'=>$txt,'app'=>'conn','mth'=>'appreader']); //pr($r=conn::$obj);
-$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',to='.$usr.',ib='.$id,langp('reply',$sz));
-$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',qo='.$id,langp('relay',$sz));
-$rt[]=toggle($pr.'|tlxf,share|id='.$id,langp('share',$sz));
-if(conn::$obj)$rt[]=toggle($pr.'|tlxf,keep|idv='.$idv.',id='.$id,langp('keep',$sz));//
-if($own or auth(6))$rt[]=toggle($pr.'|tlxf,redit|id='.$id,langp('modif'),'');
-else $rt[]=toggle($pr.'|tlxf,report|idv='.$idv.',id='.$id.',cusr='.$usr,langp('report'),'');
+$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',to='.$usr.',ib='.$id,langpi('reply',$sz));
+$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',qo='.$id,langpi('relay',$sz));
+$rt[]=toggle($pr.'|tlxf,share|id='.$id,langpi('share',$sz));
+if(conn::$obj)$rt[]=toggle($pr.'|tlxf,keep|idv='.$idv.',id='.$id,langpi('keep',$sz));//
+if($own or auth(6))$rt[]=toggle($pr.'|tlxf,redit|id='.$id,langpi('edit'),'');
+else $rt[]=toggle($pr.'|tlxf,report|idv='.$idv.',id='.$id.',cusr='.$usr,langpi('report'),'');
 $rt[]=self::app_action($obj,$pr);
-//$rt[]=bj($pr.'|tlxf,translate|id='.$id,langp('translate'));
-if($own)$rt[]=toggle($pr.'|tlxf,editpv|idv='.$idv.',id='.$id.',pv='.$pv,langp('privacy'),'');
-//if($own)$rt[]=bj($pr.'|tlxf,editlbl|idv='.$idv.',id='.$id.',lbl='.$lbl,langp('label'),'');
-$rt[]=toggle($pr.'|chat,discussion|id='.$id,langp('discussion'));//if($usr!=$us)
-if($own or auth(6))$rt[]=toggle($pr.'|tlxf,del|idv='.$idv.',did='.$id,langp('delete'),'');//??own
-return div(implode(' ',$rt),'lish');}//div(,'actions')
+//$rt[]=bj($pr.'|tlxf,translate|id='.$id,langpi('translate'));
+if($own)$rt[]=toggle($pr.'|tlxf,editpv|idv='.$idv.',id='.$id.',pv='.$pv,langpi('privacy'),'');
+//if($own)$rt[]=bj($pr.'|tlxf,editlbl|idv='.$idv.',id='.$id.',lbl='.$lbl,langpi('label'),'');
+$rt[]=toggle($pr.'|chat,discussion|id='.$id,langpi('discussion'));//if($usr!=$us)
+if($own or auth(6))$rt[]=toggle($pr.'|tlxf,del|idv='.$idv.',did='.$id,langpi('delete'),'');//??own
+//return div(implode(' ',$rt),'lish'); //div(,'actions')
+return implode(' ',$rt);}
 
 static function editlbl($p){
 $idv=$p['idv']; $id=$p['id']; $lbl=$p['lbl']; $ret='';
@@ -178,9 +179,9 @@ return $ret;}
 static function share($p){$id=$p['id']??''; $root=host(1).'/'.$id;
 $txt=sql('txt',self::$db,'v',$id);
 $txt=conn::call(['msg'=>$txt,'app'=>'conn','mth'=>'noconn','ptag'=>0]);
-$txt=(utf8enc(strip_tags($txt)));
+$txt=(str::utf8enc(strip_tags($txt)));
 //$obj=tlex::objects(); if($obj)$txt.=trim(strip_tags($obj));
-$tw='http://twitter.com/intent/tweet?original_referer='.$root.'&url='.$root.'&text='.utf8enc($txt).' #tlex'.'&title=Tlex:'.$id; $fb='http://www.facebook.com/sharer.php?u='.$root;
+$tw='http://twitter.com/intent/tweet?original_referer='.$root.'&url='.$root.'&text='.urlencode($txt).' #tlex'.'&title=Tlex:'.$id; $fb='http://www.facebook.com/sharer.php?u='.$root;
 $ptw=ico('twitter-square','24','twitter'); $pfb=ico('facebook-official','24','facebook');
 $ret=lk($tw,$ptw,'',1).lk($fb,$pfb,'',1);
 $ret.=popup('iframe,getcode|url='.host().'/frame/tlex/'.$id,ico('code',24)).' ';
@@ -194,7 +195,7 @@ return $ret;}
 //del
 static function del($p){$id=$p['did'];
 $uid=sql('uid',self::$db,'v',$id);
-if($uid!=ses('uid'))return lang('operation not permitted');
+if($uid!=ses('uid') && !auth(6))return lang('operation not permitted');
 if(empty($p['confirm'])){
 	//$cancel=bj('tlx'.$id.'|tlex,one|id='.$id,langp('cancel'),'btn');
 	$ja='cbck|tlxf,del|did='.$id.',confirm=1';
@@ -212,7 +213,7 @@ $max=sql('count(ab)','tlex_ab','v',['usr'=>$cuid]);//nb ab
 $prm='id='.$id.',cusr='.$usr;//.',idv='.$idv
 if($p['cancel']){sql::del('tlex_rpt',$idp);
 	//echo $nb.'<='.ceil($max/20);
-	if($max)if($nb<=ceil($max/20))sql::up(self::$db,'no','0',$id);}
+	if($max)if($nb<=ceil($max/20))sql::upd(self::$db,['no'=>'0'],$id);}
 elseif($idp){$and='';//already
 	if($nb>1)$and=', '.lang('and',1).' '.$nb.' '.lang('others',1);
 	$prb=['data-prmtm'=>'id='.$id];
@@ -220,7 +221,7 @@ elseif($idp){$and='';//already
 	return div(help('telex_reported').$and.' '.$ccl,'alert');}
 elseif($p['confirm']){sql::sav('tlex_rpt',[$uid,$id]); $nb+=1;
 	//echo $nb.'>='.ceil($max/20);
-	if($max)if($nb>=ceil($max/20))sql::up(self::$db,'no','1',$id);}
+	if($max)if($nb>=ceil($max/20))sql::upd(self::$db,['no'=>'1'],$id);}
 else{$ja='cbck|tlxf,report|'.$prm.',confirm=1'; $prb=['data-prmtm'=>'id='.$id];
 	$ret=lang('telex_max_reports').' : '.$nb.'/'.ceil($max/20);
 	return bj($ja,langp('confirm reporting'),'btdel',$prb).' '.span($ret,'alert');}
@@ -253,7 +254,7 @@ if($r)foreach($r as $k=>$v){$st=$v['typntf']; $usr=$v['byusr'];
 	$bt=bubble('profile,call|usr='.$usr.',sz=small','@'.$usr,'btit',1);
 	if($st==5)$bt.=bj('cbck|chat,calltlx|headers=1',pic('chat'),'btn');
 	if($st>3)$ret.=tag('h3','',$bt.' '.lang($t),'');
-	sql::up('tlex_ntf','state','0',$v['id']);}
+	sql::upd('tlex_ntf',['state'=>'0'],$v['id']);}
 return div($ret,'');}
 
 //notification (likes,follow)
@@ -262,7 +263,7 @@ $send=''; $usr=ses('usr'); if($tousr==$usr)return;
 $r=['4usr'=>$tousr,'byusr'=>$usr,'typntf'=>$type,'txid'=>$id];
 $ex=sql('id','tlex_ntf','v',$r);
 if(!$ex)sql::sav('tlex_ntf',[$tousr,$usr,$type,$id,'1']);
-else sql::up('tlex_ntf','state',1,$ex);
+else sql::upd('tlex_ntf',['state'=>1],$ex);
 $send=sql('ntf','profile','v',['pusr'=>$tousr]);
 if($send!=1){$subject=lang('tlex');
 	$mail=sql('mail','login','v',['name'=>$tousr]);
@@ -280,8 +281,8 @@ elseif(ses('uid')){$p['lid']=sql::sav('tlex_lik',[ses('uid'),$id]); self::savent
 return tlex::likebt($p);}
 
 //new user
-static function one($p){$r=tlex::api($p);
-if($r)return self::pane(current($r),$p['id']);}
+static function one($p){$d=tlex::api($p);
+if($d)return self::pane($d,$p['id']);}
 
 static function pane($v,$current=''){$id=$v['id']; $usr=$v['name'];
 $v['idv']='tlx'.$id; $tg='popup';
@@ -333,18 +334,20 @@ $js=atj('strcount2',$rid).atj('autoResizeHeight',$rid);
 $r=['id'=>$rid,'placeholder'=>lang('message'),'class'=>'resizearea scroll2','onkeyup'=>$js,'onpaste'=>$js];
 $ret.=div(tag('textarea',$r,$msg));
 $ret.=div('','clear','asci');
+//$ret.=apps::call($p);
 return div($ret,'tlxapps','addpst'.$rid);}
 
 //menu
 static function menu($p){$c='';
 [$uid,$usr,$vu,$role,$op,$app,$tg,$noab]=vals($p,['uid','usr','vu','role','opn','app','tg','noab']);
 $rp['data-u']='/'; if($vu)$rp['data-u'].='@'.$usr; $cusr=ses('usr');
-$mode=',mode='.($vu?'private':'public'); $my=$vu?'my ':'';
-$bt=ico('user').' '.$p['cusr']; //$bt=langph('myposts');
+$mode=',mode='.($vu?'private':'public'); $my=$vu?'my ':''; $tg='nav2;nav3;cbck';
+$bt=ico('user').' '.($p['cusr']??''); //$bt=langph('myposts');
 if($cusr){
-	if($noab)$rt[]=toggle('main|root,com|opn=posts',$bt,'react',[],1,1);
-	else $rt[]=toggle('main|root,com|opn=posts,usr='.$p['cusr'].',noab=1',$bt,'react',[],0,1);
-	$rt[]=toggle('nav3|'.ses::$cnfg['index'].',call|op=new',langp('new'),$c,[],'',0);}
+	if($noab)$rt[]=toggle($tg.',,z|home,com2|opn=posts',$bt,'react',[],1,1);
+	else $rt[]=toggle($tg.',,z|home,com2|opn=posts,usr='.($p['cusr']??'').',noab=1',$bt,'react',[],1,1);
+	//$rt[]=toggle('nav3;|home,com2|op=new',langp('new'),$c,[],'',0);
+	$rt[]=toggle('nav3|tlxf,editor|op=new',langp('new'),$c,[],'',0);	}
 $rt[]=toggle('nav3|tlex,searchbt|usr='.$usr.$mode,langph('search'),$c,$rp,'',0);
 $rt[]=toggle('nav3|tlex,tagsbt|usr='.$usr.$mode,langph($my.'hashtags'),$c,$rp,'',0);
 //$rt[]=toggle('nav3|tlex,tag2bt|usr='.$usr.$mode,langph($my.'tags'),$c,$rp,'',0);

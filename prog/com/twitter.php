@@ -49,7 +49,7 @@ foreach($ra as $k=>$v){if(isset($rb[$v]))sql::del(self::$db2,$k); $rb[$v]=1;}}
 static function twsave($r){
 $ex=sql('id',self::$db2,'v','where twid='.$r['twid']);
 if(!$ex)sql::sav(twitter::$db2,$r);
-else sql::up2(self::$db2,$r,$ex);}
+else sql::upd(self::$db2,$r,$ex);}
 
 #play-q
 static function banner($p){
@@ -162,13 +162,13 @@ return $d;}
 
 static function clean1($d){$q=dom($d); //eco($d);
 $r=$q->getElementsByTagName('p');//textContent
-if($r)foreach($r as $k=>$v)if(domattr($v,'dir')=='ltr')$ret=utf8dec($v->nodeValue);
+if($r)foreach($r as $k=>$v)if(domattr($v,'dir')=='ltr')$ret=str::utf8dec($v->nodeValue);
 return $ret;}
 
 static function clean($d){//eco($d);
 if(strpos($d,'<p')!==false)$d=between($d,'<p','</p>'); 
 $d=conv::com($d); $d=conn::call(['msg'=>$d,'ptag'=>'no','mth'=>'twits']); //eco($d); 
-return clean_n($d);}
+return str::clean_n($d);}
 
 static function oembed($q){
 $u='https://twitter.com/'.$q['user']['screen_name'].'/status/'.$q['id'];

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="600px" height="400px" >
+<rect x="600" y="400"></rect>
+
+<defs><g id="gr1"><polygon points="40,40 60,60 60,160 40,180 20,160 20,60 40,40"></polygon></g></defs>
+
+
+<use xlink:href="#gr1" x="0" y="0" fill="black"></use>
+<use xlink:href="#gr1" x="150" y="0" fill="black"></use>
+<use xlink:href="#gr1" x="0" y="150" fill="black"></use>
+<use xlink:href="#gr1" x="150" y="150" fill="black"></use>
+<use xlink:href="#gr1" x="-5" y="-225" transform="rotate(90 0,0)"></use>
+<use xlink:href="#gr1" x="145" y="-225" transform="rotate(90 0,0)"></use>
+<use xlink:href="#gr1" x="295" y="-225" transform="rotate(90 0,0)"></use></svg>

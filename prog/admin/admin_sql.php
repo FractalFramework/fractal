@@ -19,7 +19,7 @@ $b=$p['b']??''; $cols=val($p,'cols'); $id=$p['id']??'';
 if(self::secu($b))return;
 $cl=explode(';',$cols);
 foreach($cl as $v)$r[$v]=$p[$v];
-sql::up2($b,$r,$id);
+sql::upd($b,$r,$id);
 return 'ok';}
 
 static function add($p){
@@ -33,7 +33,7 @@ return $nid;}
 static function savcsv($p){
 $b=$p['b']??''; $bid=$p['bid']??''; $d=$p['datas']??'';
 $r=explode_r($d,"\n",','); $cl=array_keys(sql::cols($b,3,0));
-foreach($r as $k=>$v){$id=array_shift($v); if(auth(6))sql::up2($b,array_combine($cl,$v),$id,0);}
+foreach($r as $k=>$v){$id=array_shift($v); if(auth(6))sql::upd($b,array_combine($cl,$v),$id,0);}
 return self::call($p);}
 
 static function editcsv($p){
@@ -60,7 +60,7 @@ if(self::secu($b))return;
 $id=$p['id']??''; $act=val($p,'act'); $labs=val($p,'colslabels');
 if($cols){$cl=explode(',',$cols);if($labs)$lb=array_combine($cl,explode(',',$labs));}
 else{$cl=sql::cols($b,1,0); $cols=implode(',',array_keys($cl)); $p['cols']=$cols;}
-if($id)$r=sql($cols,$b,'ra','where id='.$id);
+if($id)$r=sql($cols,$b,'ra',$id);
 $prm='id='.$id.',b='.$b.',cols='.str_replace(',',';',$cols);
 if(isset($r))foreach($r as $k=>$v){
 	$label=label($k,isset($lb[$k])?lang($lb[$k]):$k);
@@ -80,7 +80,7 @@ if(self::secu($b))return;
 $ra=sql::cols($b,2,2);
 foreach($ra as $k=>$v)$rb[$v]=valb($p,$rid.$k); //pr($rb);
 $rb=sql::vrf($rb,$b);
-if($id)sql::up2($b,$rb,$id);
+if($id)sql::upd($b,$rb,$id);
 return self::read($p);}
 
 static function edit_row($p){
@@ -102,7 +102,7 @@ $d=trim($d); $d=delbr($d,"\n");
 $rc=sql::cols($b); $rd=array_keys($rc);
 $col=is_numeric($c)?$rd[$c]:$c; $ty=$rc[$col];
 if($ty=='int')$d=(int)trim($d);
-sql::up($b,$col,$d,$id,'',0);
+sql::upd($b,[$col=>$d],$id);
 return $d;}
 
 #build
@@ -141,7 +141,7 @@ if(auth(6))$bt.=download::mkcsv($r,$b.($id?'_'.$id:''));
 //core,mkbcp|b='.$db.',o='.date('ymd')
 if($b)return $bt.div(self::read($p),'',$p['did']);}
 
-static function menu($p){$ret;
+static function menu($p){
 $r=sql::query('show tables','rv'); $b=$p['b']??'';
 foreach($r as $k=>$v)if(substr($v,0,2)=='z_')unset($r[$k]);
 return batch($r,'asq|admin_sql,call|b=$v',$b);}

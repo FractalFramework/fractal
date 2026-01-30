@@ -78,9 +78,9 @@ return $d;}
 
 static function js(){}
 static function headers(){
-head::prop('og:title',addslashes_b(static::$title));
-head::prop('og:description',addslashes_b(static::$descr));
-head::prop('og:image',self::$image);}
+root::$title=static::$title;
+root::$descr=static::$descr;
+root::$title=self::$image;}
 
 #edit
 static function del($p){$id=$p['id']??'';
@@ -109,11 +109,11 @@ return $a::edit($p);}
 
 static function modif($p){
 $id=$p['id']??''; $a=static::$a; $db=static::$db;
-if($a::$conn==1 && isset($p['txt']))$p['txt']=cleanconn($p['txt']??'');
+if($a::$conn==1 && isset($p['txt']))$p['txt']=str::cleanconn($p['txt']??'');
 $r=sql::pvalk($p,$db,0); $r=trims($r);
 $ok=self::perms($db,$id,'pub');
 if(!$ok)return lang('permission denied');
-sql::up2($db,$r,$id,0);
+sql::upd($db,$r,$id,0);
 return $a::edit($p);}
 
 //privacy
@@ -146,8 +146,8 @@ if(self::permission($uid,$pub))return $ret;}//call appx means no abstraction
 
 //works for pub and edt
 static function mkpub($p){
-if(isset($p['pub'])){$v=$p['pub']??0; sql::up(static::$db,'pub',$v,$p['id']??''); desktop::renove(static::$a);}
-elseif(isset($p['edt'])){$v=$p['edt']??0; sql::up(static::$db,'edt',$v,$p['id']??'');}
+if(isset($p['pub'])){$v=$p['pub']??0; sql::upd(static::$db,['pub'=>$v],$p['id']??''); desktop::renove(static::$a);}
+elseif(isset($p['edt'])){$v=$p['edt']??0; sql::upd(static::$db,['edt'=>$v],$p['id']??'');}
 return self::edit($p);}
 
 static function privacy($p){$ret=''; $typ=$id=$p['typ']??'pub'; $edtlimit=$p['pub']??'';
@@ -174,7 +174,7 @@ static function mkdsk($p){
 $ex=$p['ex']??''; $com=$p['com']??''; $t=$p['tit']??''; $pub=$p['pub']??''; $del=$p['del']??'';
 //
 if($del)return tlxf::dskdel($p);
-else{sql::up('desktop','auth',$pub,$ex); if(!$ex)return tlxf::dsksav($p);}
+else{sql::upd('desktop',['auth'=>$pub],$ex); if(!$ex)return tlxf::dsksav($p);}
 return desktop::content(['dir'=>'/documents/'.$com]);}
 
 static function dsk($p){$ret='';
@@ -210,7 +210,7 @@ elseif($op=='imp'){$nm=$p['impdb']??''; $cols=sql::cols($db2,2); $r=explorer::re
 			else $rb[$k][$ka]='';}} if($rb)ksort($rb);
 	if($rb)sql::sav2($db2,$rb); return self::subcall($p);}
 elseif($op=='sav'){$cols=sql::cols($db2,3,2); $r=valk($p,$cols); $r=trims($r);
-	if($a::$conn==1 && isset($r['txt']))$r['txt']=conv::com($r['txt']); sql::up2($db2,$r,$idb);}
+	if($a::$conn==1 && isset($r['txt']))$r['txt']=conv::com($r['txt']); sql::upd($db2,$r,$idb);}
 elseif($op=='del'){
 	if($p['ok']??'')sql::del($db2,$idb);
 	else return bj($cb.$id.'sub,,x|'.$a.',subops|id='.$id.',idb='.$idb.',op=del,ok=1',langp('really?'),'btdel');
@@ -255,7 +255,7 @@ $ret=lku($a.'/edit/p:'.$id,langp('back'),'btn');//$cbb.'|'.$a.',edit|id='.$id
 $ret.=bj($prv?$j.$prv:'',langp('previous'),'btn'.($prv?'':' grey'));
 $ret.=bj($nxt?$j.$nxt:'',langp('next'),'btn'.($nxt?'':' grey'));
 $ret.=bj($cb.',,z|'.$a.',subops|id='.$id.',op=add|'.$cols,langp('add'),'btn');
-$ret.=bj(''.$cb.',,z,scrollBottom,txt|'.$a.',subops|id='.$id.',idb='.$idb.',op=sav|'.$cols,langp('save'),'btsav');
+$ret.=bj(''.$cb.',,z,,txt|'.$a.',subops|id='.$id.',idb='.$idb.',op=sav|'.$cols,langp('save'),'btsav');//scrollBottom
 $ret.=bj('popup|'.$a.',subops|id='.$id.',idb='.$idb.',op=del',langp('delete'),'btdel');
 $ret.=bj($j.$idb,'#'.$idb,'btn');
 $ret.=lk('/'.$lk,ico('link'),'btn');
@@ -306,14 +306,20 @@ return div($ret,'',$cb.'sub');}
 
 static function submdftxt($p){
 $id=$p['id']??''; $idb=$p['idb']??''; $rid=$p['rid']??'';
-$a=static::$a; $d=$p[$rid]??''; $d=cleanconn($d);
-sql::up(static::$db2,'txt',$d,$idb);
+$a=static::$a; $d=$p[$rid]??''; 
+$d=str::delnbsp($d); $d=str::repair_punct($d);
+//$d=conn::read($d,'conn','saveimg');
+sql::upd(static::$db2,['txt'=>$d],$idb);
 return $a::subedit(['id'=>$id,'idb'=>$idb]);}
+
+static function counthook($d){
+$na=substr_count($d,'['); $nb=substr_count($d,']'); $res=$na-$nb;
+if($res)return span(abs($res).' '.($res>0?'[':']'),'btdel');}
 
 static function subeditconn($p){$id=$p['id']??''; $idb=$p['idb']??'';
 $txt=sql('txt',static::$db2,'v',$idb); $rid=randid('art'); $a=static::$a; $cb=static::$cb;
-$ret=bj($cb.$id.',,x|'.static::$a.',submdftxt|id='.$id.',idb='.$idb.',rid='.$rid.'|'.$rid,langp('save'),'btsav');
-$ret.=build::connbt($rid).textarea($rid,$txt,'64','22','','console');
+$ret=bj($cb.$id.'|'.static::$a.',submdftxt|id='.$id.',idb='.$idb.',rid='.$rid.'|'.$rid,langp('save'),'btsav');
+$ret.=build::connbt($rid).self::counthook($txt).textarea($rid,$txt,'64','22','','console');
 return $ret;}
 
 static function langs(){
@@ -337,16 +343,19 @@ if($nb<20)$ret.=bj('choices|appx,formcom|ty='.$ty.',nb='.($nb+1).'|'.$inps,langp
 if(!($p['nb']??''))$ret=div($ret,'','choices').hidden($ty,$answ);
 return $ret;}
 
-static function form($p){$a=static::$a; $cb=static::$cb; $ret=''; $sz='34';//63
-$cols=sql::cols(static::$db,3); $id=$p['id']??''; $uid=$p['uid']??''; $html=$p['html']??'';
-foreach($cols as $k=>$v){$val=$p[$k]??''; $bt=''; $wsg=$p['wsg']??''; $lbl=lang($p['label'.$k]??$k);
+static function form($p){
+$a=static::$a; $cb=static::$cb; $cols=sql::cols(static::$db,3); $ret=''; $sz='34';//63
+$id=$p['id']??''; $uid=$p['uid']??''; $html=$p['html']??''; $wsg=$p['wsg']??''; $j=$p['jp']??'';
+foreach($cols as $k=>$v){$val=$p[$k]??''; $lbl=lang($p['label'.$k]??$k); $bt='';
 	if($p['fc'.$k]??''){$f='fc_'.$k; $bt=$a::$f($k,$val,$v,$id,$lbl);}
 	elseif($k==$html)$bt=divarea($k,conn::com($val,1),'article',1);
 	elseif($k=='txt'){
 		if($a::$conn)$wsg=build::connbt($k,1);
 		if($a::$gen)$wsg=build::genbt($k,1);
 		$h=strlen($val)>1000||substr_count($val,"\n")>10?26:8;
-		$bt=$wsg.textarea($k,$val,80,$h,$lbl,'',$v=='bvar'?1000:'');}
+		if($j)$j=$k.'cbk|'.$a.','.$j.'|'.$k;
+		$bt=$wsg.textarea($k,$val,80,$h,$lbl,'',$v=='bvar'?1000:'',$j);
+		if($j)$bt.=div('','',$k.'cbk');}
 	//elseif($k=='pub')$bt=self::pub($k,$val,$uid);
 	elseif($k=='pub' or $k=='edt')$ret.=hidden($k,$val);
 	elseif($k=='hid')$ret.=hidden($k,$val).span($val,'nfo');
@@ -484,7 +493,7 @@ else $cls.=$t;
 if($pub)$cls.=',pub'; if($edt)$cls.=',edt';
 if($spd==2){$w='where uid="'.($uid?$uid:'').'" ';
 	if($tri && $tri!='x' && $pub)$w.=' and pub="'.($tri-1).'" ';}
-else{$w='where uid!="'.($uid?$uid:'').'" ';//need nicer req, slct arts by auth
+else{//$w='where uid!="'.($uid?$uid:'').'" ';//need nicer req, slct arts by auth
 	if($pub){if(!$uid)$w.='and pub=3 '; else $w.='and (pub>1 or (pub=1 and (select usr from tlex_ab where usr="'.$uid.'" and ab=uid)))';}
 	if($tru && $tru!=1)$w='where name="'.$tru.'"';}
 if($lng)$w.=' and lang="'.ses('lng').'"';
@@ -519,8 +528,10 @@ if($r)foreach($r as $k=>$v){$id=$v['id']; $btn=''; $ttl=''; $ico=''; $com='call'
 		$j=$cb.',,,1|'.$a.','.$com.'|id='.$v['id'].',rid='.$rid.',opn='.$opn;
 		$pop=bj('popup,,y,1|'.$a.',call|id='.$v['id'],pic('popup',12)); if($dsp==2)$pop='';
 		if($dsp==1){
-			$btn.=span('#'.$v['id'],'');
-			if($pbb && $readable)$btn.=span(langpi(self::$privacy[$pub],14),'');
+			$btn.=span(bj('popup,,y,1|'.$a.',call|id='.$v['id'],'#'.$v['id']),'');
+			$btprv=langpi(self::$privacy[$pub],14);
+			//if($pbb && $readable)$btn.=span($btprv,'');
+			if($pbb && $readable)$btn.=bubble($a.',privacy|id='.$id.',rid='.$rid,$btprv,'');
 			$btn.=span($v['name'],'small');//,'','',['title'=>$ttl]//lang('by').
 			$btn.=span($v['date'],'date');' '.
 			//$bt=lku($a.'/'.$id,$tit,'');

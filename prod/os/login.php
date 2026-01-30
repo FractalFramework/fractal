@@ -42,12 +42,13 @@ $ret.=bj('recocbk|login,recoverSave||recpsw',lang('set as new password'),'btsav'
 return div($ret,'','recocbk');}
 
 static function recoverSave($p){
-$pswd=$p['recpsw'];
-$user=ses('recoveryUsr');
+$pswd=$p['recpsw']; $user=ses('recoveryUsr');
 if(!$id=ses('recoveryId'))return 'recovery_fail';
-if($user && $pswd)qr('update login set password=PASSWORD("'.$pswd.'") where id='.$id);
+if($user && $pswd){
+		$hash=auth::create_password($pswd);
+		sql::upd('login',['password'=>$hash],$id);
 sez('recoveryUsr'); sez('recoveryRid'); sez('recoveryId');
-return auth::login($user,$pswd);}
+return auth::login($user,$pswd);}}
 
 //register
 static function register($p){
@@ -85,8 +86,7 @@ return bj($j,langp('register'),self::$css);}
 //logout
 static function disconnect(){
 $state=auth::logout();
-//return self::reaction($state);
-}
+return self::reaction($state);}
 
 static function logoutbt($user){
 $ret=tag('span','class=small',$user).' ';
@@ -173,8 +173,7 @@ $auth=$p['auth']??2;
 if($p['o']??'')self::$css='';
 ses('authlevel',$auth?$auth:self::$authlevel);
 $state=auth::login($user,$pass);
-$rec=$p['recovery']??'';
-if($rec)$state=self::recoverVerif($rec);
+$rec=$p['recovery']??''; if($rec)$state=self::recoverVerif($rec);
 if($state=='ip_found')$user=auth::getUserByUid(ses('uid'));
 elseif($state=='cookie_found')$user=cookie('usr');
 elseif($state=='loged')$user=ses('usr');

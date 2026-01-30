@@ -106,7 +106,7 @@ static function nb_sec_in_year(){$j=365.2422; $aj=$j/360; return 86400*$j;}//off
 static function angle_from_date($d){$nd=self::elapsed_sec_from_year($d); $ns=30880800; return $nd/$ns;}
 static function sec_from_angle($d){return (30880800/360)*$d;}
 
-//bases
+#bases
 static function bcdec2hex($dec){$last=bcmod($dec,16); $remain=bcdiv(bcsub($dec,$last),16);
 if($remain==0)return dechex($last); else return self::bcdec2hex($remain).dechex($last);}
 
@@ -130,6 +130,20 @@ static function digits($b){$d='';
 if($b>64)for($loop=0;$loop<256;$loop++)$d.=chr($loop);
 else $d='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
 return (string)substr($d,0,$b);}
+
+#polar/svg
+static function polarToCartesian($centerX,$centerY,$radius,$angleInDegrees){
+$angleInRadians=($angleInDegrees-180)*M_PI/180;
+$x=$centerX+$radius*cos($angleInRadians);
+$y=$centerY+$radius*sin($angleInRadians);
+return ['x'=>$x,'y'=>$y];}
+
+static function describeArc($x,$y,$radius,$startAngle,$endAngle){
+$start=self::polarToCartesian($x,$y,$radius,$endAngle);
+$end=self::polarToCartesian($x,$y,$radius,$startAngle);
+$largeArcFlag=$endAngle-$startAngle<=180?0:1;
+$rt=['M',$start['x'],$start['y'],'A',$radius,$radius,0,$largeArcFlag,0,$end['x'],$end['y']];
+return join(' ',$rt);}
 
 #numbers
 static function nroot($d,$n){return pow($d,1/$n);}
@@ -200,7 +214,7 @@ foreach($r as $k=>$v)$rc[]=$v*$rb[$k];
 return $rc;}
 
 //time
-static function sec2time($d,$o=''){$ret=''; $ok=0; if(!$d)return;
+static function sec2time($d,$o=''){$ret=''; $ok=0; if(!$d or !is_numeric($d))return;
 $d+=mktime2(0,1,1,0,0,0); $r=explode('-',date('Y-m-d-H-i-s',$d)); $r[0]-=2000; $r[1]-=1; $r[2]-=1;
 if($o)$rb=['year','month','day','hour','minute','second']; else $rb=['yr','mt','dy','hr','min','sec'];
 foreach($r as $k=>$v)$re[$k]=$k>4?str_pad($v,2,'0',STR_PAD_LEFT):$v;
@@ -209,7 +223,8 @@ return implode(' ',$rt);}
 
 static function which($d,$rb){
 foreach($rb as $k=>$v)if(strpos($d,$v))return (int)trim(str_replace($v,'',$d)); return 0;}
-static function time2sec($d){$yr=$mt=$dy=$hr=$mn=$sc=0;
+
+static function time2sec($d){$yr=$mt=$dy=$hr=$mn=$sc=0; if(!$d or !is_numeric($d))return;
 $r=explode(' ',$d); $r=array_pad($r,-6,'0'); $rb=['yr','mt','dy','hr','min','sec'];
 foreach($r as $k=>$v)$rc[$k]=self::which($v,$rb); 
 foreach($rc as $k=>$v)if($v){$u=$rb[$k]; $$u=$v;}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="400px" height="200px" >
+<rect x="400" y="200"></rect>
+
+
+<path d="M 0,100 C100,-100 200,200 300,100" id="chemin" fill="none" stroke="black"></path>
+
+
+<path d="M 0,100 c100,-150 200,150 300,0" id="chemin" fill="none" stroke="green"></path>
+
+
+
+<path d="M 0,100 c, ,- 300,0" id="chemin" fill="none" stroke="red"></path>
+
+
+<path d="M 0,100 c50, 200, 300,0" id="chemin" fill="none" stroke="blue"></path></svg>

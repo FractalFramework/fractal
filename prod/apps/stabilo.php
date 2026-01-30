@@ -71,7 +71,7 @@ return self::stream_notes($p);}
 static function modif_note($p){
 $a=self::$a; $db=self::$db2; $cb=self::$cb; $cols=sql::cols($db,3,0);
 $id=$p['id']; $txt=$p['pad'.$id];
-sql::up(self::$db2,'txt',$txt,$id);
+sql::upd(self::$db2,['txt'=>$txt],$id);
 return;}
 
 static function edit_note($p){$id=$p['id']??'';
@@ -150,7 +150,7 @@ else return $ret;}
 
 static function build_stick($p){
 $r=self::build2($p,1); $txt=$p['txt'];
-$ret=$txt; $rb=[]; $rtb=utf8dec($ret);
+$ret=$txt; $rb=[]; $rtb=str::utf8dec($ret);
 if($r)foreach($r as $k=>$v){$ok=1;
 	$ok=self::intersections($r,$v,$txt);
 	if($ok)$ret=self::detection($ret,$v);

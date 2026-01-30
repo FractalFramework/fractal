@@ -59,7 +59,7 @@ return span($ret,'small');}
 
 #edit
 static function update($p){
-if($p['bid'])sql::up(self::$db,'txt',$p['text'],$p['bid']);
+if($p['bid'])sql::upd(self::$db,['txt'=>$p['text']],$p['bid']);
 if(val($p,'mnu'))return self::com($p);
 return self::build($p);}
 
@@ -74,10 +74,10 @@ if(!self::security(self::$db,$p['bid']))return;
 if($p['bid'] && val($p,'del')){sql::del(self::$db,$p['bid']);
 	sql::del('barter_valid',$p['bid'],'bid');}
 elseif($p['bid'] && $closed==1){$p['closed']=0;//open
-	sql::up(self::$db,'closed','0',$p['bid']);}
+	sql::upd(self::$db,['closed'=>'0'],$p['bid']);}
 elseif($p['bid']){$p['closed']=1;//close
-	sql::up(self::$db,'closed','1',$p['bid']);}
-//if(val($p,'mnu'))return self::build($p);
+	sql::upd(self::$db,['closed'=>'1'],$p['bid']);}
+//if($p['mnu']??'')return self::build($p);
 return self::build($p);}
 
 #sav
@@ -85,12 +85,12 @@ static function save_prop($p){$idp=val($p,'idp');
 $r=['bid'=>$p['id']??'','attr'=>val($p,'attr'.$idp),'prop'=>val($p,'prop'.$idp),'eval'=>val($p,'eval'.$idp)];
 if($idp && val($p,'del'))sql::del('barter_prop',$idp);
 elseif($idp=='new')$idp=sql::sav('barter_prop',$r);
-else sql::up2('barter_prop',$r,$idp);
+else sql::upd('barter_prop',$r,$idp);
 return self::edit($p);}
 
 static function save($p){$p['id']=$p['id']??'';
 $r=valk($p,['uid','typ','tit','money','price','closed']); $r['uid']=ses('uid');
-if($p['id'])sql::up2(self::$db,$r,$p['id']);
+if($p['id'])sql::upd(self::$db,$r,$p['id']);
 else $p['id']=sql::sav(self::$db,$r);
 return self::edit($p);}
 
@@ -108,7 +108,7 @@ $bt.=select('money',[2=>'euros',3=>'dollars',1=>'points'],$r['money']).br();
 $ret.=div('#'.$id.' '.$bt,'tit');
 $ret.=bj('newbarter|barter,edit|id='.$id.',rid='.$rid.',addprop=1|typ,tit,money,price',langp('add attribut'),'btn').br();
 if($id){
-	$rb=sql('id,attr,prop,eval','barter_prop','id','where bid="'.$id.'"');
+	$rb=sql('id,attr,prop,eval','barter_prop','id',['bid'=>$id]);
 	$rc=sql('distinct(attr)','barter_prop','rv','');
 	//$typ=$r['typ']==1?langp('sale'):langp('buy');
 	//$ret=div($typ.$r['tit'],'stit');
@@ -140,7 +140,7 @@ case('2'):return 'euro';break;
 case('3'):return 'dollar';break;}}
 
 static function read_props($id){
-$r=sql('attr,prop,eval','barter_prop','','where bid="'.$id.'"');
+$r=sql('attr,prop,eval','barter_prop','',['bid'=>$id]);
 if($r)foreach($r as $k=>$v)$r[$k][2]=self::props($v[2]);
 return tabler($r);}
 

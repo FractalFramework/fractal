@@ -18,7 +18,7 @@ static function call1($p){$ret='';
 $a='1nfo.net'; $b='newsnet.fr';
 //$r=sql('id,p','tlex_app','kv','');
 $r=sql('id,txt','tlex','kv',''); //p($r);
-foreach($r as $k=>$v)if(strpos($v,$a)){$v=str_replace($a,$b,$v); sql::up('tlex','txt',$v,$k); echo $k.' ';}
+foreach($r as $k=>$v)if(strpos($v,$a)){$v=str_replace($a,$b,$v); sql::upd('tlex',['txt'=>$v],$k); echo $k.' ';}
 return $ret;}
 
 //tlex_apps
@@ -31,13 +31,13 @@ return $ret;}
 
 //
 static function strainer($d,$a){$ret=[];
-$d=clean_n($d); $d=str_replace("\n",' (nl) ',$d); $r=explode(' ',$d);
+$d=str::clean_n($d); $d=str_replace("\n",' (nl) ',$d); $r=explode(' ',$d);
 foreach($r as $v)if(substr($v,0,1)==$a)$ret[]=substr($d,1);
 if($ret)$d=implode(' ',$ret); $d=str_replace(' (nl) ',"\n",$d);
 return trim($d);}
 
 static function captor($d,$a){$ret=[]; if(substr($d,0,1)==$a)echo $d; echo $d;
-$d=clean_n($d); $d=str_replace("\n",' ',$d); $r=explode(' ',$d);
+$d=str::clean_n($d); $d=str_replace("\n",' ',$d); $r=explode(' ',$d);
 foreach($r as $v)if(substr($v,0,1)==$a)$ret[]=substr($d,1);
 return $ret;}
 
@@ -81,7 +81,7 @@ static function call5($p){$ret='';
 $r=sql('id,bid,idn,idp,rel','slide_r','rr','');
 foreach($r as $k=>$v){
 	$r[$k]=self::idn($r,$k);
-	//sql::up2('slide_r',$r[$k],$id);
+	//sql::upd('slide_r',$r[$k],$id);
 }
 $ret=tabler($r);
 return $ret;}
@@ -91,7 +91,7 @@ static function call6($p){$ret='';
 $r=sql('id,bid,idn,idp,rel','slide_r','rr','');
 foreach($r as $k=>$v){
 	$r[$k]=self::idn($r,$k);
-	//sql::up2('slide_r',$r[$k],$id);
+	//sql::upd('slide_r',$r[$k],$id);
 }
 $ret=tabler($r);
 return $ret;}
@@ -130,7 +130,7 @@ foreach($r as $k=>$v){
 	elseif(is_img($com)){$app=''; $callid=$com;}
 	else $callid='';
 	$rb[$k]=[$uid,$dir,$type,$app,$callid,$picto,$bt,$auth];
-	//sql::up2('desktop2',$rb[$k],$id);
+	//sql::upd('desktop2',$rb[$k],$id);
 }
 //sql::sav2('desktop2',$rb);
 $ret=tabler($rb);
@@ -138,9 +138,8 @@ return $ret;}
 
 static function renove($p){$ret='';
 $r=sql('id,txt','tlex','kv','');
-foreach($r as $k=>$v){$u=str_replace('1nfo.net','newsnet.fr',$v); $r[$k]=$u;
-	//sql::up('tlex','txt',$u,$k);
-	}
+//foreach($r as $k=>$v){$u=str_replace('1nfo.net','newsnet.fr',$v); $r[$k]=$u;}
+	//sql::upd('tlex',['txt'=>$u],$k);
 $ret=tabler($r);
 return $ret;}
 

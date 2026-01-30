@@ -124,8 +124,8 @@ $r=self::res($p);
 return json_encode($r);}
 
 static function patch(){$n=7; $l=10000; $a=$n*$l; $b=$a+$l;
-$r=sql('date,cod_tend',self::$db,'kv','where numer_sta=07149 limit '.$a.','.$b.'');
-foreach($r as $k=>$v)sql::up('meteo_paris','weather',$v?$v:'null',$k,'date','');}
+$r=sql('date,cod_tend',self::$db,'kv','where numer_sta=07149 limit '.$a.','.$b);
+foreach($r as $k=>$v)sql::upd('meteo_paris',['weather'=>$v?$v:'null'],['date'=>$k]);}
 
 #content
 static function content($p){

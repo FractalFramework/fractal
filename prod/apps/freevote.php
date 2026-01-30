@@ -89,7 +89,7 @@ return $ret;}
 static function savevote($p){$bid=$p['bid'];
 $id=sql('id','freevote_valid','v','where cid="'.$bid.'" and uid="'.ses('uid').'"');
 if(!$id)sql::sav('freevote_valid',[$bid,ses('uid'),$p['val']]);
-elseif($id){$v=$p['val']==$p['current']?0:$p['val']; sql::up('freevote_valid','val',$v,$id);}
+elseif($id){$v=$p['val']==$p['current']?0:$p['val']; sql::upd('freevote_valid',['val'=>$v],$id);}
 return self::vote($p);}
 
 static function vote($p){
@@ -155,8 +155,8 @@ if($r['cl']==1)return $txt.self::argcalc($p).help('form closed','alert');
 $by=self::usrnfo($r['name'],$r['date']);
 //$by=bubble('profile,call|usr='.$r['name'].',sz=small',$r['name'],'grey small',1);
 //$bt=div(lk('/freevote/'.$id,ico('link'),'btn'),'right');
-$n=sql('count(id)','freevote_args','v','where bid="'.$id.'"');
-$nv=sql::join('count(freevote_valid.id)','freevote_valid','freevote_args','cid','v','where bid="'.$id.'"');
+$n=sql('count(id)','freevote_args','v',['bid'=>$id]);
+$nv=sql::join('count(freevote_valid.id)','freevote_valid','freevote_args','cid','v',['bid'=>$id]);
 $p['nbvotes']=$n;
 $ret=div($by.$txt,'');//$bt.br().
 $ret.=bj('arg'.$id.'|freevote,arguments|id='.$id,langnb('proposition',$n),'nfo');

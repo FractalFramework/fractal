@@ -36,9 +36,9 @@ static function admin($p){}
 #headers
 static function js(){}
 static function headers(){
-head::prop('og:title',addslashes(self::$title));
-head::prop('og:description',addslashes(self::$descr));
-head::prop('og:image',self::$image);
+root::$title=self::$title;
+root::$descr=self::$descr;
+root::$image=self::$image;
 //head::add('csslink','/css/tlex.css');
 head::add('jslink','/js/tlex.js');
 head::add('jscode',self::js());}
@@ -55,10 +55,10 @@ return $n0.'-'.$n1.'-'.$n2.'-'.$n3.'-'.$n4;}
 
 //load button
 static function loadtm($p,$t,$rel='',$r=[]){
-$c=$rel?' active':''; $tg='cbck';
+$c=$rel?' active':''; $tg='cbck,,z';
 //$r['onclick']='setTimeout(\'refresh()\',500);';
 $r['data-prmtm']=$p; $r['onclick']='ajbt(this);'; $r['data-ko']=1;//atj('closediv','dboard');
-$j='div,'.$tg.',,resetcs|tlex,read|'.($p=='current'?'':$p); //$rp['data-u']=$k;
+$j=$tg.'|tlex,read|'.($p=='current'?'':$p); //$rp['data-u']=$k;//,,resetcs
 $r['data-j']=$j; $r['data-toggle']=$tg; $r['id']=randid('tg'); $r['rel']=$rel; $r['class']=$c;
 if(ses('dev')=='prog')$r['title']=$j;
 return tag('a',$r,$t);}
@@ -79,7 +79,7 @@ if($r)foreach($r as $k=>$v)if(isset($v[1]) && method_exists($v[0],'call')){
 
 static function readntf($p){$n=$p['typntf']; $by=$p['byusr']; $st=$p['state']; $ret='';
 //$uname=sql('name','login','v',['usr'=>$p['byusr']]); //if($n)$ret='@'.$by.' ';
-if($p['state']==1)sql::up('tlex_ntf','state','0',$p['ntid']);
+if($p['state']==1)sql::upd('tlex_ntf',['state'=>'0'],$p['ntid']);
 if($n==1 && $p['ib'])$ret.=lang('has_reply',1);
 elseif($n==1)$ret.=lang('has_sent',1);
 elseif($n==2)$ret.=lang('has_repost',1);
@@ -89,7 +89,7 @@ return span($ret,'nfo'.$c).' ';}
 
 #save
 static function build_conn($d,$o=''){$ret=[];
-$d=clean_n($d);
+$d=str::clean_n($d);
 $d=str_replace("\n",' (nl) ',$d);
 $r=explode(' ',$d);
 foreach($r as $v){
@@ -128,7 +128,7 @@ if($txa){$txt=self::build_conn($txa,1); $ib=$p['ibs']??0; $pv=$p['pv']??0;
 	$lbl=$p['lbl']??0;
 	//if($lbl && !is_numeric($lbl))$lbl=sql('id','labels','v',['ref'=>$lbl]);
 	//if(!$lbl && $lbl=post('lbl'))self::$lbl'=[];
-	if($txt)$lg=trans::detect(['txt'=>$txt]); if(!$lg)$lg=ses('lng');
+	//if($txt)$lg=trans::detect(['txt'=>$txt]); if(!$lg)$lg=ses('lng');
 	if(!$lbl)$lbl=0; if(!$pv)$pv=0; if(!$ib)$ib=0;
 	$id=sql::sav(self::$db,[ses('uid'),$txt,(int)$lbl,(int)$pv,$lg,(int)$ib,0]);
 	if($aps)$lbl=self::saveapps($id,$aps);
@@ -141,19 +141,19 @@ return self::read(['tm'=>ses('usr'),'noab'=>1]);}
 static function modif($p){
 $txt=$p[$p['ids']]??''; $id=$p['id'];
 $txt=self::build_conn($txt);
-if($id && $txt)sql::up(self::$db,'txt',$txt,$id);
+if($id && $txt)sql::upd(self::$db,['txt'=>$txt],$id);
 $aps=conn::call(['msg'=>$txt,'mth'=>'appreader']);
 if($aps)$lbl=self::saveapps($id,$aps);
 return self::one(['id'=>$id,'noab'=>1]);}
 
 static function modiflbl($p){
 $id=$p['id']; $lbl=$p['lbl'.$id]??0;
-if($id)sql::up(self::$db,'lbl',$lbl,$id);
+if($id)sql::upd(self::$db,['lbl'=>$lbl],$id);
 return tlex::one(['id'=>$id,'noab'=>1]);}
 
 static function modifpv($p){
 $id=$p['id']; $pv=$p['pv'.$id]??0;
-if($id)sql::up(self::$db,'pv',$pv,$id);
+if($id)sql::upd(self::$db,['pv'=>$pv],$id);
 return tlex::one(['id'=>$id,'noab'=>1]);}
 
 #editor
@@ -201,8 +201,8 @@ if($lid){
 	//$nlik2=sql('count(id)','tlex_lik','v',['lik'=>$id,''=>2]);
 	if(ses('uid')){$mylik=sql('id','tlex_lik','v',['lik'=>$id,'luid'=>ses('uid')]);
 		if($mylik)$ico='star';}}
-$bt=ico($ico,'','','','',span($nlik1,'liknb'));//smile-o
-$ret=bj($rid.'|tlxf,savelike|y=1,id='.$id.',lid='.$mylik.',name='.$p['name'],$bt,'like');
+$bt=ico($ico,'','','','like',span($nlik1,'liknb'));//smile-o
+$ret=bj($rid.'|tlxf,savelike|y=1,id='.$id.',lid='.$mylik.',name='.$p['name'],$bt,'');
 //$bt=ico('thumbs-o-down',$sty,'like','','',span($nlik2,'liknb'));//smile-o
 //$ret.=bj($rid.'|tlxf,savelike|y=-1,id='.$id.',lid='.$mylik.',name='.$p['name'],$bt);
 return span($ret,'',$rid);}
@@ -300,26 +300,6 @@ if($o=='thread')$ids[$id]=1; ksort($ids);
 if($ids)$r=array_keys($ids);
 if(isset($r))return self::$db.'.id in ('.implode(',',$r).')';}
 
-#action
-static function actions($p,$txt){$rt=[]; $sz=''; $us=ses('usr');
-[$id,$idv,$uid,$usr,$lg,$pv,$lbl]=vals($p,['id','idv','uid','usr','lg','pv','lbl']);
-$pr='pn'.$idv; $own=$usr==$us?1:0;
-if($txt)$obj=conn::call(['msg'=>$txt,'app'=>'conn','mth'=>'appreader']); //pr($r=conn::$obj);
-if($lg && $lg!=ses('lng'))$rt[]=toggle($pr.'|tlxf,translate|id='.$id.',lg='.$lg,langpi('translate'));
-$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',to='.$usr.',ib='.$id,langpi('reply',$sz));
-$rt[]=toggle($pr.'|tlxf,editor|idv='.$idv.',qo='.$id,langpi('relay',$sz));
-$rt[]=toggle($pr.'|tlxf,share|id='.$id,langpi('share',$sz));
-if(conn::$obj)$rt[]=toggle($pr.'|tlxf,keep|idv='.$idv.',id='.$id,langpi('keep',$sz));//
-if($own or auth(6))$rt[]=toggle($pr.'|tlxf,redit|id='.$id,langpi('modif'),'');
-else $rt[]=toggle($pr.'|tlxf,report|idv='.$idv.',id='.$id.',cusr='.$usr,langpi('report'),'');
-$rt[]=tlxf::app_action($obj);
-if($own)$rt[]=toggle($pr.'|tlxf,editpv|idv='.$idv.',id='.$id.',pv='.$pv,langpi('privacy'),'');
-//if($own)$rt[]=bj($pr.'|tlxf,editlbl|idv='.$idv.',id='.$id.',lbl='.$lbl,langp('label'),'');
-$n=chat::count($id);
-$rt[]=toggle($pr.'|chat,discussion|id='.$id,langpi('discussion').' '.span($n,'liknb'));//if($usr!=$us)
-if($own or auth(6))$rt[]=toggle($pr.'|tlxf,del|idv='.$idv.',did='.$id,langpi('delete'),'');//??own
-return span(implode(' ',$rt),'');}
-
 #pane
 static function panehead($p,$msg){
 [$id,$ib,$idv,$usr,$tousr,$pv,$us,$usid,$fast]=vals($p,['id','ib','idv','name','tousr','pv','us','usid','fast']);
@@ -329,7 +309,7 @@ $ret=bubble('profile,call|usr='.$usr.',sz=small','@'.$usr,'btxt',1).' ';
 //$ret.=lk('/@'.$usr,$usr,'btxt" title="@'.$usr).' ';
 if($p['typntf']??'')$ret.=self::readntf($p);
 //$time=relativetime($p['now']);
-$time=date('d/m/Y H:i',$p['now']);
+$time=span(date('d/m/Y H:i',$p['now']),'small');
 $ret.=' &bull; '.lk('/'.$id,$time,'grey small').' &bull; ';
 if($fast)return $ret;
 if($tousr==$us && $pv==3)$ret.=langpi('private message').' ';
@@ -339,12 +319,14 @@ if($ib){$to=sql::inner('name',self::$db,'login','uid','v',[self::$db.'.id'=>$ib]
 	$ret.=pagup('tlex,wrapper|ia='.$id,lang('in-reply to',1).' '.$to,'grey small').' ';}
 if($nb=sql('count(id)',self::$db,'v',['ib'=>$id]))
 	$ret.=pagup('tlex,wrapper|ib='.$id,$nb.' '.lang($nb>1?'replies':'reply',1),'grey small').' ';
-if($usid)$ret.=bubble('tlxf,actions|id='.$id.',idv='.$idv.',uid='.$p['uid'].',lg='.$p['lg'].',pv='.$pv.',lbl='.$p['lbl'].',usr='.$usr,langpi('actions'),'',[],1).' ';//'pn'.$idv.
-//if($usid)$ret.=toggle('|tlxf,actions|id='.$id.',idv='.$idv.',uid='.$p['uid'].',lg='.$p['lg'].',pv='.$pv.',lbl='.$p['lbl'].',usr='.$usr,langpi('actions')).' ';//'pn'.$idv.
+$rp=['id'=>$id,'idv'=>$idv,'uid'=>$p['uid'],'lg'=>$p['lg'],'pv'=>$pv,'lbl'=>$p['lbl'],'usr'=>$usr];
+//if($usid)$ret.=bubble('tlxf,actions|'.prm($rp),langpi('actions'),'',[],1).' ';//'pn'.$idv.
+//if($usid)$ret.=toggle('|tlxf,actions|'.prm($rp),langpi('actions')).' ';
+if($usid)$ret.=tlxf::actions($rp,langpi('actions')).' ';
 //if($usid)$ret.=self::actions($p,$msg);
 return $ret;}
 
-static function pane($p,$current='',$op='tlex'){$head=''; $lb=''; //pr($p);
+static function pane($p,$current='',$op='tlex'){$head=''; $lb='';
 $id=$p['id']; $usr=$p['name']; $p['idv']='tlx'.$id; self::$id=$id; $cusr=ses('usr');
 $opt=get('id')==$id?1:0;
 //if($p['privacy'])$ok=sql('wait','tlex_ab','v',[]);
@@ -359,15 +341,26 @@ $ret=div($head,'post_header');//.div($lb,'label')
 //$avt=div(img2($p['avatar'],'micro'),'avatarsmall bc_l','','');
 //$avt=profile::avatarsmall($usr);
 //$ret.=div($avt.div($msg,'message bc_r'),'post_content bc_grid');//.div('','','opn'.$id);
-$ret.=div($msg,'post_text');
 $ret.=div('','post_redit','pn'.$p['idv']);
+$ret.=div($msg,'post_text');
 if($current==$id){self::$title=host(1).'/'.$id.' by @'.$usr;
 	self::$descr=etc(strip_tags($msg));
 	self::$image=host(1).'/img/mini/'.$p['avatar'];}
 return div($ret,'post','tlx'.$id,'');}
 
 #rocketman
-/**/static function apisql($p,$z=0){
+
+static function rqtm($p){
+$rc=sql::read('lik,id as lid,luid','tlex_lik','kv',['lik'=>$ra]);
+}
+
+/**/static function apisql0($p,$z=0){//pr($p);
+$ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
+[$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
+if($tm)return self::rqtm($p);
+}
+
+/**/static function apisql($p,$z=0){//pr($p);
 $ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
 [$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
 if($from=='wrp')return;
@@ -377,13 +370,14 @@ if(!$noab){$cfg[]='members'; $cfg[]='mentions';}
 //if($labl or $see=='labl')$cfg[]='labels'; else
 if($tag or $see=='tag')$cfg[]='tags';
 //elseif($app or $see=='app')
-$cfg[]='apps';
+$cfg[]='apps'; //pr($cfg);
 $sqcl[]=$db.'.id,uid,txt,lg,pv,ib,ko,unix_timestamp('.$db.'.up) as now,name';
 $sqin[]='left join login on login.id=uid'; //pr($cfg);
 foreach($cfg as $k=>$v)//activations
-	if($v=='profile'){$sqcl[]='pname,avatar,clr,privacy'; $sqin[]='left join profile on puid=uid';}
-	elseif($v=='like'){$sqcl[]='tlex_lik.id as lid'; $sqin[]='left join tlex_lik on '.$db.'.id=lik';}
-	elseif($v=='members'){$sqcl[]='list';//usr,ab
+	/**/
+	//if($v=='profile'){$sqcl[]='pname,avatar,clr,privacy'; $sqin[]='left join profile on puid=uid';}
+	//elseif($v=='like'){$sqcl[]='tlex_lik.id as lid'; $sqin[]='left join tlex_lik on '.$db.'.id=lik';}
+	if($v=='members'){$sqcl[]='list';//usr,ab
 		if($mode=='public' or $tag or $app)$abs=''; else $abs=' and tlex_ab.usr="'.$usid.'"';
 		$sqin[]='left join tlex_ab on '.$db.'.uid=ab and wait=0 and block=0'.$abs;}
 	elseif($v=='labels'){$sqcl[]='ref,icon,lbl'; $sqin[]='left join labels on lbl=labels.id';}
@@ -408,7 +402,7 @@ elseif($ntf){$sqcl[]='tlex_ntf.id as ntid,byusr,typntf,state';
 	$sqin[]='left join tlex_ntf on txid='.$db.'.id and typntf in (1,2,3)'; $sqnd[]='4usr="'.$us.'"';}
 elseif($mnt)$sqnd[]='tousr="'.$usr.'"';
 elseif($tag)$sqnd[]='tag="'.$tag.'"';
-elseif($liks)$sqnd[]='luid="'.$usid.'"';
+//elseif($liks)$sqnd[]='luid="'.$usid.'"';
 elseif($list)$sqnd[]='list="'.$list.'"';
 elseif($app)$sqnd[]='app="'.$app.'"';
 elseif($noab)$sqnd[]='name="'.$usr.'"';
@@ -416,7 +410,7 @@ elseif($mode=='private')$sqnd[]='name="'.$usr.'"';
 //elseif($answ)$sqnd[]='ib="'.$answ.'"';
 //if($mode=='private')$sqnd[]='name="'.$usr.'"';
 //elseif($mode=='public')$sqnd[]='name="'.$usr.'"';
-else $sqnd[]='(privacy="0" or 0=(select wait from tlex_ab where usr="'.$usid.'" and tlex_ab.ab=tlex.uid))';//name!="'.$usr.'" and
+///redo//else $sqnd[]='(privacy="0" or 0=(select wait from tlex_ab where usr="'.$usid.'" and tlex_ab.ab=tlex.uid))';//name!="'.$usr.'" and
 if(!$noab && !$th)$sqnd[]='((pv=3 and tousr="'.$us.'") or (pv=2 and tlex_ab.usr="'.$usid.'") or pv<"'.($usid?2:1).'")';//(pv=4 and uid="'.$usid.'") or uid="'.$usid.'" or
 //if(!$noab && !$th && !$app && !$tag && !$id && !$ntf)$sqnd[]='name!="'.$usr.'"';
 if(!$id && !$see)$gr=' group by '.$db.'.id';//if(!$count)
@@ -426,10 +420,23 @@ elseif($ntf)$ord=' order by ntid desc limit 20';
 //$sqcl=[$db.'.id'];
 //pr(array_merge($sqcl,$sqin,$sqnd,[$gr],[$ord]));
 $cols=implode(',',$sqcl); if($sqin)$in=implode("\n",$sqin); $w=implode(' and ',$sqnd);
-return sql::read($cols,self::$db,$vm,$in.' where '.$w.$gr.$ord,$z);}
-
-//select tlex.id,uid,txt,lg,pv,ib,ko,unix_timestamp(tlex.up) as now,name,pname,avatar,clr,privacy,tlex_lik.id as lid,ref,icon,lbl,list,tousr,app,p from tlex left join login on login.id=uid left join profile on puid=uid left join tlex_lik on tlex.id=lik left join labels on lbl=labels.id left join tlex_ab on tlex.uid=ab and wait=0 and block=0 and tlex_ab.usr="1" left join tlex_mnt on tlex.id=tlex_mnt.tlxid left join tlex_app on tlex.id=tlex_app.tlxid where (privacy="0" or 0=(select wait from tlex_ab where usr="1" and tlex_ab.ab=tlex.uid)) and ((pv=3 and tousr="dav") or (pv=2 and tlex_ab.usr="1") or pv<"2") group by tlex.id order by tlex.id desc limit 40
-
+$rt=sql::read($cols,self::$db,$vm,$in.' where '.$w.$gr.$ord,$z);
+//profiles
+$ra=array_column($rt,'uid'); $ra=array_flip(array_flip($ra)); //pr($ra);
+//$ru=array_column($rt,'usr'); $ru=array_flip(array_flip($ru)); pr($ru);
+$rb=sql::read('id,pname,avatar,clr,privacy','profile','rid',['id'=>$ra]); //pr($rb);
+foreach($rt as $k=>$v)$rt[$k]=array_merge($v,$rb[$v['uid']]??[]); //pr($rt);
+//likes//$sqcl[]='tlex_lik.id as lid'; $sqin[]='left join tlex_lik on '.$db.'.id=lik';
+$rc=sql::read('lik,id as lid,luid','tlex_lik','kv',['lik'=>$ra]); //pr($rc);
+foreach($rt as $k=>$v)$rt[$k]=array_merge($v,['lid'=>$rc[$v['uid']]??'']); //pr($rt);
+/**/
+//members
+//if($v=='members'){$sqcl[]='list';//usr,ab
+//	if($mode=='public' or $tag or $app)$abs=''; else $abs=' and tlex_ab.usr="'.$usid.'"';
+//	$sqin[]='left join tlex_ab on '.$db.'.uid=ab and wait=0 and block=0'.$abs;}
+//$rd=sql::read('ab,list','tlex_ab','kv',['ab'=>$ra]); pr($rd);
+//foreach($rt as $k=>$v)$rt[$k]=array_merge($v,['list'=>$rd[$v['uid']]??'']); pr($rt);
+return $rt;}
 
 static function sql_thread2($id,$o=''){$r=[];
 if($o!='parents')$ids=self::thread_childs($id); else $ids=[];
@@ -437,53 +444,6 @@ if($o!='childs')$ids=self::thread_parents($id,$ids);
 if($o=='thread')$ids[$id]=1; ksort($ids);
 if($ids)$r=array_keys($ids);
 return $r;}
-
-static function apisql0($p,$z=0){
-$ra=['tm','th','id','ib','ia','srh','ntf','from','since','list','noab','labl','count','app','tag','mnt','see','mode','likes'];
-[$usr,$th,$id,$ib,$ia,$srh,$ntf,$from,$since,$list,$noab,$labl,$count,$app,$tag,$mnt,$see,$mode,$liks]=vals($p,$ra);
-if($from=='wrp')return;
-$vm='rr'; $gr=''; $ord=''; $db=self::$db; $sqin=[]; $us=ses('usr'); $usid=ses('uid');
-$cfg=['profile','like','labels'];
-if(!$noab){$cfg[]='members'; $cfg[]='mentions';}
-//if($labl or $see=='labl')$cfg[]='labels'; else
-if($tag or $see=='tag')$cfg[]='tags';
-//elseif($app or $see=='app')
-$cfg[]='apps';
-if(is_numeric($from))$sqnd[]=$pr['id<']=$from;
-elseif(is_numeric($since))$pr['id>']=$since;
-elseif($id)$pr['id']=$id;
-elseif($ib)$pr['id']=self::sql_thread2($ib,'childs');
-elseif($ia)$pr['id']=self::sql_thread2($ia,'parents');
-elseif($th)$pr['id']=self::sql_thread2($th,'thread');
-elseif($srh)$pr+=['|name'=>$srh,'%txt'=>$srh,'privacy'=>0,'uid'=>ses('uid')];
-
-$pr['_order']=$ord; $pr['_limit']='id desc';
-$ra=sql('id,uid,txt,lg,pv,ib,ko,unix_timestamp('.$db.'.up) as now','tlex','rr',$pr);
-$ids=array_column($ra,'id');
-$uids=array_column($ra,'uid');
-
-foreach($cfg as $k=>$v)//activations
-	if($v=='profile'){$rt['profile']=sql('pname,avatar,clr,privacy','profile','',['puid'=>$ids]);}
-	elseif($v=='like'){$pr=['lik'=>$ids]; if($liks)$pr['luid']=$usid;
-		$rt['tlex_lik']=sql('id as lid','tlex_lik','',$pr);}
-	elseif($v=='members'){$sqcl[]='list';//usr,ab
-		if($mode=='public' or $tag or $app)$pr=[]; else $pr=['usr'=>$usid];
-		$sqin[]='left join tlex_ab on '.$db.'.uid=ab and wait=0 and block=0'.$abs;
-		$pr['ab']=$uids;
-		$rt['members']=sql('id,usr,ab','tlex_ab','',$pr+['wait'=>'0','block'=>'0']);}
-	elseif($v=='labels'){$pr=['id'=>$lbl]; 
-		$rt['labels']=sql('id,ref,icon,lbl','labels','',$pr);}//$lbl??
-	elseif($v=='mentions'){$pr=['tlxid'=>$ids]; if($mnt)$pr['tousr']=$usr;
-		$rt['mentions']=sql('id,tousr','tlex_mnt','',$pr);}
-	elseif($v=='tags'){$pr=['tlxid'=>$ids]; if($tag)$pr['tag']=$tag;
-		$rt['tags']=sql('id,tag','tlex_tag','',$pr);}
-	elseif($v=='apps'){$pr=['tlxid'=>$ids]; if($app)$pr['app']=$app;
-		$rt['apps']=sql('id,app,p','tlex_app','',$pr);}
-
-if($ntf){$pr=['txid'=>$ids,'typntf'=>[1,2,3],'4usr'=>$us];
-	$rt[]=sql('id as ntid,byusr,typntf,state','tlex_ntf','',$pr);}
-
-return $ra;}
 
 #read
 static function read($p){//$id will be in popup
@@ -500,7 +460,7 @@ if($lbl)$pm='labl='.$lbl; if($p['noab']??'')$pm.=',noab=1';
 if(isset($p))$r=self::apisql($p);
 if($r){foreach($r as $k=>$v){$ret.=self::pane($v,$id);}}//self::$rf[]=chrono($v['id']);
 //if($pm && isset($v['id']))$ret.=bj('after,tlx'.$v['id'].',2|tlex,read|'.$pm.',from='.$v['id'],pic('down'),'licon');
-//$bt=trace(self::$rf);
+//$bt=rplay(self::$rf);
 if(!$ret && !$last)$ret=help('empty_home','board');
 //else $ret.=hidden('prmtm',$pm); //echo $pm;
 return $bt.$ret;}
@@ -541,12 +501,12 @@ static function call($p){$r=self::apisql($p);
 if($r)foreach($r as $k=>$v){
 	$r[$k]['avatar']=host(1).'/img/full/'.$v['avatar'];
 	$r[$k]['txt']=conn::call(['msg'=>$v['txt'],'app'=>'conn','mth'=>'reader']);}
-if($r)return json_enc($r);}
+if($r)return $r;}
 
 #content
 static function content($p){
 //self::install(); //profile::install();
 //if(ses('dev')=='prog')self::$db='tlex';//alternative table
-return home::content($p);}
+return home::call($p+['op'=>'posts']);}
 }
 ?>

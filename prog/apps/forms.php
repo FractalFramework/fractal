@@ -66,7 +66,7 @@ return self::play($p);}
 static function sav_lead($p){$id=$p['id']??'';
 $r=valk($p,['tit','txt','com']);
 $r['com']=str_replace("\n",'',$r['com']);
-if($id)sql::up2(self::$db,$r,$id);
+if($id)sql::upd(self::$db,$r,$id);
 else $bid=sql::sav(self::$db,[ses('uid'),$r['tit'],$r['txt'],$r['com'],'']);
 return self::create($p);}
 
@@ -74,7 +74,7 @@ static function preview($p){$id=$p['id'];
 return conn::com2($p['com'],'conn','form');}
 
 static function edit_form($p){$com=str_replace("\n",'',val($p,'com')); $id=$p['id']??'';
-if(!$com)$com=utf8enc('[label|title:input][label2|text:textarea]');//[form'.$id.'|'.ses('usr').':submit]
+if(!$com)$com=str::utf8enc('[label|title:input][label2|text:textarea]');//[form'.$id.'|'.ses('usr').':submit]
 $ret=build::cbt('com',uns(form::ex(),'submit'));
 $j='frmpw|forms,preview|id='.$id.'|com';
 $ret.=div(textarea('com',$com,60,4,lang('fields'),'console','',$j));

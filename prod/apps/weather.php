@@ -96,7 +96,7 @@ $res=sql('res',self::$db2,'v',$prm); $res=str_replace('u0','\u0',$res);
 if($res)$rb=json_decode($res,true); //pr($rb);
 if(isset($rb['update']))$bt.=span('('.day('d/m/Y-H:i',strtotime($rb['update'])).')','small').' ';
 if(!$rb or $x){$rb=meteo::$va($vr); $res=json_encode($rb); //pr($rb);//list($rb,$ra)??
-	if($x){$ex=sql('id',self::$db2,'v',$prm); sql::up2(self::$db2,['res'=>$res],$ex,0);}
+	if($x){$ex=sql('id',self::$db2,'v',$prm); sql::upd(self::$db2,['res'=>$res],$ex);}
 	else{$ex=[$id,date('ymdH'),$r['insee'],$res];
 		if(!$ex)sql::sav(self::$db2,[$id,date('ymdH'),$r['insee'],$res],0);}}
 $ret=meteo::com_render($rb);

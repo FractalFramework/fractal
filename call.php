@@ -9,19 +9,19 @@ $prm=$p?_jrb($p):[];
 if(isset($_POST))$prm+=$_POST;
 $prm['_a']=$a; $prm['_m']=$m;
 if(isset($prm['verbose']))pr($prm);
-$content=app($a,$prm);
+$cnt=app($a,$prm);
+if(is_array($cnt))$cnt=json_enc($cnt);//todo: kill json_enc in apps
 //add_head('charset','UTF-8');
 $ret='';//build_head();
-if(get('popup'))$ret.=mkpopup($content,$prm);
-elseif(get('pagup'))$ret.=mkpagup($content,$prm);
-elseif(get('imgup'))$ret.=mkimgup($content);
-elseif(get('bubble'))$ret.=mkbubble($content);
-elseif(get('menu'))$ret.=mkmenu($content);
-elseif(get('drop'))$ret.=mkmenu($content);
+if(get('popup'))$ret.=mkpopup($cnt,$prm);
+elseif(get('pagup'))$ret.=mkpagup($cnt,$prm);
+elseif(get('imgup'))$ret.=mkimgup($cnt);
+elseif(get('bubble'))$ret.=mkbubble($cnt);
+elseif(get('menu'))$ret.=mkmenu($cnt);
+elseif(get('drop'))$ret.=mkmenu($cnt);
 elseif(get('ses'))sez($prm['k'],$prm['v']);
-else $ret.=$content;
+else $ret.=$cnt;
 //stats::add($app,$prm);
-//if(ses('enc'))$ret=utf8_encode($ret);
 echo $ret;
 sql::close();
 ?>

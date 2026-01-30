@@ -95,7 +95,7 @@ static function bank_finalization($p){//needed by bank
 [$bid,$cid,$don,$rat,$rf,$cnd]=vals($p,['aid','cid','value','rat','rf','cnd'],0);
 $ret=div(lang('don').': '.bank::coin($don,0).' '.lang('at').' '.$rat.'% '.lang('for').': '.usrid($cid),'nfo');
 $ret.=help('Thank You').' '; $ret.=bj(self::$cb.$bid.'|income,call|id='.$bid,langp('close'),'btno').' ';
-if($cnd==2)$ret=help('done'); if($rf)$ret.=trace(bank::$rf);
+if($cnd==2)$ret=help('done'); if($rf)$ret.=rplay(bank::$rf);
 return $ret;}
 
 //operation
@@ -111,7 +111,7 @@ static function scorebt($p){
 [$cid,$note]=vals($p,['id','v']); $uid=ses('uid'); $dt=date('ym');
 $r=[$uid,(int)$cid,(int)$note,$dt];
 $ex=sql('id',self::$db4,'v',['cid'=>$cid,'uid'=>$uid,'month'=>$dt]);//self::$w
-if(!$ex)sql::sav(self::$db4,$r); else sql::up(self::$db4,'note',$note,$ex,'',0);
+if(!$ex)sql::sav(self::$db4,$r); else sql::upd(self::$db4,['note'=>$note],$ex);
 return build::scorebt($p);}
 
 static function scorify($p){
@@ -175,7 +175,7 @@ return $ret.div($bt,'',$rid);}
 #subscription
 /*static function savneeds($p){$n=$p['needs'];
 if(!$n or !is_numeric($n))return help('value?','alert').self::edtneeds($p);
-sql::up(self::$db3,$n,ses('uid'),'uid');
+sql::upd(self::$db3,[$n=>ses('uid')],['uid'=>]);
 return self::edtneeds($p);}*/
 
 static function register($p){$n=$p['needs'];
@@ -208,7 +208,7 @@ return $rt;}
 
 static function affectation($r){$rb=[];
 foreach($r as $k=>$v){
-	//sql::up2(self::$db2,['don'=>$v['ratio'],'ratio'=>$v['don']],$v['id']);
+	//sql::upd(self::$db2,['don'=>$v['ratio'],'ratio'=>$v['don']],$v['id']);
 	$don=$v['don']*round($v['ratio']/100); $remain=$v['don']-$don;
 	$rb[$v['cid']][]=[$v['don'],$v['ratio'],$don,$remain];}
 return $rb;}

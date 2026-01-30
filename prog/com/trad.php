@@ -13,14 +13,14 @@ $r[]=['editors','pop','pad','','pad'];
 $r[]=['editors','pop','trad','','trad'];
 return $r;}
 
-static function clean_mail($ret){
+/*static function clean_mail($ret){
 $ret=str_replace(".\n",'.µµ',$ret);
 $ret=str_replace("\n",'µ',$ret);
 $ret=str_replace('µµ',"\n\n",$ret);
 $ret=str_replace('µ',' ',$ret);
-return $ret;}
+return $ret;}*/
 
-static function com($prm){$d=val($prm,'inp1'); $d=self::clean_mail($d);
+static function com($prm){$d=val($prm,'inp1'); $d=str::clean_mail($d);
 $ret=trans::com(['to'=>ses('lng'),'txt'=>$d,'dtc'=>1,'mode'=>'html']);
 return $ret;}
 

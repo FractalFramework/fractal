@@ -87,7 +87,7 @@ return div($ret,'');}
 
 #role
 static function savrole($p){$set=val($p,'set',0);
-if($set)sql::up(self::$db2,'role',$set,ses('uid'),'uid');
+if($set)sql::upd(self::$db2,['role'=>$set],['uid'=>ses('uid')]);
 return lang(self::$roles[$set]);}
 
 static function setrole($p){$ret='';

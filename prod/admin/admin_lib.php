@@ -18,20 +18,21 @@ $id=sql('id',self::$db[$b],'v',['func'=>$func,'lang'=>$lang]);
 if($id){
 	$txt=sql('txt',self::$db[$b],'v',$id);
 	if($txt && !$p['txt'])$p['txt']=($txt);//conn::com
-	sql::up2(self::$db[$b],$p,$id);}
+	sql::upd(self::$db[$b],$p,$id);}
 else $id=sql::sav(self::$db[$b],$p,0,0,1);
 if(isset(self::$maj[$id]))unset(self::$maj[$id]);
 return $id;}
 
 static function del($p){
-$id=$p['id']??''; $b=$p['b']??'';
+[$id,$b,$rid,$ok]=vals($p,['id','b','rid','ok']);
+if(!$ok)return bj($rid.'|admin_lib,del|b='.$b.',id='.$id.',ok=1',langp('really?'),'btdel');
 if($id)sql::del(self::$db[$b],$id);
 return self::play($p);}
 
 static function update($p){
 $id=$p['id']??''; $txt=val($p,'tx'.$id); $rid=$p['rid']??''; $b=$p['b']??'';
-sql::up(self::$db[$b],'txt',$txt,$id);
-return conn::com($txt);}
+sql::upd(self::$db[$b],['txt'=>$txt],$id);
+return conn::com($txt,1);}
 
 static function modif($p){$id=$p['id']??''; $b=$p['b']??''; $rid=$p['rid']??'';
 $txt=sql('txt',self::$db[$b],'v',$id);
@@ -42,7 +43,7 @@ return div($ret,'','md'.$id);}
 //read
 static function seecode($p){$id=$p['id']??''; $b=$p['b']??'';
 $ret=sql('code',self::$db[$b],'v',$id);
-return div(build::Code($ret),'paneb');}
+return div(build::code($ret),'paneb');}
 
 //build
 static function build($f){$rf=explode('/',$f);
@@ -52,7 +53,7 @@ foreach($ra as $v){
 	$fnc=strto($v,'{');
 	$vr=explode('(',$fnc); $func=$vr[0];
 	$vars=(isset($vr[1])?substr($vr[1],0,-1):'');
-	$code=utf8enc(trim(accolades($v)));
+	$code=str::utf8enc(trim(str::accolades($v)));
 	if($func && $code)$rb[]=['func'=>$func,'vars'=>$vars,'code'=>$code,'txt'=>'','lang'=>ses('lng')];}
 return $rb;}
 
@@ -70,7 +71,7 @@ static function docs($p){$rid=$p['rid']??''; $b=$p['b']??''; $ret='';
 $r=sql('id,func,vars,txt',self::$db[$b],'rr','where lang="'.ses('lng').'" order by func');
 if($r)foreach($r as $k=>$v){$id=$v['id'];
 	$bt=tag('h2','',$v['func'].'('.$v['vars'].')');
-	$bt.=div(conn::com($v['txt']),'','md'.$id);
+	$bt.=div(conn::com($v['txt'],1),'','md'.$id);
 	$ret.=div($bt,'paneb');}
 return $ret;}
 
@@ -84,15 +85,28 @@ $ret.=bj($rid.'|admin_lib,play|b=2,rid='.$rid,'core','btn'.active($b,2));
 //$ret.=bj('popup|admin_lib,play|o=1',langp('view'),'btn');
 return $ret;}
 
+static function pane($p){
+[$id,$b]=vals($p,['id','b']);
+$d=sql('txt',self::$db[$b],'v',['id'=>$id]);
+return conn::com($d,1);}
+
 static function play($p){$rid=$p['rid']??''; $b=$p['b']??''; $ret='';
-$r=sql('id,func,vars,txt',self::$db[$b],'rr','where lang="'.ses('lng').'"');// order by func
+$r=sql('id,func,vars,txt',self::$db[$b],'rr',['lang'=>ses('lng')]);// order by func
 $j='b='.$b.',rid='.$rid;
 if($r)foreach($r as $k=>$v){$id=$v['id'];
 	$bt=span($v['func'].'('.$v['vars'].')','tit').' ';
-	if(auth(6))$bt.=toggle('md'.$id.'|admin_lib,seecode|'.$j.',id='.$id,langp('view'),'btn');
-	if(auth(6))$bt.=toggle('md'.$id.'|admin_lib,modif|'.$j.',id='.$id,langp('modif'),'btsav');
-	if(auth(6))$bt.=toggle($rid.'|admin_lib,del|'.$j.',id='.$id,langp('del'),'btdel');
-	$bt.=div(conn::com($v['txt']),'pane','md'.$id);
+	if(auth(6)){
+		//$bt.=toggle('md'.$id.'|admin_lib,seecode|'.$j.',id='.$id,langp('view'),'btn');
+		$ja='md'.$id.'|admin_lib,seecode|'.$j.',id='.$id;
+		$jb='md'.$id.'|admin_lib,pane|id='.$id.',b='.$b;
+		$bt.=togbt($ja,$jb,langp('view'),'btn');
+		//$bt.=toggle('md'.$id.'|admin_lib,modif|'.$j.',id='.$id,langp('modif'),'btsav');
+		$ja='md'.$id.'|admin_lib,modif|'.$j.',id='.$id;
+		$bt.=togbt($ja,$jb,langp('modif'),'btsav');
+		//$bt.=toggle('md'.$id.'|admin_lib,del|'.$j.',id='.$id,langp('del'),'btdel');
+		$ja='md'.$id.'|admin_lib,del|'.$j.',id='.$id;
+		$bt.=togbt($ja,$jb,langp('del'),'btdel');}
+	$bt.=div(conn::com($v['txt'],1),'paneb','md'.$id);
 	$ret.=div($bt,'');}
 return $ret;}
 

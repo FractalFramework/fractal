@@ -22,7 +22,7 @@ elseif($table=='desktop')$wh='where uid=1';
 elseif($table=='articles')$wh='where uid=1';
 else $wh='';
 $r=sql($keys,$table,'rr',$wh,0);
-$ret=json_enc($r);
+$ret=($r);//json_enc
 return $ret;}
 
 static function menu($p){//system tables

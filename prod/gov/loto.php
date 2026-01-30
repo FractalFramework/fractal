@@ -66,7 +66,7 @@ static function bank_finalization($p){//needed by bank
 [$bid,$cid,$don,$rat,$rf,$cnd]=vals($p,['aid','cid','value','rat','rf','cnd'],0);
 if($cnd==1)$bt='good luck'; elseif($cnd==2)$bt='congratulations'; else $bt='back';
 $ret=bj(self::$cb.$bid.'|loto,call|id='.$bid,langp($bt),'btok');
-//if($rf)$ret.=trace(bank::$rf);
+//if($rf)$ret.=rplay(bank::$rf);
 return $ret;}
 
 #build
@@ -81,7 +81,7 @@ return $ret.self::play($p);}
 
 static function draw($r,$id){
 for($i=0;$i<$r['nb'];$i++)$rv[]=rand(1,9); $val=implode('',$rv);
-sql::up(self::$db,'result',$val,$id);
+sql::upd(self::$db,['result'=>$val],$id);
 return $val;}
 
 //game

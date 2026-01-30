@@ -52,8 +52,9 @@ $p['cid']=sql::sav(self::$db2,$r);
 return self::play($p);}
 
 static function argumentedit($p){$id=$p['id'];
-$ret=input('addarg',lang('add proposition'),'52',1);
-$ret.=bj(self::$cb.$id.'|ideas,argumentSave|id='.$id.'|addarg',langp('save'),'btsav');
+$j=self::$cb.$id.'|ideas,argumentSave|id='.$id.'|addarg';
+$ret=input('addarg','','52',1);
+$ret.=bj($j,langp('add proposition'),'btsav');
 return $ret;}
 
 //algo
@@ -64,13 +65,13 @@ return $ret;}
 
 //poll
 static function lead_save($p){$v=val($p,'v');
-$id=sql('id',self::$db3,'v','where uid='.ses('uid').' and cid='.$p['bid']);
+$id=sql('id',self::$db3,'v',['uid'=>ses('uid'),'cid'=>$p['bid']]);
 if(!$id)sql::sav(self::$db3,[$p['bid'],ses('uid'),1]);
-else sql::up(self::$db3,'val',$v==1?0:1,$id);
+else sql::upd(self::$db3,['val'=>$v==1?0:1],$id);
 return self::play($p);}
 
-static function barlevel($p){
-[$sum,$score,$cl,$bid,$vot,$t,$bt,$btv]=vals($p,['sum','score','cl','bid','vot','txt','bt','btvot']);
+static function barlevel($p){//pr($p);
+[$sum,$score,$cl,$bid,$vot,$t,$bt,$btv]=vals($p,['tot','score','cl','bid','voted','txt','bt','btvot']);
 $size=$sum&&$score?round($score/$sum*100):0;
 $bar=div('','bartensor '.($vot?'active':''),'','width:'.$size.'%;";');
 $bar.=div($t,'bartxt');

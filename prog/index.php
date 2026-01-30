@@ -6,8 +6,8 @@ $index=ses::$cnfg['index'];
 header('Content-Type: text/html; charset=UTF-8');
 //head::add('code','<base href="'.$_SERVER['HTTP_HOST'].'" />');
 head::add('charset','UTF-8');
-head::add('tag',['title','',lang($app)]);//setlng();
-head::add('rel',['name'=>'shortcut icon','value'=>'/favicon.ico']);
+head::add('tag',['title',[],ses::$cnfg['index']]);//setlng();//lang($app)
+head::add('rel',['name'=>'shortcut icon','value'=>favicon()]);
 head::name('viewport','user-scalable=no, initial-scale=1, width=device-width');
 head::add('csslink',night(0).$nc);//$start
 head::add('csslink','/css/global.css'.$nc);

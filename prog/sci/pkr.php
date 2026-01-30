@@ -64,12 +64,12 @@ sql::sav(self::$db2,[$p['id'],$p['cdr']]);}
 
 static function dellast($p){
 $d=sql('cards',self::$db2,'v',$p['bid']);
-sql::up(self::$db2,'cards',substr($d,0,2),$p['bid']);
+sql::upd(self::$db2,['cards'=>substr($d,0,2)],$p['bid']);
 return self::play($p);}
 
 static function compsave($p){
 $r=vals($p,['bid','uid','cd0','cd1','cd2','cd3','','','','']); pr($r);
-//$bid=sql::up(self::$db2,$r,$p['bid']);
+//$bid=sql::upd(self::$db2,$r,$p['bid']);
 if($p['cd0'])$p['bid']=sql::sav(self::$db2,$r); $p['opn']=1;
 return self::edit($p);}
 

@@ -81,7 +81,7 @@ foreach($rb as $k=>$v){$i++; $rb[$k]['idn']=$i; $rkb[$k]=$i;}//reorder
 foreach($rb as $k=>$v){//new links
 	if($v['idp'] && isset($rk[$v['idp']]))$rb[$k]['idp']=$rb[$rk[$v['idp']]]['idn'];
 	if($v['rel'] && isset($rk[$v['rel']]))$rb[$k]['rel']=$rb[$rk[$v['rel']]]['idn'];}
-foreach($rb as $k=>$v)sql::up2(self::$db2,$v,$k);//save
+foreach($rb as $k=>$v)sql::upd(self::$db2,$v,$k);//save
 foreach($rb as $k=>$v)//rapport
 	foreach($v as $ka=>$va)if($r[$k][$ka]??'' && $va!=$r[$k][$ka])$rc[$k][$ka]=$ka.':'.$r[$k][$ka].'->'.$va;
 return $rc;}
@@ -94,8 +94,8 @@ if(!$rc[0] && !$rc[1] && !$rc[2])return 0;
 if(!$rc[0] && $idp==$idn)$idp=$rc[1]?$_idp:0;//collide parents
 if($rc[0] && ($rel==$idn or $rel==$idp))$rel=$rc[2]&&$_rel!=$idn&&$_rel!=$idp?$_rel:0;//ref
 $p['idn']=$idn; $p['idp']=$idp; $p['rel']=$rel;
-//$ra=valk($p,['t2','bkg','txt']); sql::up2($db2,$ra,$idb);
-$ra=valk($p,['idn','idp','rel']); if($ra['idn']!=$p['idn']) sql::up2($db2,$ra,$idb);
+//$ra=valk($p,['t2','bkg','txt']); sql::upd($db2,$ra,$idb);
+$ra=valk($p,['idn','idp','rel']); if($ra['idn']!=$p['idn']) sql::upd($db2,$ra,$idb);
 $rc=self::repair($ra,$id,$idb,$idn);
 if($rc){$ret=help('slide_collision','board').bj('sldok|core,txt',langp('ok'),'btn').tabler($rc,0,1);}
 return div($ret,'','sldok');}
@@ -106,7 +106,7 @@ $p['t']='t2'; $p['bt']=self::subbt($p); $ret='';
 [$id,$idb,$idn,$op]=vals($p,['id','idb','idn','op']); if(!$idn)$idn=1;
 $cb=self::$cb; $a=self::$a; $db2=self::$db2;
 if($op=='sav'){$p['op']='';
-	$r=valk($p,sql::cols($db2,3,2)); sql::up2($db2,$r,$idb);
+	$r=valk($p,sql::cols($db2,3,2)); sql::upd($db2,$r,$idb);
 	$ret=self::collisions($p);}//alternative save
 elseif($op=='add')$p['idn']=$idn+1;
 return ($ret?$ret:'').parent::subops($p);}
@@ -133,9 +133,9 @@ elseif($id && $delall){sql::del(self::$db,$id); sql::del(self::$db2,$id,'bid');
 elseif($id && $idn){//reorder slides and parents after deleting
 	qr('delete from '.self::$db2.' where bid="'.$id.'" and idb="'.$idb.'" and idn="'.$idn.'"');
 	$r=sql('id,idn',self::$db2,'kv','where bid="'.$id.'" and idn>"'.$idn.'" order by idn');
-	if($r)foreach($r as $k=>$v){$nidn=$v-1; sql::up(self::$db2,'idn',$nidn,$k);}
+	if($r)foreach($r as $k=>$v){$nidn=$v-1; sql::upd(self::$db2,['idn'=>$nidn],$k);}
 	$r=sql('id,idp',self::$db2,'kv','where bid="'.$id.'" and idp>="'.$idn.'" order by idn');
-	if($r)foreach($r as $k=>$v)if($v){$nidp=$v-1; sql::up(self::$db2,'idp',$nidp,$k);}
+	if($r)foreach($r as $k=>$v)if($v){$nidp=$v-1; sql::upd(self::$db2,['idp'=>$nidp],$k);}
 	$p['idn']=$idn-1>0?$idn-1:1; return self::play($p);}}
 
 //add slide
@@ -145,7 +145,7 @@ if($r)return max($r)+1; else return 1;}
 
 static function addsav($p){
 $id=$p['id']??''; $idb=$p['idb']??''; $mdf=$p['mdf']; //$idn1=$p['idn1'];
-if($mdf)sql::up2(self::$db2,valk($p,['idn','idp','t2','bkg','txt','rel']),$idb);
+if($mdf)sql::upd(self::$db2,valk($p,['idn','idp','t2','bkg','txt','rel']),$idb);
 else $id=sql::sav(self::$db2,valk($p,['bid','idn','idp','t2','bkg','txt','rel']));
 //if($p['idn']!=$idn1 && $idn1)self::collisions($p);
 return self::play($p);}

@@ -21,7 +21,11 @@ static $errors=[];
 * with an example
 */
 
-static function getkey(){return 1234;}
+static function skey(){return 1234;
+return read_file('cnfg/'.self::$a.'.txt');}
+
+static function getkey(){
+return sesm(self::$a,'skey');}
 
 static function apicall($r,$mode){
 	$k=self::getkey();

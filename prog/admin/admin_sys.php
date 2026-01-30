@@ -25,14 +25,14 @@ $ra=sql::pvalk($p,self::$db);
 if($id){
 	$txt=sql('txt',self::$db,'v',$id);
 	if($txt && !$p['txt'])$p['txt']=$txt;
-	sql::up2(self::$db,$ra,$id,0,1);}
+	sql::upd(self::$db,$ra,$id,0,1);}//??
 else $id=sql::sav(self::$db,$ra,0,0,1);
 if(isset(self::$maj[$id]))unset(self::$maj[$id]);
 return $id;}
 
 static function update($p){
 $id=$p['id']??''; $txt=val($p,'tx'.$id); $rid=$p['rid']??'';
-sql::up(self::$db,'txt',trim($txt),$id);
+sql::upd(self::$db,['txt'=>trim($txt)],$id);
 return self::modif($id,$txt,$rid,$p['app']??'');}
 
 static function modif($id,$txt,$rid,$app=''){
@@ -57,8 +57,8 @@ foreach($r as $k=>$v){
 		if($na!=$nb){$nc=strrpos($v,'}'); $v=substr($v,0,$nc);}
 		$na=substr_count($v,'{'); $nb=substr_count($v,'}');
 		if($na!=$nb){echo $app.'/'.$fnc.':'.$na.'-'.$nb.br(); return;}
-		$code=trim(accolades($v));
-		if($func && $code)$rb[]=['dir'=>$rf[1],'app'=>$app,'func'=>$func,'vars'=>$vars,'code'=>utf8enc($code),'txt'=>'','lang'=>$lg];}}
+		$code=trim(str::accolades($v));
+		if($func && $code)$rb[]=['dir'=>$rf[1],'app'=>$app,'func'=>$func,'vars'=>$vars,'code'=>str::utf8enc($code),'txt'=>'','lang'=>$lg];}}
 return $rb;}
 
 //dirs

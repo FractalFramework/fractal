@@ -50,20 +50,20 @@ return parent::create($p);}
 static function checkDay($p){
 if(val($p,'status')){
 	$id=sql('id','pray_valid','v','where bid="'.$p['id'].'" and uid="'.ses('uid').'" and day="'.$p['day'].'"');
-	if($p['status']==1)sql::up('pray_valid','ok',2,$id);
-	elseif($p['status']==2)sql::up('pray_valid','ok',1,$id);}
+	if($p['status']==1)sql::upd('pray_valid',['ok'=>2],$id);
+	elseif($p['status']==2)sql::upd('pray_valid',['ok'=>1],$id);}
 else sql::sav('pray_valid',[$p['id'],ses('uid'),$p['day'],1]);
 return self::week($p);}
 
 #week
-static function week($p){
+static function week($p){$rb=[]; $rh=[]; $rs=[];
 $id=$p['id']; $now=time(); $usr=ses('usr'); 
 $date=sql('day',self::$db,'v',$id); $firstDay=strtotime($date);
 $w='left join login on uid=login.id where bid='.$id;
 $rusr=sql('name','pray_group','rv',$w);
 $rvalid=sql('name,day,ok','pray_valid','kkv',$w);
 setlng();//setlocale
-for($i=0;$i<7;$i++)$rb[0][]=date('d/m/Y',$firstDay+(86400*$i));//headers
+for($i=0;$i<7;$i++)$rh[]=date('d/m/Y',$firstDay+(86400*$i));//headers
 for($i=0;$i<7;$i++)$rdates[]=date('Y-m-d',$firstDay+(86400*$i));//headers
 //pr($rusr);//0=>dav
 //pr($rvalid);//dav=>[date=>1/2]
@@ -86,9 +86,10 @@ foreach($rok as $k=>$v){
 			elseif($ok==1){$c=' active'; $ico=ico('check');}
 			else{$c=''; $ico=ico('minus');}
 			if($k==$usr)$bt=bj('rv'.$id.'|pray,checkDay|id='.$id.',status='.$ok.',day='.$currentDate,$ico,'minicon'.$c);
-			else $bt=tag('span','class=minicon opac'.$c,$ico);}
+			else $bt=tag('span',['class'=>'minicon opac'.$c],$ico);}
 		else $bt=span('-','minicon off');
 		if($ok==1)$rc[$k][]=1;
+		$rsum[$k][$i]=$ok==1?1:0;
 		$rb[$k][]=$bt;}
 	//score
 	if(isset($rc[$k])){
@@ -96,13 +97,17 @@ foreach($rok as $k=>$v){
 		if($n>=7)$c=' yes'; else $c=' no';
 		if($firstDay+592200<ses('time'))$rb[$k][]=span($n,'success'.$c);
 		if($n>=7)$rd[$k][]=1;}}}//else $rd[$k][]=0;
+//sum
+if($rb)for($i=0;$i<7;$i++)$rs[]=array_sum(array_column($rsum,$i)); //pr($rs);
+$n=count($rd??0);
+$rs[]=span($n,$n>=7?'valid':'alert');
+if($rs)array_push($rb,$rs);
 //render
-$ret=tabler($rb,1,1,'minibtn');
+//pr($rb);
+$ret=tabler($rb,$rh,1);
 //total
-if(isset($rd)){
-	$n=count($rd);
-	if($n>=7)$msg='success'; else $msg='fail';
-	$ret.=div(lang($msg).' ('.$n.'*7)',$n>=7?'valid':'alert');}
+if($n>=7)$ret.=div(lang('success').' : '.$n.' / 7','valid');
+else $ret.=div(lang('fail').' : '.$n.' / 7','alert');
 return $ret;}
 
 #play
