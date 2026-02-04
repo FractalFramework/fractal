@@ -66,7 +66,7 @@ static function translate($d,$ref){$lng='en';//ses('lng');
 $lg=sql('lang','voc','v','where vrf="'.$vrf.'"');
 if(!$lg){//update changes
 	$ex=sql('id','voc','v',['ref'=>$ref,'lang'=>$lng]);
-	//if($ex)sql::up($db,[$col=>$d,'vrf'=>$vrf],$ex);
+	//if($ex)sql::upd($db,[$col=>$d,'vrf'=>$vrf],$ex);
 	if($ex)sql::del('voc',$ref,'ref');}
 if(!$lg){
 	$lg=trans::detect(['txt'=>$d]); //echo $lg.'-';

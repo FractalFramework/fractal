@@ -86,6 +86,7 @@ static function form($p){
 //$p['bttxt']=1;//label for txt;
 //$p['barfunc']='barlabel';//js function for bar()
 //$p['labeltit']='title';//personalized label for col tit
+//$p['jp']='preview|a=1';//'mth|prm to call for preview';
 return parent::form($p);}
 
 static function edit($p){//->form, ->call
@@ -106,6 +107,8 @@ static function template(){//return parent::template(); //use Genetics Template 
 //return '[[[tit:var]*class=tit:div][[txt:gen]*class=txt:div]*class=paneb:div]';//use gen for txt
 //return '[[[tit:var]*class=tit:div][[txt:html]*class=txt:div]*class=paneb:div]';//html content
 return '[[(tit)*class=tit:div][[txt:var]*class=txt:div]*class=paneb:div]';}//will nl2br()
+
+static function preview($p){return parent::preview($p);}
 
 #play (where to begin to code)
 static function play($p){//->build, ->template

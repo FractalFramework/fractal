@@ -39,7 +39,7 @@ else return help('error');}
 
 static function redo($p){
 $d=self::getfile($p);
-sql::up(self::$db,'txt',$d,$p['id']);
+sql::upd(self::$db,['txt'=>$d],$p['id']);
 return self::edit($p);}
 
 static function save($p){

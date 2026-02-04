@@ -36,15 +36,28 @@ $ret=parent::modif($p); self::play($p,1);
 return $ret;}
 
 //menubt
-static function el($k,$v,$rid){return insert('['.implode(',',$v).':'.$k.']',$rid);}
-static function menu($p){$r=svg::motor();
-$ra=['attr','shapes'=>['rect','circle','ellipse','line','polyline','polygon','path'],'btn'=>['group','text','tspan','a','bj','js'],'defs'=>['filter'=>['feBlend','feOffset','feGaussianBlur','feColorMatrix']],'linearGradient'=>['stop'],'dev'=>['setvar','var','verbose','grid','g','gp','animate']];
+static function el($k,$v,$rid){//called bu build::iterbt
+return insert('['.implode(',',$v).':'.$k.']',$rid);}
+
+static function r(){
+return ['attr','stroke','shapes'=>['rect','circle','ellipse','line','polyline','polygon','path','arc'],'btn'=>['group','text','tspan','a','bj','js'],'defs'=>['filter'=>['feBlend','feOffset','feGaussianBlur','feColorMatrix'],'animate'],'linearGradient'=>['linearGradient','stop'],'specials'=>['dim','grid','setvar','var','g','gp','verbose'],'examples'=>array_keys(svg::ex())];}
+
+static function cbk($p){//using subt
+[$a,$m,$r,$cb,$n]=vals($p,['a','m','r','cb','n']);
+$k1=$p['k1']??''; $bt=$p['k'.$n]??'';
+if($k1=='examples')$ra=svg::ex(); else $ra=svg::motor();
+$ret=$ra[$bt]??'';
+if(is_array($ret))$ret='['.join(',',$ret).':'.$bt.']';
+elseif(!$ret)$ret='[:'.$bt.']';
+return [$cb=>$p['codea'].n().$ret];}
+
+static function menu($p){$r=svg::motor(); $ra=self::r();
 return build::iterbt($p,$ra,$r,'functions','vector');}
 
 static function svgbt($rid,$id){$ret=''; $r=svg::motor(); $t='vector'.$id; //sql('tit',self::$db,'v',$id);
 $ret=div(menu::call(['app'=>'vector','mth'=>'menu','bid'=>'code','drop'=>0]));
 //foreach($r as $k=>$v)$ret.=btj($k,insert('['.implode(',',$v).':'.$k.']',$rid),'btn').' ';
-$r=['setvar'=>'v*10','var'=>'v','verbose'=>1,'grid'=>20,'g'=>1,'gp'=>'1/1 2/2'];
+$r=['dim'=>'600,400','grid'=>20,'attr'=>',white,2','stroke'=>'black,10,0.5,round,2/4,arcs/miter/round','setvar'=>'v1*40','var'=>'v1','g'=>1,'gp'=>'1/1 2/2','verbose'=>1];
 $ret.=build::cbt($rid,$r);
 //$ret.=build::sample(['a'=>'svg','b'=>$rid]);
 $ret.=bj('popup|svg',lang('examples'),'btsav');

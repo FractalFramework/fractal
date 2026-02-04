@@ -50,7 +50,7 @@ return $f;}
 
 //tags
 static function tags($tag,$atb,$d){
-if(strpos($atb,'align="center"')!==false)$d='['.$d.':c]';
+//if(mb_strpos($atb,'align="center"')!==false)$d='['.$d.':c]';
 switch($tag){
 case('a'):$u=between($atb,'href="','"'); //$ub=between($atb,'data-j="','"');
 	if($d==domain($u))$d='';
@@ -59,15 +59,15 @@ case('a'):$u=between($atb,'href="','"'); //$ub=between($atb,'data-j="','"');
 	if($u && substr($u,0,3)=='#nh')return '['.substr($u,3).':nb]';
 	if($u && substr($u,0,3)=='#nb')return '['.substr($u,3).':nh]';
 	if($u)return '['.trim($u).($d?'|'.trim($d):'').':url]'; break;
-case('img'):$u=between($atb,'src="','"'); $b64='';
+case('img'):$u=between($atb,'src="','"'); $alt=between($atb,'alt="','"'); $b64='';
 	$w=between($atb,'width="','"'); $h=between($atb,'height="','"');
 	if(substr($u,0,10)=='data:image')$u=self::b64img($u);
-	elseif(substr($u,0,4)=='http')$u=saveimg($u,'art',$w,$h='');
+	elseif(substr($u,0,4)=='http')$u=saveimg($u,'art',$w);
 	elseif(substr($u,0,9)=='/img/mini')return '';
-	//elseif(substr($u,0,9)=='/img/full')return $u;
+	//elseif(substr($u,0,9)=='/img/full')$d=strend($u,'/');
 	elseif(substr($u,0,4)!='http')$u=strend($u,'/');
 	//if($w && $h)$u.='|'.$w.'-'.$h;
-	return '['.$u.']'; break;//:img
+	return '['.$u.''.($alt?'|'.$alt:'').']'; break;//:img
 case('table'):
 	if(mb_substr($d,-1,1)=='¬')$d=mb_substr($d,0,-1);
 	if(post('th')){$o='|1'; self::$th='';} else $o='';
@@ -93,19 +93,42 @@ $r=self::$conn; if($d && isset($r[$tag]))return '['.$d.':'.$r[$tag].']';
 $r=self::$conb; if($d && isset($r[$tag]))return "\n\n".'['.$d.':'.$r[$tag].']'."\n\n";
 return $d;}
 
-static function recursearch($v,$ab,$ba,$tag){//pousse si autre balise similaire
-$bb=strpos($v,'>',$ba); $d=self::ecart($v,$ab,$ba);
-if(strpos($d,'<'.$tag)!==false){$bab=strpos($v,'</'.$tag,$ba+1);
-	if($bab!==false)$ba=self::recursearch($v,$bb,$bab,$tag);}
+//pousse si autre balise similaire
+static function recursearch($v,$ab,$ba,$tag){static $i; $i++;
+$bb=mb_strpos($v,'>',$ba); $d=self::ecart($v,$ab,$ba);
+$nab=mb_strpos($d,'<'.$tag); $nba=mb_strpos($d,'</'.$tag);
+if($nab!==false && $nba===false){$bab=mb_strpos($v,'</'.$tag,$ba+1);
+	if($bab!==false && $i<100)$ba=self::recursearch($v,$bb,$bab,$tag);}
 return $ba;}
 
-static function ecart($v,$a,$b){return substr($v,$a+1,$b-$a-1);}
+static function recursearch_a($v,$ab,$ba,$tag){static $i; $i++;
+$bb=strpos($v,'>',$ba); $d=self::ecart($v,$ab,$ba);
+$nab=strpos($d,'<'.$tag); $nba=strpos($d,'</'.$tag);
+if($nab!==false && $nba===false){$bab=strpos($v,'</'.$tag,$ba+1);
+	if($bab!==false && $i<100)$ba=self::recursearch($v,$bb,$bab,$tag);}
+return $ba;}
+
+static function recursearch_0($v,$ab,$ba,$aa_bal){//pousse si autre balise similaire
+$bb=strpos($v,'>',$ba); $bal=self::ecart($v,$ab,$ba);
+if(strpos($bal,'<'.$aa_bal)!==false){$bab=strpos($v,'</'.$aa_bal,$ba+1);
+	if($bab!==false)$ba=self::recursearch($v,$bb,$bab,$aa_bal);}
+return $ba;}
+
+static function ecart($v,$a,$b){
+//if($b<$a+2)return $v;
+return mb_substr($v,$a+1,$b-$a-1);}
 
 static function cleanhtml($d){;
-$r=['b','i','u','strike','ul','ol','li'];
+$r=['b','i','u','em','strong','strike','ul','ol','blockquote'];
 foreach($r as $k=>$v){
+	$d=str_replace('<'.$v.'> ',' <'.$v.'>',$d);
+	$d=str_replace(' </'.$v.'>','</'.$v.'> ',$d);
+	$d=str_replace('<'.$v.'></'.$v.'>','',$d);
+	$d=str_replace('<'.$v.'> </'.$v.'>','',$d);
+	$d=str_replace('<'.$v.'>."\n".</'.$v.'>',"\n",$d);
 	$d=str_replace('</'.$v.'><'.$v.'>','',$d);
-	$d=str_replace('</'.$v.'> <'.$v.'>',' ',$d);}
+	$d=str_replace('</'.$v.'> <'.$v.'>',' ',$d);
+	$d=str_replace('</'.$v.'>."\n"<'.$v.'>',"\n",$d);}
 return $d;}
 
 static function cleanconn($d){
@@ -114,35 +137,35 @@ $r=self::$conn+self::$conb;
 foreach($r as $k=>$v){
 	$d=str_replace("\n".':'.$v.']',':'.$v.']'."\n",$d);
 	$d=str_replace(' :'.$v.']',':'.$v.'] ',$d);
-	$d=str_replace(':'.$v.'].','.:'.$v.']',$d);
+	//$d=str_replace(':'.$v.'].','.:'.$v.']',$d);
 	$d=str_replace('[:'.$v.']','',$d);}
 return $d;}
 
 static function parse($v,$x=''){
 $tag=''; $atb=''; $txt=''; $before='';
-$aa=strpos($v,'<'); $ab=strpos($v,'>');//tag
+$aa=mb_strpos($v,'<'); $ab=mb_strpos($v,'>');//tag
 if($aa!==false && $ab!==false && $ab>$aa){
-$before=substr($v,0,$aa);//...<
+$before=mb_substr($v,0,$aa);//...<
 $atb=self::ecart($v,$aa,$ab);//<...>
-	$aa_end=strpos($atb,' ');
-	if($aa_end!==false)$tag=substr($atb,0,$aa_end);
+	$aa_end=mb_strpos($atb,' ');
+	if($aa_end!==false)$tag=mb_substr($atb,0,$aa_end);
 	else $tag=$atb;}
-$ba=strpos($v,'</'.$tag,$ab); $bb=strpos($v,'>',$ba);//end
+$ba=mb_strpos($v,'</'.$tag,$ab); $bb=mb_strpos($v,'>',$ba);//end
 if($ba!==false && $bb!==false && $tag && $bb>$ba){
 	$ba=self::recursearch($v,$ab,$ba,$tag);
-	$bb=strpos($v,'>',$ba);
+	$bb=mb_strpos($v,'>',$ba);
 	$tagend=self::ecart($v,$ba,$bb);
 	$txt=self::ecart($v,$ab,$ba);}
 elseif($ab!==false)$bb=$ab;
 else{$bb=-1;}
-$after=substr($v,$bb+1);//>...
+$after=mb_substr($v,$bb+1);//>...
 $tag=strtolower($tag);
 //itération
-if(strpos($txt,'<')!==false)$txt=self::parse($txt,$x);
+if(mb_strpos($txt,'<')!==false)$txt=self::parse($txt,$x);
 if(!$x)//interdit l'imbrication
 	$txt=self::tags($tag,$atb,$txt);
 //sequence
-if(strpos($after,'<')!==false)$after=self::parse($after,$x);
+if(mb_strpos($after,'<')!==false)$after=self::parse($after,$x);
 $ret=$before.$txt.$after;
 return $ret;}
 
@@ -176,24 +199,23 @@ return join('',$rt);}
 static function call($p){
 $d=$p['txt']??''; //eco($d);
 //$d=unicode($d);
-//if(!$p['brut']??'')$d=deln($d);
-$d=delt($d);
-$d=delsp($d);
-$d=delr($d);
-$d=deln($d,' ');
+//if(!$p['brut']??'')$d=str::deln($d);
+$d=str::delt($d);
+$d=str::delnbsp($d);
+$d=str::delr($d);
+$d=str::deln($d,' ');
 //$d=str::clean_mail($d);
-if(strpos($d,'<br>')!==false && strpos($d,"\n")!==false)$d=deln($d);
-if(strpos($d,'<br>')!==false && strpos($d,"\n")===false)$d=delbr($d,"\n");
-//$d=delp($d);
+if(strpos($d,'<br>')!==false && strpos($d,"\n")!==false)$d=str::deln($d);
+if(strpos($d,'<br>')!==false && strpos($d,"\n")===false)$d=str::delbr($d,"\n");
+//$d=str::delp($d);
 $d=str::clean_lines($d);
 $d=self::cleanhtml($d);
 $d=self::parse($d);
 //$d=self::parsedom(dom($d));
 $d=self::cleanconn($d);
-$d=delbr($d,"\n");
+$d=str::delbr($d,"\n");
 $d=str::clean_n($d);
-$d=cleansp($d);
-$d=str::nbsp($d);
+$d=str::repair_punct($d);
 //eco($d);
 return $d;}
 

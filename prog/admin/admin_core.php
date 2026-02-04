@@ -20,14 +20,14 @@ $id=sql('id',self::$db,'v',$w);
 if($id){
 	$txt=sql('txt',self::$db,'v',$id);
 	if($txt && !$p['txt'])$p['txt']=$txt;
-	sql::up2(self::$db,$p,$id);}
+	sql::upd(self::$db,$p,$id);}
 else $id=sql::sav(self::$db,$p);
 if(isset(self::$maj[$id]))unset(self::$maj[$id]);
 return $id;}
 
 static function update($p){
 $id=val($p,'id'); $txt=val($p,'tx'.$id); $rid=val($p,'rid');
-sql::up(self::$db,'txt',$txt,$id);
+sql::upd(self::$db,['txt'=>$txt],$id);
 return tag('pre','',($txt));}
 
 static function modif($p){$id=val($p,'id');

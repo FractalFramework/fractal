@@ -12,7 +12,7 @@ return $p['inp1'].': '.$p['msg'];}
 static function auth($p){
 $uid=sql('id','login','v',['id'=>1]);
 if(ses('uid'==1) or $p['param']=='superadmin')
-	sql::up('login','auth','6','uid',ses('uid'));
+	sql::upd('login',['auth'=>'6'],['uid'=>ses('uid')]);
 return 'ok';}
 
 static function func($p){$pb=explode('-',$p['o']);

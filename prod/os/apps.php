@@ -4,7 +4,7 @@ static $private=0;
 static $a='apps';
 static $db='os';
 static $cb='appmain';
-static $title='home';
+static $title='';
 static $descr='';
 static $image='';
 static $home='';
@@ -27,9 +27,9 @@ return $r;}
 static function js(){}
 
 static function headers(){
-head::prop('og:title',addslashes(self::$title));
-head::prop('og:description',addslashes(self::$descr));
-head::prop('og:image',self::$image);
+root::$title=self::$title;
+root::$descr=self::$descr;
+root::$image=self::$image;
 head::add('jslink','/js/tlex.js');
 head::add('jscode',self::js());}
 
@@ -67,7 +67,7 @@ foreach($rt as $k=>$v){ksort($v); $ret.=div($k,'tit').div(implode('',$v),'cols')
 return div($ret,'');}
 
 static function build(){
-return sql('app',self::$db,'rv','where uid="'.ses('uid').'" order by id');}
+return sql('app',self::$db,'rv',['uid'=>ses('uid'),'_order'=>'id']);}
 
 static function appbt($v,$c){
 $auth=sesif('auth',0);

@@ -74,7 +74,7 @@ if($p['vote']=='ok'){$p['op2']=1;
 elseif($p['vote']=='ko'){
 	sql::del(self::$db3,['bid'=>$p['id'],'cid'=>$p['cid'],'uid'=>ses('uid')]);}
 $score=sql('count(id)',self::$db3,'v',['bid'=>$p['id'],'cid'=>$p['cid']]);
-sql::up(self::$db2,'score',$score,$p['cid']);
+sql::upd(self::$db2,['score'=>$score],$p['cid']);
 return self::call($p);}
 
 static function participation($p){

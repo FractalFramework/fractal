@@ -11,7 +11,7 @@ sql::create(self::$db,$r);}
 
 static function updateIp($uid){
 $r=['name'=>'var','password'=>'var','ip'=>'var'];
-sql::up(self::$db,'ip',ip(),$uid);}
+sql::upd(self::$db,['ip'=>ip()],$uid);}
 
 static function logout(){
 unset($_SESSION['usr']); unset($_SESSION['uid']);
@@ -30,10 +30,14 @@ $msg=host(1).'/login/recovery:'.$rid;
 mail::send($mail,$title,$msg,self::$mailadmin,'text');
 return 'recovery_mailsent';}
 
+static function create_password($psw){
+return password_hash($psw,PASSWORD_DEFAULT);}
+
 static function register($user,$pass,$mail,$auth){$ip=ip();
 if(!filter_var($mail,FILTER_VALIDATE_EMAIL))return 'register_fail_mail';
-if(sql('id','login','v','where name="'.$user.'"'))return 'register_fail_aex';
-$r=[$user,'PASSWORD("'.$pass.'")',$auth,strtolower($mail),$ip];//,'0'
+if(sql('id','login','v',['name'=>$user]))return 'register_fail_aex';
+$psw=self::create_password($pass);
+$r=[$user,$pass,$auth,strtolower($mail),$ip];//,'0'
 $uid=sql::sav(self::$db,$r);
 if($uid)self::activateSession($uid,$user,$auth);
 self::activateCookie($uid,$user);
@@ -74,6 +78,10 @@ self::activateSession($uid,$user,$auth);
 self::activateCookie($uid,$user);
 return 'loged_ok';}
 
+static function verif_user($usr,$psw){
+$hash=sql('password','login','v',['name'=>$usr]);
+return password_verify($psw,$hash);}
+
 static function login($user='',$pass=''){
 //self::install();
 $uid=ses('uid'); //if($uid)return 'loged';
@@ -90,9 +98,9 @@ if($user){
 			if(isset($ra['name']) && $ra['name']==$user)
 				$state=self::logon($ra['id'],$ra['name'],$ra['auth']);}}
 	elseif($user && $pass){
-		$sq=['name'=>$user,'password'=>'PASSWORD("'.$pass.'")'];
-		$rb=sql('id,ip,auth',self::$db,'ra',$sq);
-		if($rb){
+		$ok=self::verif_user($user,$pass);
+		$rb=sql('id,ip,auth',self::$db,'ra',['name'=>$user]);
+		if($ok && $rb){
 			$state=self::logon($rb['id'],$user,$rb['auth']);
 			if($rb['ip']!=ip())self::updateIp($uid);}
 		elseif($uid)$state='bad_password';
@@ -113,6 +121,11 @@ $bt=ico('user').' '; $bt.=ses('usr')?ses('usr'):lang('login');
 $call='login|auth=2,o='.$o;
 if($o)return bubble($call,$bt,$c='',$o='');
 return pagup($call,$bt,$c='',$o='');}
+
+static function verif(){
+$psw=$p['psw']??'';
+$hash=self::create_password($psw);
+$ok=password_verify($psw,$hash)?1:0;}
 
 }
 ?>

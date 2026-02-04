@@ -1,4 +1,5 @@
 <?php
+//linear//old
 class spitable3{
 static $private=0;
 static $a=__CLASS__;
@@ -7,6 +8,7 @@ static $cb='spr';
 static $max=120;
 static $ratio=1;
 static $mode=1;
+static $nt='3';
 
 static function admin(){
 $r=admin::app(['a'=>self::$a,'db'=>self::$db]);
@@ -25,17 +27,15 @@ static function headers(){
 //head::add('jscode',self::js($p,$o));
 head::add('csscode',self::css());}
 
-static $clr=[''=>'ccc','Nonmetals'=>'5FA92E','Nobles Gasses'=>'00D0F9','Alkali Metals'=>'FF0008','Alkali Earth Metals'=>'FF00FF','Metalloids'=>'1672B1','Halogens'=>'F6E617','Metals'=>'999999','Transactinides'=>'FF9900','Lanthanides'=>'666698','Actinides'=>'9D6568','undefined'=>'ffffff'];
-
 static function legend(){$i=0; $ret='';
-$r=self::$clr; $w=100; $h=20; $y=20; $x=60; $n=count($r); $nc=16500000/$n;
+$r=spilib::basic_colors(); $w=100; $h=20; $y=20; $x=60; $n=count($r); $nc=16500000/$n;
 $sz=[1=>70,2=>100,3=>90,4=>120,5=>70,6=>60,7=>50,8=>90,9=>80,10=>60,11=>70];
 foreach($r as $k=>$v)if($k){$i++; 
 	$w=strlen($k)*8; $w=$sz[$i];
 	$ret.='[#'.$v.',gray:attr]['.$x.','.$y.','.$w.','.$h.':rect]';
 	$ret.='[black,,,14px:attr]['.($x+4).','.($y+15).',font-size:12px*'.$k.':text]';
 	$x+=$w;}
-	$ret.='[50,640,9*@Davy 2003-2022:text]';
+	$ret.='[50,640,9*@Davy 2003-2025:text]';
 return $ret;}
 
 static function layers(){
@@ -47,9 +47,6 @@ foreach($rd as $k=>$v){$h=$rh[$k]*$u*self::$ratio;
 	$ret.='[orange,,:attr][20,'.($y+($h/2)+6).',12px*'.$k.':text]';
 	$y+=$h+$u*self::$ratio;}
 return $ret;}
-
-static function findclr($d){$r=self::$clr;
-return $r[$d]?$r[$d]:'ffffff';}
 
 static function draft(){
 $d='
@@ -63,6 +60,7 @@ $rad=M_PI/180; $m=180/$n;
 for($i=1;$i<=$n;$i++)$r[]=[round(cos($m*$i*$rad),2),round(sin($m*$i*$rad),2)];
 return $r;}
 
+//dev
 function arc($r,$u,$ia){$d='';
 foreach($r as $k=>$v){
 $ray=$u*$ia; $x=$v[0]*$ray+$u; $y=$v[1]*$ray;
@@ -132,7 +130,9 @@ $j='spl|spitable3,call|p1='.$n.',|mode';
 $rp=['onclick'=>'ajbt(this);'.atj('val',[$n,'lbar']).atj('val',[$n,'lbllbar'])];//onmouseover
 $ret.=bj($j,'['.($x+6).','.($y+15).',font-size:12px*'.$n.':text]','',$rp);
 if($ratio==2)$ret.='['.($x+6).','.($y+35).',12*'.$valence.':text]';
-$ret.='[popup|spitable;infos|p1='.$n.'*['.($x+$w/2).','.($y+(15*$ratio)).',font-size:'.(12*$ratio).'px*'.$v.':text]:bj]';
+$j='popup|spilib;infos|p1='.$n;
+//$ret.='['.$j.'*['.($x+$w/2).','.($y+(15*$ratio)).',font-size:'.(12*$ratio).'px*'.$v.':text]:bj]';
+$ret.='['.$j.'*['.($x+$w/2).','.($y+(15*$ratio)).',font-size:'.(12*$ratio).'px*'.$v.':text]:bubj]';
 //echo $x.'-'.$y.'-'.$w.'-'.$h.br();
 return [$x,$y,$w,$h,$ret];}
 
@@ -146,7 +146,11 @@ static function findpos($level,$i){
 if($i>self::$max)return self::findpos2($i);
 $ring=substr($level,0,1);
 $subring=substr($level,1,1);
-if($subring=='s')$sub=1; elseif($subring=='p')$sub=2; elseif($subring=='d')$sub=3; elseif($subring=='f')$sub=4; else $sub=5;
+if($subring=='s')$sub=1;
+elseif($subring=='p')$sub=2;
+elseif($subring=='d')$sub=3;
+elseif($subring=='f')$sub=4;
+else $sub=5;
 $pos=substr($level,2);
 return [$ring,$sub,$pos];}
 
@@ -160,32 +164,33 @@ return [$ring,$sub,$pos];}*/
 static function build_level($i){//7p6
 $ra=['s','p','d','f','g',''];}
 
-static function act($r,$ring){static $rx;
+static function atom_toggle($r,$ring){static $rx;
 [$name,$sym,$fam,$layer,$level]=$r;
 $ra=explode('-','-'.$layer);
 $max=val($ra,$ring); $rx[$ring][]=1;//count elemenrs in rings
 return count($rx[$ring])<=$max?0:1;}
 
 //atom
-static function atom($r,$i,$mode,$p){
+static function atom($r,$i,$mode,$p,$rc){
 [$name,$sym,$fam,$layer,$level]=val($r,$i,['','','','','']);
 [$ring,$subring,$pos]=self::findpos($level,$i);
 //[$ring,$subring,$pos]=self::findpos_layer($layer,$i);
 [$x,$y,$w,$h,$t]=self::atompos($ring,$subring,$pos,$i,$sym,$mode);
-$clr=self::findclr($fam);
-$hide=self::act(val($r,$p),$ring);//anomalies
+$clr=spilib::findclr($fam); if($rc)$clr=$rc[$i];
+$hide=self::atom_toggle($r[$p]??'',$ring);//anomalies
 $bdr=$p==$i?'white':($hide?'gray':'black'); $sz=$p==$i?'2':'1'; $alpha=$hide?'0.1':'1';
 $atr='[#'.$clr.','.$bdr.','.$sz.',,'.$alpha.':attr]';
 $rect='['.$x.','.$y.','.$w.','.$h.',,id'.$i.':rect]';
 return $atr.$rect.$t;}
 
 //build
-static function build($p,$o){//$o=0;
+static function build($p,$o,$c){//$o=0;
 $r=db_read('db/public/atomic','','',1);
 $w=1000; $h=680*self::$ratio; $sz=$w.'/'.$h;
 $rb[0]=self::legend();
 $rb[1]=self::layers();
-for($i=1;$i<=self::$max;$i++)$rb[]=self::atom($r,$i,$o,$p);
+$rc=[]; if($c==2)$rc=spilib::clr2(); elseif($c!=1)$rc=spilib::clr3($r,$c);
+for($i=1;$i<=self::$max;$i++)$rb[]=self::atom($r,$i,$o,$p,$rc);
 $ret=implode("\n",$rb);
 if($ret)$ret=svg::call(['code'=>$ret,'w'=>$w,'h'=>$h,'fit'=>1]);//render
 return $ret;}
@@ -194,34 +199,33 @@ static function call($p){//pr($p);
 $inpspi=$p['inpspi']??self::$max;
 $a=$p['p1']??($p['lbar']??$inpspi);
 $o=$p['p2']??($p['mode']??self::$mode);
-$bt=hidden('mode',$o);
+$c=$p['p3']??($p['clr']??1);
+$bt=self::nav($a,$o,'','');
+$bt.=hidden('mode',$o);
 if($a>self::$max)$a=self::$max; if($a<1)$a=1;
-return $bt.self::build($a,$o);}
+return $bt.self::build($a,$o,$c);}
+
+static function navb($a,$o,$c,$h){$rid=self::$cb; $ret='';
+$ra=[1=>'left','valences/left','right','valences/right'];//,'angular'
+foreach($ra as $k=>$v)$ret.=bj(self::$cb.'|spitable3,call|p1='.$a.',p2='.$k,$v,'btn'.active($o,$k)).'';
+return div($ret);}
+
+static function nav($a,$o,$c,$h){
+return spilib::nav($a,$o,$c,$h,self::$nt);}
 
 static function menu($p,$o,$rid){
-//$j=$rid.'|spitable3,call|p2='.$o.'|inpspi';
-//$ret=inputcall($j,'inpspi',$p,4);
-//$ret.=bj($j,picto('ok',24),'btsav').' ';
-$j=$rid.'|spitable3,call||lbar,mode';
-$ret=bar('lbar',$p,1,1,120,'1',ajx($j),'','');
-//if($p>0)$ret.=bj($rid.'|spitable3,call|p1='.($p-1).',p2='.$o,picto('previous'),'btn').'';
-//if($p<self::$max)$ret.=bj($rid.'|spitable3,call|p1='.($p+1).',p2='.$o,picto('next'),'btn').' ';
-$ra=[1=>'left','valences/left','right','valences/right'];//,'angular'
-foreach($ra as $k=>$v)$ret.=bj(self::$cb.'|spitable3,call|p1='.$p.',p2='.$k,$v,'btn').'';
-$ret.=hlpbt('spitable');
-$ret.=db::bt('db/public/atomic');
-$ret.=btj(langp('fullscreen'),atj('toggleFullscreen','splcb'),'btn','btfs');
-$ret.=lk('/spitable3',pic('url'),'btn');
-$ret.=lk('/spitable',langpi('spitable'),'btn');
-return $ret;}
+return spilib::menu($p,$o,$rid,self::$nt);}
 
 static function content($p){
-$a=$p['p1']??self::$max; $o=val($p,'p2');
+$a=$p['lbar']??self::$max; $o=$p['mode']??'';
 $rid=self::$cb; //$o=1;
 $bt=self::menu($a,$o,$rid);
 head::add('jscode',self::js($a,$o));
 $ret=self::call($p);
 return div($bt.div($ret,'',$rid),'board','splcb');}
+
+static function iframe($p){
+return spilib::iframe($p);}
 
 }
 ?>

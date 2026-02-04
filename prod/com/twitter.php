@@ -49,7 +49,7 @@ foreach($ra as $k=>$v){if(isset($rb[$v]))sql::del(self::$db2,$k); $rb[$v]=1;}}
 static function twsave($r){
 $ex=sql('id',self::$db2,'v','where twid='.$r['twid']);
 if(!$ex)sql::sav(twitter::$db2,$r);
-else sql::up2(self::$db2,$r,$ex);}
+else sql::upd(self::$db2,$r,$ex);}
 
 #play-q
 static function banner($p){

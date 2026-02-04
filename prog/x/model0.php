@@ -12,7 +12,8 @@ static $cb='mdb';
 static function install(){
 sql::create(self::$db,array_combine(self::$cols,self::$typs),1);}
 
-static function admin(){return admin::app(['a'=>self::$a,'db'=>self::$db,'cb'=>self::$cb]);}
+//static function admin(){return admin::app(['a'=>self::$a,'db'=>self::$db,'cb'=>self::$cb]);}
+static function admin(){return menu::call(['app'=>'admin','mth'=>'app','drop'=>1,'a'=>self::$a]);}
 static function js(){return;}
 static function headers(){
 head::add('csscode','');
@@ -45,11 +46,12 @@ $j=self::$cb.'|'.self::$a.',call||p1'; $p1=$p['p1']??'';
 //$ret=$bt.textarea('p1','',60,4);
 //$ret=inputcall($j,'p1',$p['p1']??'',32).$bt;
 $ret=form::call(['p1'=>['inputcall',$p1,'url',$j],['submit',$j,'ok','']]);
-return $ret;}
+return div($ret);}
 
 #content
 static function content($p){
 //self::install();
+//$bt=self::admin();
 $p['p1']=$p['p1']??'';
 $bt=self::menu($p);
 $ret=self::call($p);

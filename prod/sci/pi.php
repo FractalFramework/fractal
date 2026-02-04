@@ -13,7 +13,7 @@ static function headers(){
 head::add('csscode','');
 head::add('jscode',self::js());}
 
-static function result(){return '3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+static function result(){return '1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 8214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196
 4428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141273
 7245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094
@@ -10028,6 +10028,10 @@ static function build($n){
 $pi4=self::build($n);
 $ret=bcmul($pi4,4).br();*/
 
+static function com(){
+$pi=self::result();
+return deln($pi);}
+
 #call
 static function call($p){
 $n=$p['inp2']??40000;
@@ -10035,8 +10039,7 @@ bcscale(40);
 $pi4=self::build($n);
 $ret='from calc: '.bcmul($pi4,4).br();
 $ret.='from php: '.pi().br();
-$pi=self::result();
-$pi=deln($pi);
+$pi=self::com();
 $ret.='from '.lk('http://www.piday.org/million/').': '.span($pi,'code','','word-wrap:break-word').br();
 return $ret;}
 

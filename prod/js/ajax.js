@@ -64,11 +64,14 @@ if(this.mRequest.readyState==4){wait=0;
 		else if(mth=='reload'){//loged_ok,register_ok
 			if(res==opt)setTimeout('window.location=document.URL',100);
 			else ob.innerHTML=res;}
+		//post-actions
 		if(opt=='xy' || opt=='y')setTimeout("repos()",500);
 		else if(opt=='xx')setTimeout("Close('popup')",2000);
 		else if(opt=='xz')setTimeout("closediv('"+tg+"')",2000);
 		else if(opt=='store')localStorage['m3']=res;
-		else if(opt=='restore')ob.innerHTML=localStorage['m3'];}
+		else if(opt=='restore')ob.innerHTML=localStorage['m3'];
+		else if(opt=='scrollTop')scrollTop(tg?tg:mth);
+		else if(opt=='reposbub')reposbub(ob);}
 	else if(this.onError!=undefined){
 		this.onError({status:this.mRequest.status,
 		statusText:this.mRequest.statusText});}
@@ -84,12 +87,17 @@ else if(wait==0){wait=1;
 	//if(d)ajaxcall('mpo|upload,progress','rid='+tg);}//progress
 }
 
-function jsonput(keys,res){var cb,k,typ;
-	var obj=JSON.parse(res); var rk=keys.split(';');
-	for(var i in obj){k=rk[i]; cb=getbyid(k);
-		if(cb!=null)var typ=cb.type; //var type=typ.split('-')[0];
-		if(typ=='text' || typ=='textarea' || typ=='hidden')cb.value=obj[i];
-		else cb.innerHTML=obj[i];}}
+//let decide tg by keys of res
+function jsonput(keys,res){var cb,k,typ,tg;
+var obj=JSON.parse(res); var rk=keys.split(';'); var i=0; var rkx=rk.length>1?1:0; //pr(obj);
+for(var k in obj){
+	//tg=rk[k]?k:rk[i];//priotize asked
+	tg=rkx?rk[i]:k;//priotize callback
+	if(!tg)break;
+	cb=getbyid(tg); i++;
+	if(cb!=null)typ=cb.type;
+	if(typ=='text'||typ=='textarea'||typ=='hidden'||typ=='number'||typ=='date')cb.value=obj[k];
+	else if(cb!=null)cb.innerHTML=obj[k];}}
 
 //composants
 //function n(){return "\n";}
@@ -126,7 +134,7 @@ function jrb(ra){var rb=[];
 for(var key in ra)rb.push(key+':'+ra[key]);
 return rb.join(',');}
 
-//ajaxCall
+//ajaxCall //com{method,id,option,js}|app{app,mth}|
 function ajaxcall(call,params,inputs,el){//na=0;
 if(params){var prm=jra(params);} else var prm=new Object();
 if(typeof xc!='undefined')clearTimeout(xc);//stop pending actions
@@ -136,7 +144,7 @@ var app=p[1].split(',');
 //callbackMethod
 var cbMethod=com[0];//div,popup,bubble,...
 var cbId=com[1]!=undefined?com[1]:'';//id of callback
-var cbOption=com[2]!=undefined?com[2]:'';//x,y,xy,xx,z,store,...
+var cbOpt=com[2]!=undefined?com[2]:'';//x,y,xy,xx,z,store,...
 var cbJs=com[3]!=undefined?com[3]:'';//id of code to retro-inject in headers
 //component
 var _a=app[0];
@@ -144,8 +152,8 @@ var _m=app[1]!=undefined?'&_m='+app[1]:'';
 //aPost
 var fd=new FormData();
 //loading
-if(cbOption=='z')mpop('Loading...');
-//if(cbOption=='x' || cbOption=='xy')if(curid)Close('popup');
+if(cbOpt=='z')mpop('Loading...');
+//if(cbOpt=='x' || cbOpt=='xy')if(curid)Close('popup');
 //inputs
 if(inputs)var inp=inputs.split(','); else inp='';
 if(inp!=undefined && inp!=null){
@@ -159,27 +167,27 @@ if(inp!=undefined && inp!=null){
 			else var content=ajaxCaptures(ob);
 			if(content!=undefined){fd.append(inp[i],content);}}}}
 //load operation
-if(cbMethod=='popup' || cbOption=='w')prm['_pw']=getbyid('page').offsetWidth-40;
+if(cbMethod=='popup' || cbOpt=='w')prm['_pw']=getbyid('page').offsetWidth-40;
 //var 
 var str=jrb(prm);
 var url='/call.php?_a='+_a+_m+'&_p='+str+'&'+cbMethod+'='+(cbId?cbId:1);
 //send
-if(na){mem=[url,cbMethod,cbId,cbOption]; return;}
-else new AJAX(url,cbMethod,cbId,cbOption,fd,el);
-//post actions
-if(cbOption=='reload')setTimeout('window.location=document.URL',100);//,,reload
-else if(cbOption=='resetform')for(i=0;i<inp.length;i++){
+if(na){mem=[url,cbMethod,cbId,cbOpt]; return;}
+else new AJAX(url,cbMethod,cbId,cbOpt,fd,el);
+//post actions, before ajax finish
+if(cbOpt=='reload')setTimeout('window.location=document.URL',100);//,,reload
+else if(cbOpt=='resetform')for(i=0;i<inp.length;i++){
 	var did=getbyid(inp[i],el); if(did.type=='textarea')did.value='';
 	else if(did.type=='text')did.value='';}
-else if(cbOption=='resetdiv')getbyid(inp[0],el).innerHTML='';
-else if(cbOption.substr(0,6)=='reset:')getbyid(cbOption.substr(6),el).innerHTML='';
-else if(cbOption=='js'){var ob=getbyid(com[4],el); addjs(ob.value?ob.value:ob.innerHTML);}
-else if(cbOption=='css'){var ob=getbyid(com[4],el); addcss(ob.value?ob.value:ob.innerHTML);}
+else if(cbOpt=='resetdiv')getbyid(inp[0],el).innerHTML='';
+else if(cbOpt.substr(0,6)=='reset:')getbyid(cbOpt.substr(6),el).innerHTML='';
+else if(cbOpt=='js'){var ob=getbyid(com[4],el); addjs(ob.value?ob.value:ob.innerHTML);}
+else if(cbOpt=='css'){var ob=getbyid(com[4],el); addcss(ob.value?ob.value:ob.innerHTML);}
 //retro-injection in headers
 if(cbJs){var url='/call.php?_a='+_a+'&_m=';
 	if(cbJs=='resetcs')addjs('exs=[];');
 	else if(cbJs=='scrollBottom')setTimeout('scrollBottom("'+(com[4]?com[4]:com[1])+'")',200);
-	else if(cbJs=='scrollTop')scrollTop(com[1]);
+	else if(cbJs=='scrollTop')scrollTop(com[1]?com[1]:com[0]);
 	else if(cbJs=='scrollUp')window.scrollTo(0,0);
 	else if(cbJs=='js'){new AJAX(url+'js','injectJs','','2','','');}
 	else if(cbJs=='css'){new AJAX(url+'css','injectCss','','2','','');}
@@ -244,12 +252,6 @@ function toggle(ob){
 
 function togbt(ob){var n=ob.rel==1?0:1;
 	var j=n?ob.dataset.j:ob.dataset.jb; ob.rel=n; active(ob,n); ajx(j);}
-
-function scrollBottom(d){var div=getbyid(d); div.scrollTo(0,div.scrollHeight);}
-function scrollTop(d){var div=getbyid(d); div.scrollTo(0,0);}
-function randid(d){var n=Math.random()+''; return d+(n.substr(2,7));}
-function active(bt,o){if(bt==undefined)return; var css=bt.className; if(css==undefined)css='';
-	if(o)bt.className=css+' active'; else bt.className=css.split(' ')[0];}
 
 //capture inputs
 function ajaxCaptures(el){var typ=el.type;
@@ -502,7 +504,9 @@ var mp=mouse(event); var pp=getbyid('bubjs'); var res=ob.dataset.tx;
 if(pp==null){var pp=document.createElement('div'); pp.id='bubjs'; 
 pp.style='background:white; border;1px solid silver; padding:1px;'; getbyid('popup').appendChild(pp);}
 if(o==1){pp.style.display='inline-block'; pp.innerHTML=res; pp.style.position='absolute';
-	pp.style.top=(mp.y-30)+'px'; pp.style.left=(mp.x-8)+'px';}
+	var py=(mp.y-32); var px=(mp.x-8);
+	//var py=(mp.y-(pp.offsetHeight/2)); var px=(mp.x-(pp.offsetWidth/2));
+	pp.style.top=py+'px'; pp.style.left=px+'px';}
 else{pp.style.display='none'; pp.innerHTML='';}}
 
 function bubj(ob,o){
@@ -510,9 +514,23 @@ var mp=mouse(event); var pp=getbyid('bubj'); var j=ob.dataset.ja;
 if(pp==null){var pp=document.createElement('div'); pp.id='bubj';
 pp.style='position:absolute; background:white; border;1px solid silver; padding:1px; font-size:12px;';
 getbyid('popup').appendChild(pp);}
-if(o==1){pp.style.display='inline-block'; pp.style.zIndex+=1; ajx(pp.id+'|'+j,'','',ob);
-pp.style.top=(mp.y+15)+'px'; pp.style.left=(mp.x-8)+'px';}
+if(o==1){pp.style.display='block'; pp.style.zIndex+=1; ajx(pp.id+',,reposbub|'+j,'','',ob);
+	//var pos=getPositionAbsolute(ob); pr(pos);
+	var py=(mp.y+16); var px=(mp.x+16);
+	pp.style.top=py+'px'; pp.style.left=px+'px';}
 else{pp.style.display='none'; pp.innerHTML='';}}
+
+function reposbub(ob){
+var sz=innersizes();
+//var pp=getbyid('bubj');//is ob
+var pos=getPositionAbsolute(ob); //pr(pos);
+//var py=(pos.y); var px=(pos.x);
+//var mp=mouse(event); //give nothing?
+//var ts=document.body.scrollTop; //give nothing?
+var py=(pos.y); var px=(pos.x);
+if(py>sz.h/2)py=pos.y-pos.h-26; //pr(mp);
+if(px>sz.w/2)px=pos.x-pos.w;
+ob.style.top=py+'px'; ob.style.left=px+'px';}
 
 //tabs
 function togtab(e){var pa=e.parentNode; var ob=pa.getElementsByTagName('a');
@@ -528,29 +546,29 @@ var rgx=new RegExp(/([^A-Za-z0-9\-])/);
 if(rgx.test(val))for(var i=0;i<arr.length;i++)val=strreplace(ra[i],rb[i],val);
 return val;}
 
-function nsf(){return false;} function nst(){return true;} 
+//function nsf(){return false;} function nst(){return true;} 
 function noslct(a){
-if(window.sidebar){if(a)document.onmousedown=nst; else document.onmousedown=nsf;}}
-//document.onselectstart = new Function("return false");
+if(window.sidebar){if(a)document.onmousedown=true; else document.onmousedown=false;}}
+//document.onselectstart=new Function("return false");
 
 function zindex(id){popz++; curid=id; var bub=getbyid(id);
 if(bub!=null)bub.style.zIndex=popz;}
 
 //ancestor of insertAdjacentHTML
-function addiv(tar,res,st){var ob=getbyid(tar); if(ob==null)return; pr(tar); pr(st);
+/*function addiv_0(tar,res,st){var ob=getbyid(tar); if(ob==null)return; pr(tar); pr(st);
 var div=document.createElement('div'); div.innerHTML=res; var parent=ob.parentNode; 
 if(st=='before')parent.insertBefore(div,ob);
 else if(st=='after')parent.appendChild(div);
 else if(st=='begin'){var obd=ob.childNodes; ob.insertBefore(div,obd[0]);}
 //else if(st=='atend')parent.insertBefore(div,ob.nextSibling);
 else if(st=='atend'){var childs=div.childNodes, n=childs.length;
-	for(i=0;i<n;i++)if(typeof childs[i]=='object')ob.appendChild(childs[i]);}}
+	for(i=0;i<n;i++)if(typeof childs[i]=='object')ob.appendChild(childs[i]);}}*/
 
-/*function addiv(tar,res,st){var ob=getbyid(tar); if(ob==null)return;
+function addiv(tar,res,st){var ob=getbyid(tar); if(ob==null)return;
 if(st=='before')ob.insertAdjacentHTML('beforebegin',res);
 else if(st=='begin')ob.insertAdjacentHTML('afterbegin',res);
 else if(st=='atend')ob.insertAdjacentHTML('beforeend',res);
-else if(st=='after')ob.insertAdjacentHTML('afterend',res);}*/
+else if(st=='after')ob.insertAdjacentHTML('afterend',res);}
 
 function addjs(d){var head=document.getElementsByTagName('head')[0]; if(xt)clearTimeout(xt);
 var div=document.createElement('script'); div.type='text/javascript'; div.id='addjs'; 
@@ -582,6 +600,7 @@ function getPositionAbsolute(e){if(e==null)return {x:0,y:0,w:0,h:0};
 var left=0; var top=0; var w=e.offsetWidth; var h=e.offsetHeight;
 while(e.offsetParent){left+=e.offsetLeft; top+=e.offsetTop; e=e.offsetParent;}
 left+=e.offsetLeft; top+=e.offsetTop; return {x:left,y:top,w:w,h:h};}
+
 function getPositionRelative(e){if(e==null)return {x:0,y:0,w:0,h:0};
 return {x:e.offsetLeft,y:e.offsetTop,w:e.offsetWidth,h:e.offsetHeight};}
 

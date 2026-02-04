@@ -35,7 +35,7 @@ $p['rid']=randid('pad');
 $ret=div(self::call($p),'',$p['rid'].'cb');
 //$ret.=div(textarea($p['rid'],'',34,8,'','article'));
 $s='width:calc(100% - 10px); min-height:440px; max-width:720px;';
-$ret.=divarea($p['rid'],'','padarea scroll','');
+$ret.=divarea($p['rid'],'<p></p>','padarea scroll','');
 $ret.=head::jscode(self::js($p));
 return $ret;}
 }

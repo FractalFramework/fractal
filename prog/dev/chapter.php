@@ -46,7 +46,7 @@ if($op=='add'){$cols=sql::cols($db2,1,0);
 	sql::sav($db2,$rc);}
 elseif($op=='del')sql::del($db2,$idb);
 elseif($op=='sav'){$cols=sql::cols($db2,3,2);
-	$r=valk($p,$cols); sql::up2($db2,$r,$idb);}
+	$r=valk($p,$cols); sql::upd($db2,$r,$idb);}
 return self::subcall($p);}
 
 static function subcall($p){$id=$p['id']??''; $ret='';

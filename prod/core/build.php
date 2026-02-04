@@ -82,7 +82,7 @@ return div($s.'-'.$e,'wyg');}
 
 static function editor($p){
 $rid=$p['rid']??''; $ret=self::wsgbt($rid);
-$j='ajx(\'div,'.$rid.'|build,areaconn|aid='.$rid.'|'.$rid.'\');';//strcount(\''.$rid.'\',768); 
+$j=ajx('div,'.$rid.'|build,areaconn|aid='.$rid.'|'.$rid);//strcount(\''.$rid.'\',768); 
 $r=['contenteditable'=>'true','id'=>$rid,'class'=>'article scroll','onkeyup'=>$j,'onmousedown'=>$j,'placeholder'=>lang('message')];
 $ret.=tag('div',$r,'');
 $ret.=span('','btko','strcnt'.$rid,'display:none;').' ';
@@ -98,7 +98,7 @@ return conn::call(['msg'=>$d,'mth'=>'minconn','ptag'=>1]);}
 static function connbt($id,$o=''){$ns='';//ns();
 $ret=btj('[]',atj('embed_slct',['[',']',$id]),'btn').$ns;
 //$r=['h','b','i','u','q','k','video','web','twit'];//,'url','code'
-$r=['h'=>'big','b'=>'bold','i'=>'italic','u'=>'underline','k'=>'strike','list'=>'list','q'=>'indent'];//'c'=>'center','nh'=>'refnote','nb'=>'footnote','as'=>'aside',,'url','code','video'=>'video','web'=>'web','twit'=>'twitter'
+$r=['url'=>'url','h'=>'big','b'=>'bold','i'=>'italic','u'=>'underline','k'=>'strike','list'=>'list','q'=>'indent','nh'=>'refnote','nb'=>'footnote','aside'=>'aside',];//'c'=>'center','url','code','video'=>'video','web'=>'web','twit'=>'twitter'
 foreach($r as $k=>$v)$ret.=btj(langpi($v),atj('embed_slct',['[',':'.$k.']',$id]),'btn').$ns;
 $ret.=bj($id.'|core,clean_mail|x='.$id.'|'.$id,pic('clean'),'btn',['title'=>helpx('eraser')]);
 if($o==2)$ret.=bubble('images,pick|o=1,id='.$id,pic('img'),'btn');
@@ -180,6 +180,18 @@ $ty=$n>0?'%y-%m-%d':'%h-%i-%s'; $res=$diff->format($ty); $rb=explode('-',$res);
 foreach($rb as $k=>$v)if($v)$rt[]=$v.' '.langs($ra[$k],$v,1);
 return implode(', ',$rt);}
 
+static function compute_timer($s){$rt=[];
+$r=[31556925,2629744,604800,86400,3600,60,1];
+foreach($r as $k=>$v)if($s>$v){$n=floor($s/$v); $s-=$v*$n; $rt[$k]=$n;}
+return $rt;}
+
+static function compute_time($s){$rt=[]; $r=self::compute_timer($s);
+$ra=['year','month','week','day','h','min','s'];
+foreach($r as $k=>$v)//$rt[]=$v.' '.$ra[$k].($v>1?'s':'');
+if($s>86400){if($k<4)$rt[]=$v.' '.$ra[$k].($v>1?'s':'');}
+else if($k>=4)$rt[]=$v.$ra[$k];
+return join(' ',$rt);}
+
 static function calendar($d='',$fc=''){$rt=[];
 if(!$fc)$fc=function($mk){return date('d',$mk);};
 $gd=getdate($d?$d:time()); $d0=date('d'); $mo=$gd['mon']; $y=$gd['year'];
@@ -204,16 +216,15 @@ if(!$a)$a='build'; $j=$rid.'|'.$a.',scorebt|'.prm($p);
 for($i=1;$i<6;$i++)$ret.=bj($j.',v='.$i,ico($i<=$v?'star':'star-o'),'star');
 return $ret.$lbl.hidden($k,$v);}
 
-static function code($d,$o=''){
-$d=str_replace(['<?php','?>'],'',$d); $d=trim($d);
+static function code($d){$d=trim($d);
 ini_set('highlight.comment','gray');
 ini_set('highlight.default','white');
 ini_set('highlight.html','red');
 ini_set('highlight.keyword','orange');
 ini_set('highlight.string','lightblue');
-$d=highlight_string('<'.'?php'."\n".$d,true);
-$d=str_replace(['&lt;?php','?>','<span style="color: white"><br /></span>'],'',$d); $d=trim($d);
-return div(trim($d),'','','overflow:auto; wrap:true; background:#222244; padding:0 20px;');}
+$d=highlight_string('<?php'."\n".$d,true);
+$d=str_replace(['&lt;?php'."\n",'?>','<br />'],'',$d);
+return div(trim($d),'code','','');}
 
 //iterable me,u (vector,bitmap)
 static function iterbt($p,$ra,$r,$b,$a){$rb=[]; $rid=$p['bid'];
@@ -243,6 +254,5 @@ $rb[$i][$o]=$r2[$nc]; unset($r2[$nc]);}}
 foreach($rb as $k=>$v)$rt[]=implode('',$v);
 $rt=array_flip(array_flip($rt)); sort($rt);
 return $rt;}
-
 }
 ?>

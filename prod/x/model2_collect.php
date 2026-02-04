@@ -50,6 +50,8 @@ static function form($p){
 //$p['fctxt']=1;
 //$p['bttxt']=1;
 //$p['barfunc']='barlabel';
+//$p['labeltit']='title';
+//$p['jp']='preview|a=1';
 return parent::form($p);}
 
 static function edit($p){
@@ -92,6 +94,7 @@ $ret.=self::answer_form($p);
 $ret.=gen::com2(self::template2(),$rb);
 return $ret;}
 
+//static function preview($p){return parent::preview($p);}
 //static function cover($id,$r=[]){}
 
 static function stream($p){

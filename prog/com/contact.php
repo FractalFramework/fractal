@@ -22,7 +22,7 @@ static function save($p){$nid='';
 ['cto'=>$cto,'cmail'=>$mail,'ctit'=>$tit,'ctxt'=>$txt]=$p;
 $r=[ses('uid'),$cto,$mail,$tit,$txt];
 if($txt)$nid=sql::sav(self::$db,$r);
-if($cto)$to=sql('mail','login','v','where id='.$cto);
+if($cto)$to=sql('mail','login','v',$cto);
 if($nid && $mail && $to)mail::send($to,$tit,$txt,$mail,'txt');
 if($nid && $mail)$ret=help('message posted','valid');
 else $ret=help('message not posted','alert');
@@ -56,7 +56,7 @@ static function content($p){
 //self::install();
 $rid=randid('md'); $ret='';
 $bt=tag('h1','',lang('contact'));
-if(ses('uid'))$mail=sql('mail','login','v','where id='.ses('uid')); else $mail='';
+if(ses('uid'))$mail=sql('mail','login','v',ses('uid')); else $mail='';
 $ret.=input_pic('cmail',$mail,lang('from'),'mail').' ';
 $ret.=hidden('cto','1');
 $ret.=select('ctit',self::$rt,0,0,1).' ';

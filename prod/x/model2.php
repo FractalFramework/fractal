@@ -51,6 +51,8 @@ static function form($p){
 //$p['fctxt']=1;
 //$p['bttxt']=1;
 //$p['barfunc']='barlabel';
+//$p['labeltit']='title';
+//$p['jp']='preview|a=1';
 return parent::form($p);}
 
 static function edit($p){
@@ -72,6 +74,8 @@ return '[[[txt:var]*class=txt:div]*class=paneb:div]';}//will nl2br()
 
 static function template2(){
 return '[[[tit2:var]*class=tit:div][[txt2:var]*class=txt:div]*class=paneb:div]';}
+
+//static function preview($p){return parent::preview($p);}
 
 #play
 static function play($p){

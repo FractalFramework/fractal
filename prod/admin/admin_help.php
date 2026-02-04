@@ -4,6 +4,7 @@ class admin_help{
 static $private=6;
 static $a='admin_help';
 static $db='help';
+static $cb='admcnn';
 
 //install
 static function install(){
@@ -13,7 +14,7 @@ sql::create(self::$db,['ref'=>'var','txt'=>'text','lang'=>'var'],1);}
 static function create($p){
 $newlng=$p['newlng']??''; $lng='fr';
 $ret=input('newlng',$newlng);
-$ret.=bj('admcnn|'.self::$a.',create||newlng',langp('add language'),'btn');
+$ret.=bj(self::$cb.'|'.self::$a.',create||newlng',langp('add language'),'btn');
 if($newlng){
 	$r=sql('ref,txt',self::$db,'rr','where lang="'.$lng.'" limit 80,10'); //p($r);
 	foreach($r as $k=>$v){
@@ -31,7 +32,7 @@ static function goodid($p){
 return sql('id',self::$db,'v',['ref'=>$p['ref'],'lang'=>$p['lang']]);}
 
 static function insertup($p){$id=self::goodid($p);
-if($id)sql::up(self::$db,'txt',$p['txt'],$id);
+if($id)sql::upd(self::$db,['txt'=>$p['txt']],$id);
 else sql::sav(self::$db,[$p['ref'],$p['txt'],$p['lang']]);}
 
 static function translate($p){$voc=''; $txt=''; $copy=$p['copy']??'';
@@ -56,7 +57,7 @@ return self::com($p);}
 
 //save
 static function update($p){$rid=$p['rid'];
-sql::up(self::$db,'txt',val($p,$rid),$p['id']);
+sql::upd(self::$db,['txt'=>$p[$rid]],$p['id']);
 return self::com($p);}
 
 static function del($p){
@@ -73,8 +74,8 @@ $p['id']=sql::sav(self::$db,[$p['ref'],$p['voc'],$p['lang']]);
 return self::edit($p);}
 
 static function edit($p){$rid=randid('ref');
-$to=$p['to']??''; $cb=$to?'socket,,x':'admcnn,,x';
-$r=sql('ref,txt,lang',self::$db,'ra','where id='.$p['id']);
+$to=$p['to']??''; $cb=$to?'socket,,x':self::$cb.',,x';
+$r=sql('ref,txt,lang',self::$db,'ra',$p['id']);
 $ref=$r['ref']??''; $lang=$r['lang']??'';
 $ret=label($rid,$ref.' ('.$lang.')');
 $ret.=bj($cb.'|'.self::$a.',update|id='.$p['id'].',rid='.$rid.',lang='.$lang.'|'.$rid,lang('save'),'btsav');
@@ -93,23 +94,28 @@ return $ret;}
 static function open($p){$ref=$p['ref']??'';
 $p['id']=sql('id',self::$db,'v',['ref'=>$ref]);
 if(!$p['id'])$p['id']=sql::sav(self::$db,[$ref,'',ses('lng')]);
-if($p['id'])return div(self::edit($p),'','admcnn');}
+if($p['id'])return div(self::edit($p),'',self::$cb);}
 
 static function add($p){//ref,txt
 $ref=$p['ref']??''; $txt=$p['txt']??'';
 $ret=input('ref',$ref?$ref:'',16,'ref').textarea('txt',$txt?$txt:'',40,4,'ref');
-$ret.=bj('admcnn,,x|'.self::$a.',save||lang,ref,txt',lang('save'),'btsav');
+$ret.=bj(self::$cb.',,x|'.self::$a.',save||lang,ref,txt',lang('save'),'btsav');
 return $ret;}
 
 static function rename($p){
 if($p['ok']??''){
 	$r=sql('id,ref',self::$db,'kv',['%ref'=>$p['ref1']]);
-	foreach($r as $k=>$v){$v=str_replace($p['ref1'],$p['ref2'],$v); sql::up(self::$db,'ref',$v,$k);}
+	foreach($r as $k=>$v){$v=str_replace($p['ref1'],$p['ref2'],$v); sql::upd(self::$db,['ref'=>$v],$k);}
 	//return self::com(['lang'=>$p['lang']]);
-	return bj('admcnn,,x|'.self::$a.',com|lang='.$p['lang'],lang('ok'),'btn');}
+	return bj(self::$cb.',,x|'.self::$a.',com|lang='.$p['lang'],lang('ok'),'btn');}
 $ret=input('ref1',$p['ref1']??'',16,'ref old').input('ref2',$p['ref2']??'',16,'ref new');
 $ret.=bj('rnhlp|'.self::$a.',rename|ok=1,lang='.$p['lang'].'|ref1,ref2',lang('rename'),'btsav');
 return div($ret,'','rnhlp');}
+
+static function delempty($p){
+$r=sql('id',self::$db,'rv',['txt'=>'is empty']);
+sql::del(self::$db,['(id'=>$r]);
+return count($r).' erased';}
 
 //table
 static function select($lang){
@@ -117,16 +123,17 @@ $ret=hidden('lang',$lang);
 //$r=sql('distinct(lang)',self::$db,'rv','');
 $r=lngs();
 foreach($r as $v){$c=$v==$lang?' active':'';
-	$rc[]=bj('admcnn|'.self::$a.',com|lang='.$v,$v,'btn'.$c);}
+	$rc[]=bj(self::$cb.'|'.self::$a.',com|lang='.$v,$v,'btn'.$c);}
 $ret.=div(implode('',$rc),'');
 if(auth(6)){
 	$ret.=bj('popup|'.self::$a.',add',langpi('add'),'btn');
-	$ret.=bj('admcnn|'.self::$a.',equalize||lang',langpi('equalize'),'btn');
+	$ret.=bj(self::$cb.'|'.self::$a.',equalize||lang',langpi('equalize'),'btn');
 	$ret.=bj('popup,,xx|core,mkbcp|b=help',langpi('backup'),'btsav');
 	if(sql::ex('z_help_'))
 	$ret.=bj('popup,,xx|core,rsbcp|b=lang',langpi('restore'),'btdel');
-	$ret.=bj('admcnn|'.self::$a.',create',langpi('add language'),'btn');
-	$ret.=bj('popup|'.self::$a.',rename|lang='.$lang,langpi('rename'),'btn');}
+	$ret.=bj(self::$cb.'|'.self::$a.',create',langpi('add language'),'btn');
+	$ret.=bj('popup|'.self::$a.',rename|lang='.$lang,langpi('rename'),'btn');
+	$ret.=bj(self::$cb.'|'.self::$a.',delempty|lang='.$lang,langpi('del_empty'),'btn');}
 return div($ret);}
 
 static function com($p){$rb=[];
@@ -149,7 +156,7 @@ static function content($p){$ret='';
 //self::install();
 $lang=$p['lang']??lng();
 $ret=self::com(['lang'=>$lang]);
-return div($ret,'board','admcnn');}
+return div($ret,'board',self::$cb);}
 
 }
 ?>

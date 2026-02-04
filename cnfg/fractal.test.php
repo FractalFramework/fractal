@@ -1,4 +1,4 @@
 <?php
-new sql(['localhost','pmauser','psw','ffw']);
-ses::$cnfg=['utf8'=>1,'noadmin'=>0,'site'=>'Fractal','index'=>'home','usrboot'=>'','srv'=>'logic.ovh','dev'=>1];
+$s=['localhost','root','psw','ffw'];
+$r=['site'=>'Fractal','index'=>'home','noadmin'=>0,'usrboot'=>'','srv'=>'ffw.ovh','favicon'=>1,'tz'=>'Europe/Paris','lang'=>'fr'];
 ?>

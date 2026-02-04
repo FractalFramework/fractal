@@ -6,8 +6,8 @@ $index=ses::$cnfg['index'];
 header('Content-Type: text/html; charset=UTF-8');
 //head::add('code','<base href="'.$_SERVER['HTTP_HOST'].'" />');
 head::add('charset','UTF-8');
-head::add('tag',['title','',lang($app)]);//setlng();
-head::add('rel',['name'=>'shortcut icon','value'=>'/favicon.ico']);
+head::add('tag',['title',[],ses::$cnfg['index']]);//setlng();//lang($app)
+head::add('rel',['name'=>'shortcut icon','value'=>favicon()]);
 head::name('viewport','user-scalable=no, initial-scale=1, width=device-width');
 head::add('csslink',night(0).$nc);//$start
 head::add('csslink','/css/global.css'.$nc);
@@ -16,10 +16,10 @@ head::add('csslink','/css/pictos.css');
 head::add('csslink','/css/fa.css');
 head::add('jslink','/js/ajax.js'.$nc);
 head::add('jslink','/js/core.js'.$nc);
-head::add('jscode','var index="'.$index.'";');
+head::add('jscode','var index="'.($index=='home'?'root':$index).'";');
 //head::add('jslink','/js/bab.js');
 head::name('generator','Fractal');
-head::name('version','23');
+head::name('version','26');
 #usr
 $own=ses('usr'); $usr=$p['usr']??'';
 ses('cusr',$own); ses('cuid',ses('uid'));

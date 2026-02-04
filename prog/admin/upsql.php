@@ -9,7 +9,7 @@ static function js(){return;}
 #client
 static function installdb($a,$r){
 if(isset($r) && is_array($r)){
-	//sql::trunc($a);
+	sql::trunc($a);
 	sql::sav2($a,$r,5,1,0,1);
 	if($a=='lang')ses('lang',lang_com(ses('lng')));
 	if($a=='icons')ses('icon',icon_com());

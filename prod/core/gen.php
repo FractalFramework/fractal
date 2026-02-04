@@ -6,7 +6,7 @@ private static $r=[];
 static function reader($d,$b=''){//[p*o:c]
 [$p,$o,$c,$da]=readgen($d);
 $r=['area','base','bgsound','embed','frame','input','link','meta','option'];//,'nextid'
-if(in_array($c,$r)){$n=1; if(!$o)$o=$p;} else $n=0; $atb=($o); 
+if(in_array($c,$r)){$n=1; if(!$o)$o=$p;} else $n=0; $atb=$o?prmr($o):[]; 
 //$r=['h'=>'big','k'=>'strike','e'=>'sup','n'=>'sub','s'=>'small','q'=>'blockquote'];
 //if(isset($r[$c]))$c=$r[$c];
 switch($c){

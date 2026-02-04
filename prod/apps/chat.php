@@ -35,11 +35,11 @@ static function save($p){return parent::save($p);}
 static function modif($p){return parent::modif($p);}
 
 static function archive($p){$id=$p['del']??''; $act=$p['act']??'';
-if($act=='remove')sql::up(self::$db,'old',1,$id);}
+if($act=='remove')sql::upd(self::$db,['old'=>1],$id);}
 
 static function chatprivacy($p){
 [$id,$pub,$bid,$rid,$sav]=vals($p,['id','pub','bid','rid','sav']);
-if($sav)sql::up(self::$db,$id,$pub,$bid);
+if($sav)sql::upd(self::$db,[$id=>$pub],$bid);
 if(!$pub){$ic='user-secret'; $t='private';}else{$ic='users'; $t='public';}
 $j=$rid.'|chat,chatprivacy|sav=1,id='.$id.',bid='.$bid.',rid='.$rid.',pub='.($pub?0:3);
 return span(bj($j,ico(''.$ic,22).lang($t),'',['title'=>helpx('chat'.$t)]).hidden($id,$pub),'',$rid).' ';}
@@ -92,7 +92,7 @@ return self::play(['id'=>$id]);}
 static function clearntf($id){
 $q=['typntf'=>'5','txid'=>$id,'4usr'=>ses('usr'),'state'=>1];
 $ntf=sql('id','tlex_ntf','v',$q);
-if($ntf)sql::up('tlex_ntf','state','0',$ntf);}
+if($ntf)sql::upd('tlex_ntf',['state'=>'0'],$ntf);}
 
 static function chatntf($id){
 $r=self::listers($id,1);
@@ -101,7 +101,7 @@ if($r)foreach($r as $k=>$v)if($k!=ses('uid')){
 	$ra=['4usr'=>usrid($k),'byusr'=>ses('usr'),'typntf'=>5,'txid'=>$id];
 	$ex=sql('id,state','tlex_ntf','rw',$ra);
 	if(!$ex){$ra['state']=1; $rb[]=$ra;}
-	elseif($ex[0] && !$ex[1])sql::up('tlex_ntf','state',1,$ex[0]);}
+	elseif($ex[0] && !$ex[1])sql::upd('tlex_ntf',['state'=>1],$ex[0]);}
 if(isset($rb))sql::sav2('tlex_ntf',$rb);}
 
 #read

@@ -22,7 +22,7 @@ if($r){
 		//elseif($k=='mdf')foreach($rb as $kb=>$vb)$rd[]=[$id,$k,$kb,$vb];
 	}
 	if(isset($rc))sql::sav2('mem',$rc);
-	//if(isset($rd))sql::up2('mem',$rd);
+	//if(isset($rd))sql::upd('mem',$rd,);
 	}
 }
 

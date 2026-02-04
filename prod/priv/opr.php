@@ -36,7 +36,7 @@ $r=sql('all',self::$db,'ra',$id);
 return $r;}
 
 static function op($p){$ret=''; $u=val($p,'inp1');
-//$d=sql('txt','multilang','v',150); sql::up('book_chap','txt',$d,28);
+//$d=sql('txt','multilang','v',150); sql::upd('book_chap',['txt'=>$d],28);
 $ret=btj('ok','Mercury.parse('.$u.').then(result => console.log(result));','btn');
 return $ret;}
 

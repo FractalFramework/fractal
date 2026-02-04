@@ -51,8 +51,8 @@ return $voc;}
 
 //save
 static function update($p){$rid=$p['rid'];
-sql::up(self::$db,'voc',$p[$rid],$p['id']);
-sql::up(self::$db,'app',$p['app'.$rid],$p['id']);
+sql::upd(self::$db,['voc'=>$p[$rid]],$p['id']);
+sql::upd(self::$db,['app'=>$p['app'.$rid]],$p['id']);
 if($p['lang']==lng())sesf('lang_com',$p['lang'],1);//update session
 return self::com($p);}
 
@@ -75,7 +75,7 @@ if($p['lang']==lng())sesf('lang_com',$p['lang'],1);//update session
 return self::edit($p);}
 
 static function edit($p){$rid=randid('voc');//id
-$r=sql('ref,voc,lang,app',self::$db,'ra','where id='.$p['id']);
+$r=sql('ref,voc,lang,app',self::$db,'ra',$p['id']);
 $ret=label($rid,$r['ref'].' ('.$r['lang'].')').input($rid,$r['voc'],16);
 $ro=sql('distinct(app)',self::$db,'rv','');
 $ret.=datalist('app'.$rid,$ro,$r['app'],8,'app');

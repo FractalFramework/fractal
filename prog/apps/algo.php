@@ -29,15 +29,11 @@ head::add('jscode',self::js());}
 
 #edit
 static function collect($p){return parent::collect($p);}
-static function del($p){
-//$p['db2']=self::$db2;
-return parent::del($p);}
+static function del($p){return parent::del($p);}
 
 static function save($p){return parent::save($p);}
 static function modif($p){return parent::modif($p);}
-static function create($p){
-//$p['pub']=0;//default privacy
-return parent::create($p);}
+static function create($p){return parent::create($p);}
 
 //subcall
 static function subops($p){return parent::subops($p);}
@@ -47,19 +43,9 @@ static function subcall($p){return parent::subcall($p);}
 
 //form
 //static function fc_tit($k,$v){}
-static function form($p){
-//$p['html']='txt';
-//$p['fctit']=1;
-//$p['bttxt']=1;
-//$p['barfunc']='barlabel';
-//$p['labeltit']='title';
-return parent::form($p);}
+static function form($p){return parent::form($p);}
 
 static function edit($p){
-//$p['collect']=self::$db2;
-//$p['help']=1;
-//$p['sub']=1;
-//$p['execcode']=1;
 $p['bt']=bj('popup|algo,mktable_menu|id='.$p['id'],langp('create_table'),'btn');
 return parent::edit($p);}
 
@@ -81,7 +67,7 @@ conn::com2($d,'algo','exeread'); $ra=self::$r; $ka=$ra[0];
 for($i=$a;$i<$b;$i+=$ia){$da=$d;
 	$da=str_replace('['.$ka.':x]',$i,$da);
 	$n=exec::build(['ind'=>'algo'.$id,'code'=>'$ret='.$da.';']);
-	if(is_numeric($n))$rb[]=$n;} //pr($rb);
+	if(is_numeric($n))$rb[]=$n;}
 $f='usr/'.ses('usr').'/algo/'.$id;
 db::save($f,$rb);
 $bt=db::bt($f);
@@ -98,15 +84,16 @@ return $bt.div('','',$cb);}
 
 #exec
 static function exec($p){$ret=''; $id=$p['id'];
-$r=self::build($p); $d=gen::com($r['txt']); //echo $d;
-conn::com2($d,'algo','exeread'); $ra=self::$r; $rp=[]; //p($ra);
+$r=self::build($p); $d=gen::com($r['txt']);
+conn::com2($d,'algo','exeread'); $ra=self::$r; $rp=[];
 foreach($ra as $k=>$v)$rp[$v]=is_numeric($p['ex'.$v])?$p['ex'.$v]:0;
 foreach($rp as $k=>$v)$d=str_replace('['.$k.':x]',$v,$d);//eq to parse :var
-$d=gen::com($d,$rp); //echo $d;
+$d=gen::com($d,$rp);
 return exec::build(['ind'=>'algo'.$id,'code'=>'$ret='.$d.';']);}
 
 static function exeread($da,$b){
-[$p,$c]=split_one(':',$da,1); //echo $da;
+[$p,$c]=split_one(':',$da,1);
+//if($c=='date')self::$r[]=datz($p);
 if($c=='x')self::$r[]=$p;}
 
 #play
@@ -117,17 +104,15 @@ $bt=div($r['tit'],'tit');
 conn::com2($d,'algo','exeread'); $ra=self::$r;
 $in=$ra?'ex'.implode(',ex',$ra):'';
 $j=$cb.'|algo,exec|id='.$id.'|'.$in;
-foreach($ra as $k=>$v)$d=str_replace('['.$v.':x]',inpnum('ex'.$v,$v,4,'','',ajx($j)),$d);
+foreach($ra as $k=>$v)$d=str_replace('['.$v.':x]',inpnb('ex'.$v,1,4,'','',$j),$d);
 //$bt.=bj($j,langp('ok'),'btn');
 return $bt.$d.' = '.span('','',$cb);}
 
 static function stream($p){
-//$p['t']=self::$cols[0];
 return parent::stream($p);}
 
 #call (read)
 static function tit($p){
-//$p['t']=self::$cols[0];
 return parent::tit($p);}
 
 static function call($p){

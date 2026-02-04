@@ -105,7 +105,7 @@ return $rc;}
 static function account_update($uid=0){
 $r=self::investigate($uid); //pr($r);
 $id=sql('id',self::$db2,'v',['uid'=>$uid]);
-if($id)sql::up2(self::$db2,$r,$uid,'uid');
+if($id)sql::upd(self::$db2,$r,['uid'=>$uid]);
 else{$r=['uid'=>$uid]+$r; sql::sav(self::$db2,$r,0,0,1);}
 self::$rf['account_update']='ok';
 return array_values(array_slice($r,0,3));}
@@ -151,7 +151,7 @@ static function contract_validation($p){$er='';
 [$a,$id,$ct,$cnd]=vals($p,['app','aid','ct','cnd']);
 $idc=sql('id',self::$db3,'v',$ct); if(!$idc)$er=6;
 if(!$er){$ok=self::bank_condition($p); if(!$ok)$er=7;}
-if(!$er)$er=sql::up(self::$db3,'ok',1,$ct);//&&$id means contract are refs
+if(!$er)$er=sql::upd(self::$db3,['ok'=>1],$ct);//&&$id means contract are refs
 self::$rf['contract_validation']=($er?'not ':'').'valided'; //returns actions
 //if(!$er)$er=app($a,['id'=>$id,'ct'=>$ct],'actions');
 return $er;}
@@ -177,7 +177,7 @@ return 'ok';}
 static function bank_finalization($p){
 [$a,$bid,$cid,$va,$ty,$rf]=vals($p,['app','aid','cid','value','type','rf'],0);
 if(method_exists($a,'bank_finalization'))return $a::bank_finalization($p);
-$ret=help('Thank you'); if($rf)$ret.=trace(bank::$rf);
+$ret=help('Thank you'); if($rf)$ret.=rplay(bank::$rf);
 return $ret;}
 
 //load
@@ -197,7 +197,7 @@ if(!$er)$er=1;
 self::$rf['transaction']=$er;
 if($er==1)return self::bank_finalization($p);
 elseif($vb)return self::verbose($er);
-//if($rf)return trace(bank::$rf);
+//if($rf)return rplay(bank::$rf);
 return $er;}
 
 static function bt($p){$rid=randid(); $p['rid']=$rid;
@@ -207,7 +207,7 @@ $er=self::transfert_exists($p); if($er)return self::verbose($er).$bt;
 if($ct or $ok){$ret=bj($rid.'|bank,transaction|'.prm($p),langp('payment').' '.$bt,'btok');}
 else $ret=bj($rid.'|bank,transaction|'.prm($p),lang('to contract').' '.$bt,'btsav');
 //if(!$ok)$ret.=bj($a::$cb.$aid.'|'.$a.',call|id='.$aid,langp('back'),'btno');
-if(bank::$rf)$ret.=trace(bank::$rf);
+if(bank::$rf)$ret.=rplay(bank::$rf);
 return span($ret,'',$rid);}
 
 static function verbose($n){switch($n){

@@ -25,7 +25,9 @@ head::add('jscode',self::js());}
 
 #edit
 static function collect($p){return parent::collect($p);}
-static function form($p){return parent::form($p);}
+static function form($p){
+//$p['jp']='preview|';
+return parent::form($p);}
 static function del($p){return parent::del($p);}
 static function save($p){return parent::save($p);}
 static function create($p){return parent::create($p);}
@@ -40,6 +42,11 @@ static function template(){
 //return '[[[tit:var]*[tit:class]:div][[txt:conn]*[txt:class],[cbck:id]:div]*[article:class]:div]';
 return '[[tit:var]*[tit:class]:div][[txt:var]*[article:class]:div]';//
 return parent::template();}
+
+static function preview($p){
+//return parent::preview($p);
+$d=conn::call(['msg'=>$p['txt'],'ptag'=>1]);
+return div($d,'article');}
 
 static function play($p){
 $r=self::build($p);

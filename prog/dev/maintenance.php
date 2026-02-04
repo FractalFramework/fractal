@@ -39,7 +39,7 @@ $r=sql('all',self::$db,'ra',$id);
 return $r;}
 
 static function op($p){$ret='';
-//$d=sql('txt','multilang','v',150); sql::up('book_chap','txt',$d,28);
+//$d=sql('txt','multilang','v',150); sql::upd('book_chap',['txt'=>$d],28);
 return $ret;}
 
 static function newhasher($p){$ret='';//book_chap,comic_cases,note,slide_r,stext,stx,sys,syslib,tlex,tlex_web,userguide,vector,
@@ -56,7 +56,7 @@ static function newhasher($p){$ret='';//book_chap,comic_cases,note,slide_r,stext
     //$b=$p['inp1']??self::$db;
     //$d=sql('txt',$b,'ra','');
     //$d=str_replace('|','|',$d);
-    //sql::up($b,'txt',$d,28);
+    //sql::upd($b,['txt'=>$d],28);
 return $ret;}
 
 #call

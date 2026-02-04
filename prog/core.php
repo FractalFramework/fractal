@@ -2,8 +2,7 @@
 
 class core{
 static function js($p){}
-static function help($p){[$ref,$c,$cn,$b]=vals($p,['ref','css','conn','brut']);
-return help($ref,$c,$cn,$b);}
+static function help($p){[$ref,$c,$cn,$b]=vals($p,['ref','css','conn','brut']); return help($ref,$c,$cn,$b);}
 //static function no($p){return '';}
 static function val($p){return $p['p1']??'';}
 static function send($p){return $p[$p['v']]??'';}
@@ -23,6 +22,9 @@ static function video($p){return video::com(http($p['u']??''));}
 static function tree($p){return tree(json_decode($p['rj']??'',true));}
 static function clean_mail($p){$x=$p['x']??''; if($x)return str::clean_mail($p[$x]??'');}}
 
+class ses{static $r; static $ret; static $alx; static $cnfg=[];
+static function cnfg($k){return self::$cnfg[$k]??'';}}
+
 class mem{static $r=[]; static $ret='';}
 
 function qr($d,$x=''){return sql::qr($d,$x);}
@@ -31,8 +33,8 @@ function sql($d,$b,$p='',$q='',$z=''){return sql::read($d,$b,$p,$q,$z);}
 #usr
 function idusr($u){return sql('id','login','v',['name'=>$u]);}
 function usrid($id){return sql('name','login','v',$id);}
-function vrfusr($d){return sql('id','login','v','where name="'.$d.'" and auth>1');}
-function vrfid($d,$db){return sql::inner('name',$db,'login','uid','v','where '.$db.'.id="'.$d.'"');}
+function vrfusr($d){return sql('id','login','v',['name'=>$d,'>auth'=>'1']);}
+function vrfid($d,$db){return sql::inner('name',$db,'login','uid','v',[$db.'.id'=>$d]);}
 function isown($usr){return sql('name','login','v',['mail'=>ses('mail'),'name'=>$usr]);}
 
 #app
@@ -60,10 +62,10 @@ return app($call,$p);}
 #icon
 function icon_ex($d){$r=sesf('icon_com','',0);
 if(is_array($r) && array_key_exists($d,$r))return $r[$d];}
-function icon_com(){return sql('ref,icon','icons','kv','');}
+function icon_com(){return sql('ref,icon','icons','kv',[]);}
 function icolg($d,$o='',$no=''){$r=sesf('icon_com','',0);
 if($r && !array_key_exists($d,$r) && $d && !is_numeric($d) && !$no){
-	sql::sav('icons',[$d,'']); $r=sesf('icon_com','',1);}
+	sql::savif('icons',['ref'=>$d,'icon'=>'']); $r=sesf('icon_com','',0);}
 $ret=!empty($r[$d])?$r[$d]:'';
 if($o)$ret=ico($ret); return $ret;}
 function ico($d,$s='',$c='',$t='',$ti='',$tb='',$id=''){$r=[];
@@ -80,6 +82,8 @@ function picto($d,$s='',$c=''){if($c)$c=' '.$c; if(is_numeric($s))$s='font-size:
 function pictxt($d,$t=''){return span('','philum ic-'.$d).$t;}
 
 #lang
+function getlng(){$hal=$_SERVER['HTTP_ACCEPT_LANGUAGE']??''; $lg=ses::$cnfg['lang']??'fr';
+$lc=$hal?substr($hal,3,5):$lg.'_'.strtoupper($lg); setlocale(LC_TIME,$lc); return $lg;}
 function setlng(){$lng=ses('lng'); if($lng=='en')$lngb='US'; else $lngb=strtoupper($lng);
 setlocale(LC_ALL,$lng.'_'.$lngb);}
 function lng(){return ses('lng')?ses('lng'):'fr';}//sesif('lng','fr')
@@ -94,7 +98,9 @@ function lang($d,$o='',$no=''){
 $lang=sesif('lng','fr'); $applng=sesifn('applng',$lang); $r=sesf('lang_com',$lang,0); //$r=lang_com($lang);
 if(!$no && $r && $d && !array_key_exists($d,$r) && !is_numeric($d)){//strpos($d,',')===false &&
 	$db=trans::com(['from'=>'en','to'=>$lang,'txt'=>$d]); if($db)$d=$db;//
-	if(strpos($d,'"')===false)sql::sav('lang',[$d,'',$applng,$lang]);
+	//pr([$d,'',$applng,$lang]); if($d=='/')trace();
+	$rp=['ref'=>$d,'voc'=>'','app'=>$applng,'lang'=>$lang];
+	if($d && $d!='/' && strpos($d,'"')===false)sql::savif('lang',$rp,0);
 	$r=sesf('lang_com',$lang,1);}
 $ret=!empty($r[$d])?$r[$d]:$d;
 if(!$o)$ret=str::ucfirst_b($ret);
@@ -111,9 +117,9 @@ function langx($d,$o=''){$rb=[]; $r=explode(' ',$d);
 foreach($r as $k=>$v){$rb[]=lang($v,$o); $o=1;} return implode(' ',$rb);}
 
 //helps
-function help($ref,$css='',$conn='',$brut=''){$lg=sesif('lng','fr'); $bt='';//hlpxt
+function help($ref,$css='',$conn='',$brut=''){$lg=sesif('lng','fr'); $bt='';
 $r=sql('id,txt','help','rw',['ref'=>$ref,'lang'=>$lg]); if(!$r)return $ref;
-if(!isset($r[0]) && $ref)$r[0]=sql::sav('help',[$ref,'',$lg]);
+if(!isset($r[0]) && $ref)$r[0]=sql::savif('help',['ref'=>$ref,'txt'=>'','lang'=>$lg]);
 if(auth(6))$bt=bj('popup|admin_help,edit|to=hlpxd,id='.$r[0].',headers=1',ico('edit')).' ';
 if(isset($r[1]))$txt=$conn?conn::com($r[1],1):nl2br($r[1]); else $txt=$ref;
 if($brut)return $r[1]??''; elseif($txt)return div($bt.$txt,$css?$css:'helpxt','hlpxd');}
@@ -174,7 +180,8 @@ return div($ret);}
 function inpclr($id,$clr,$sz='',$sky='',$bkg=''){$cb=randid('cklr');
 if(substr($clr,0,1)=='-' or strpos($clr,',') or is_img($clr))$clrb='black';
 else $clrb=clrneg($clr,1);
-$inp=tag('input',['type'=>'text','id'=>$id,'value'=>$clr,'size'=>$sz,'placeholder'=>lang($id,1),'onclick'=>'applyclr(this,'.$bkg.')','onkeyup'=>'applyclr(this,'.$bkg.')','style'=>'background-color:#'.$clr.'; color:#'.$clrb],'',1);//
+$pr=['type'=>'text','id'=>$id,'value'=>$clr,'size'=>$sz,'placeholder'=>lang($id,1),'onclick'=>'applyclr(this,'.$bkg.')','onkeyup'=>'applyclr(this,'.$bkg.')','style'=>'background-color:#'.$clr.'; color:#'.$clrb];
+$inp=tagb('input',$pr);
 $ret=span(pic('color').$inp,'inpic');
 $ret.=toggle($cb.'|core,clrpick|id='.$id,pic('clr'),'btn');
 if($sky)$ret.=toggle($cb.'|sky,slct|rid='.$id,ico('snowflake-o'),'btn');
@@ -249,10 +256,10 @@ elseif(substr($f,0,4)=='disk')return $f;
 elseif(substr($f,0,3)=='usr')return '/disk/'.$f;
 else return '/disk/usr/'.$f;}
 
-function img2($f,$dim='',$o=''){ 
-
-$ret=imgroot($f,$dim); $w=''; if($dim=='micro')$w=100; elseif($dim=='avt')$w=60; elseif($dim=='med')$w=640;
-if(ex_img($ret))return img('/'.$ret,$w);
+function img2($f,$dim='',$o=''){
+$ret=imgroot($f,$dim); $w=''; //if($dim=='micro')$w=100; elseif($dim=='avt')$w=60; elseif($dim=='med')$w=640;
+//if(ex_img($ret))return img('/'.$ret,$w);
+if(ex_img($ret))return imgalt('/'.$ret,$o);
 elseif($o)return pic('img');}
 
 function playimg($f,$dim,$o='',$sz=''){if($dim=='micro')$sz=64;
@@ -285,20 +292,23 @@ if($cb==1)return bubble('upload,pick|id='.$id.',o='.$o,ico('image'),'btn',[],'z'
 elseif($cb)return toggle($cb.',,z|upload,pick|id='.$id.',o='.$o,ico('image'),'btn',[],'z');
 else return popup('upload,pick|id='.$id.',o='.$o,ico('image'),'btn');}
 
+function favicon(){
+return '/usr/favicons/favicon_'.(ses::$cnfg['favicon']??'').'.png';}
+
 #popup
 function mkpopup($d,$p){
 //$pw=$p['_pw']??640; $w=$p['popwidth']??640;
 //$s='width:'.($pw<640?$pw:($w?$w:$pw)).'px;';
 $ret=btj(picto('close',20),atj('Close','popup'),'imbtn');
 $ret.=btj(picto('ktop',20),atj('repos',''),'imbtn');
-$ret.=btj(picto('less',20),atj('reduc','popup'),'imbtn');
+//$ret.=btj(picto('less',20),atj('reduc','popup'),'imbtn');
 $app=$p['_a']??''; $mth=$p['_m']??'';
 $title=':: '.$app.' :: ';//lk('/'.$app,ico('link'),'',1).
 if(method_exists($app,'titles'))$title.=$app::titles($p); else $title.=$mth.' ';
 if($app && method_exists($app,'admin') && !$mth)//
 	$title.=menu::call(['app'=>$app,'mth'=>'admin']);
 $ret.=tag('span',['class'=>'imbtn'],$title);
-$head=tag('div',['id'=>'popa','class'=>'popa','onmouseup'=>'stop_drag(event); noslct(1);','onmousedown'=>'noslct(0);'],$ret);
+$head=tag('div',['id'=>'popa','class'=>'popa','onmouseup'=>'stop_drag(event); noslct(1);','onmousedown'=>'noslct(0);','ondblclick'=>atj('reduc','popup'),'style'=>'user-select:none;'],$ret);
 $ret=tag('div',['id'=>'popu','class'=>'popu'],$d);
 if($d)return tag('div',['class'=>'popup'],$head.$ret);}//,'style'=>$s
 
@@ -326,18 +336,22 @@ function jurl($d,$o=''){//$d=unicode($d);
 	$a=['|','|'];//"\n","\t",'\'',"'",'"','*','#','+','=','&','?','.',':',',',,'<','>','/','%u',' '
 	$b=['(-bar)','(-par)'];//'(-n)','(-t)','(-asl)','(-q)','(-dq)','(-star)','(-dz)','(-add)','(-eq)','(-and)','(-qm)','(-dot)','(-ddot)','(-coma)',,','(-b1)','(-b2)'(-sl)','(-pu)','(-sp)'
 	return str_replace($o?$b:$a,$o?$a:$b,$d);}
+
 function _jr($r){$rt=[];//tostring
 	if($r)foreach($r as $k=>$v)if($v)
 		if(strpos($v,'=')){[$k,$v]=explode('=',$v); $rt[]=$k.'='.jurl($v);}
 	if($rt)return implode(',',$rt);}
-function _jrb($d,$s=':'){if(!$d)return [];
+
+function _jrb($d,$s=':'){if(!$d)return [];//json
 	if($d)$r=explode(',',$d); $rt=[];
 	if($r)foreach($r as $k=>$v){$rb=explode($s,$v);
 		if(isset($rb[1])){
+			if($_POST[$rb[1]]??'')$rt['p'.($k+1)]=$_POST[$rb[1]];
 			if($rb[1]=='undefined' && $rb[0])$rt['p'.($k+1)]=jurl($rb[0],1);
 			else $rt[$rb[0]]=jurl($rb[1],1);}
 		elseif($rb[0])$rt['p'.($k+1)]=jurl($rb[0],1);}
 	return $rt;}
+
 function unicode($d){
 	if(strpos($d,'%u')===false)return $d; $n=strlen($d); $ret='';
 	for($i=0;$i<$n;$i++){$c=substr($d,$i,1);
@@ -348,15 +362,24 @@ function unicode($d){
 return $ret;}
 
 function unicode2($d){return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/',function($match){return mb_convert_encoding(pack('H*',$match[1]),'UTF-8','UCS-2BE');},$d);}
-function protect($d,$o=''){$a='|'; $b='(bar)';
-	return str_replace($o?$b:$a,$o?$a:$b,$d);}
 
+//protect($d,'|','(bar)',0)
 function jurl2($v,$p=''){#dont edit!//ajx() on philum
 $r=['*','_','(star)']; $a=$p?1:0; $b=$p?0:1;
 if(!$p){$a=0; $b=1; $c=2; $d=0;} else{$a=1; $b=0; $c=0; $d=2;}//�=>&#167;
-$ra=[$r[$a],$r[$b],'_',"\n","\r",'\'',"'",'�','#','�','"','+','=','�','&','.',':','/','&#8617;'];
+$ra=[$r[$a],$r[$b],'_',"\n","\r",'\'',"'",'§','#','€','"','+','=','�','&','.',':','/','&#8617;'];
 $rb=[$r[$c],$r[$d],'(und)','(nl)','(nl)','(aslash)','(quote)','(by)','(diez)','(mic)','(dquote)','(add)','(equal)','(euro)','(and)','(dot)','(ddot)','(slash)','(back)'];
-return $p?str_replace($rb,$ra,$v):str_replace($ra,$rb,$v);}
+if($p)[$rb,$ra]=[$ra,$rb];
+return str_replace($ra,$rb,$v);}
+
+function protect($d,$a,$o=0){
+$b=base64_encode($a);
+if($o)[$b,$a]=[$a,$b];
+return str_replace($a,$b,$d);}
+
+function protectr($d,$r,$o=0){
+foreach($r as $k=>$v)$d=protect($d,$v,$o);
+return $d;}
 
 #builders
 function insert($d,$rid,$o=''){return 'insert(\''.$d.'\',\''.$rid.'\',this);'.($o?' Close(\'popup\');':'');}
@@ -372,8 +395,8 @@ foreach($r as $k=>$v){$c='btn'; if($k==$ka)$c.=' active'; $p['ka']=$k;
 	$ret.=bj($rid.'|core,boxhide|'.prm($p),langp($v),$c);}
 $ret.=hidden($id,$ka); if($xid)$ret=div($ret,'',$xid); return $ret;}
 
-function trace($r){
-return popup('core,rplay||rj',ico('pied-piper'),'btn').divh(json_enc($r),'rj');}
+function rplay($r){
+return popup('core,tree||rj',ico('pied-piper'),'btn').divh(json_enc($r),'rj');}
 
 function dragline($t,$id,$j=''){return tag('div',['id'=>$id,'class'=>'dragme','draggable'=>'true','ondragstart'=>'drag_start(event)','ondragover'=>'drag_over(event)','ondragleave'=>'drag_leave(event)','ondrop'=>'drag_sql::drop(event,\''.$j.'\')','ondragend'=>'drag_end(event)'],$t);}
 
@@ -404,18 +427,17 @@ foreach($r as $k=>$v){
 return implode('',$rt);}
 
 //tabler
-function tabler($r,$head='',$keys='',$sums=''){$i=0; $tr=[];
+function tabler($r,$head='',$keys=''){$i=0; $tr=[];
 if(is_array($head))array_unshift($r,$head);
-if($sums)foreach(next($r) as $k=>$v)$r['='][]=array_sum(array_column($r,$k));
 if(is_array($r))foreach($r as $k=>$v){$td=[]; $i++;
-	if(($head && $i==1) or $k==='_' or $k==='=')$tag='th'; else $tag='td';
-	if($keys)$td[]=tag($tag,'',$k?$k:'_');
-	if(is_array($v))foreach($v as $ka=>$va)
-		$td[]=tag($tag,['id'=>$k.'-'.$ka],$va);
-	else $td[]=tag($tag,'',$v);
+	if(($head && $i==1) or $k==='_')$tag='th'; else $tag='td';
+	if($keys)$td[]=tag($tag,[],$k?$k:'_');
+	if(is_array($v))foreach($v as $ka=>$va){
+		$td[]=tag($tag,['id'=>$k.'-'.$ka],$va);}
+	else $td[]=tag($tag,[],$v);
 	if($td)$tr[]=tag('tr',['id'=>'k'.$k],join('',$td));}
-$ret=tag('tbody','',join('',$tr));
-return div(tag('table','',$ret),'scroll','','');}//overflow:auto;
+$ret=tag('tbody',[],join('',$tr));
+return div(tag('table',[],$ret),'scrollh','','');}//overflow:auto;
 
 function playr($r,$c=''){$ret='';
 if(is_array($r))foreach($r as $k=>$v){
@@ -522,5 +544,7 @@ return div(build::calendar($d,$fc),'',$rid);}
 #pop
 function alert($d){
 head::add('jscode','ajx("popup|core,txt|txt='.$d.'");');}
+
+function er($d){ses::$er[]=$d;}
 
 ?>

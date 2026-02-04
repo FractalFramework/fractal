@@ -27,7 +27,7 @@ return span('','fa fa-'.$d.$c,'',$s);}*/
 
 static function patch(){$ret='';
 $r=sql('id,icon','icons','kv',''); pr($r);
-//foreach($r as $k=>$v)if(substr($v,-2,2)=='-o')sql::up('icons','icon',substr($v,0,-2),$k);
+//foreach($r as $k=>$v)if(substr($v,-2,2)=='-o')sql::upd('icons',['icon'=>substr($v,0,-2)],$k);
 return $ret;}
 
 //builder

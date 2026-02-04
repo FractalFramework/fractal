@@ -61,7 +61,7 @@ return parent::edit($p);}
 
 static function editopo($p){$ret='';
 $id=$p['id']??''; $t=val($p,'inpt'); $o=val($p,'o'); $rid=randid('tpl');
-if($t)sql::up(self::$db2,'root',$t,$id);
+if($t)sql::upd(self::$db2,['root'=>$t],$id);
 $t=sql('root',self::$db2,'v',$id);
 $j=$rid.'|topology,editopo|id='.$id;
 if($o)$ret=inputcall($j.'|inpt','inpt',$t,22).bj($j,pic('cancel',12),'btn');
@@ -70,8 +70,8 @@ return span($ret,'',$rid);}
 
 #build
 static function build($p){
-$ra=parent::build($p); $id=$p['id']??'';
-$rb=sql('all',self::$db2,'rr',['bid'=>$id]);
+return parent::build($p); $id=$p['id']??'';
+//$rb=sql('all',self::$db2,'rr',['bid'=>$id]);
 return [$ra,$rb];}
 
 static function template(){
@@ -82,27 +82,24 @@ if($r)foreach($r as $k=>$v)$ret.=$f($k,$v);
 return $ret;}
 
 static function root($p){
-$dir=$p['dir']; $cuid=$p['cuid']??''; $bid=$p['bid'];
+$dir=$p['dir']; $bid=$p['bid'];
 $r=sql('all',self::$db2,'rr',['bid'=>$bid]);
 if($r)foreach($r as $k=>$v){
-	$ic='folder';//$ic=icon_ex(substr($v['root'],1));
-	//$v['root']=substr($v['root'],1);
-	$rb[$v['id']]=[$v['root'],'in','topology,playobj|id='.$v['id'],$ic,$v['id'],'',''];}
+	$rb[$v['id']]=[$v['root'],'in','topology,playobj|id='.$v['id'],'folder',$v['id'],'',''];}
 if($r)return $rb;}
 
 static function playobj($p){$id=$p['id']??'';
 $r=sql('all',self::$db2,'ra',['id'=>$id]); $bt='';
 //$ret=gen::com('[[[element:var]*class=txt:div]*class=paneb:div]',$r);
 if($r['uid']==ses('uid'))$bt=self::editopo(['id'=>$id]);
-$ret=div('#'.$r['id'].'. '.$r['element'].' '.$bt,'paneb');
+$ret=div('#'.$r['id'].'. '.$r['element'].' '.$bt,'panec');
 return $ret;}
 
 #play
 static function play($p){
 $id=$p['id']??'';
-[$ra,$rb]=self::build($p);
-$ret=gen::com(self::template('tit','txt'),$ra);
-//$ret='';
+$ra=self::build($p); //pr($rb);
+$ret=gen::com(self::template(),$ra); //eco($ret);
 //$ret.=desk::load('topology','root','','',$id);
 $ret.=tree::load('topology','root','','',$id);
 return $ret;}

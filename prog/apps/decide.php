@@ -69,7 +69,7 @@ static function savevote($p){
 $id=sql('id','decide_valid','v','where cid="'.$p['cid'].'" and uid="'.ses('uid').'"');
 if(isset($id))$p['val']=$p['val']!=val($p,'current')?$p['val']:'0';
 if(!isset($id))$p['idc']=sql::sav('decide_valid',[$p['cid'],ses('uid'),$p['val']]);
-else sql::up('decide_valid','val',$p['val'],$id);
+else sql::upd('decide_valid',['val'=>$p['val']],$id);
 return self::vote($p);}
 
 static function vote($p){
@@ -186,7 +186,7 @@ if($r['cl']==1)return self::argcalc($p).div(nl2br($r['txt']),'txt').help('form c
 $ret=self::usrlog($r['date'],$r['name']);
 $ret.=self::linktopoll($id,'').br();
 $ret.=div(nl2br($r['txt']),'content');
-$n=sql('count(id)','decide_args','v','where bid="'.$id.'"');//args
+$n=sql('count(id)','decide_args','v',['bid'=>$id]);//args
 //$ret.=toggle('arg'.$id.'|decide,arguments|id='.$id,lang('args').' ('.$n.')','btn');
 //$ret.=bj('arg'.$id.'|decide,arguments|id='.$id,lang('args').' ('.$n.')','btn');
 $ret.=self::argcalc($p);//calc

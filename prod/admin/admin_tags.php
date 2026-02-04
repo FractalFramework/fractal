@@ -34,7 +34,7 @@ static function goodid($p){
 return sql('id',self::$db,'v',['ref'=>$p['ref'],'lg'=>$p['lg']]);}
 
 static function insertup($p){$id=self::goodid($p);
-if($id)sql::up(self::$db,'txt',$p['txt'],$id);
+if($id)sql::upd(self::$db,['txt'=>$p['txt']],$id);
 else sql::sav(self::$db,[$p['ref'],$p['txt'],$p['lg']]);}
 
 static function translate($p){$voc=''; $txt=''; $copy=val($p,'copy');
@@ -62,10 +62,10 @@ static function update($p){
 $ref=val($p,$p['rid']); $old=val($p,'ref'); $ex='';
 $ex=sql('id',self::$db,'v',['ref'=>$ref]);
 if($old!=$ref && strtolower($old)==strtolower($ref))$ex=0;
-if(!$ex)sql::up(self::$db,'ref',$ref,$p['id']);
+if(!$ex)sql::upd(self::$db,['ref'=>$ref],$p['id']);
 else{
 	$bid=sql('id',self::$db,'v',['ref'=>$old]);
-	sql::up(self::$db2,'bid',$ex,['bid'=>$bid]);//trigger
+	sql::upd(self::$db2,['bid'=>$ex],['bid'=>$bid]);//trigger
 	$n=sql('count(id)',self::$db2,'v',['bid'=>$bid]);
 	if(!$n)self::del(['id'=>$bid]);}
 return self::com($p);}
@@ -85,7 +85,7 @@ return self::edit($p);}
 
 static function edit($p){$rid=randid('ref');
 $to=val($p,'to')?'socket,,x':'adtg,,x';
-$r=sql('ref,lg',self::$db,'ra','where id='.$p['id']);
+$r=sql('ref,lg',self::$db,'ra',$p['id']);
 $ret=label($rid,$r['ref'].' ('.$r['lg'].')');
 $ret.=bj($to.'|'.self::$a.',update|id='.$p['id'].',rid='.$rid.',ref='.$r['ref'].',lg='.$r['lg'].'|'.$rid,lang('save'),'btsav');
 $ret.=bj($to.'|'.self::$a.',del|id='.$p['id'].',lg='.$r['lg'],lang('del'),'btdel');

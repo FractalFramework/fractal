@@ -16,7 +16,7 @@ sql::create(self::$db,['ref'=>'int','nam'=>'var','icon'=>'var'],1);}
 
 //save
 static function update($p){$rid=$p['rid'];
-sql::up(self::$db,'nam',$p[$rid],$p['id']);
+sql::upd(self::$db,['nam'=>$p[$rid]],$p['id']);
 $r=sesf('ascii_com','',1);
 return $p[$rid];
 return self::com($p);}
@@ -31,7 +31,7 @@ $r=sesf('ascii_com','',1);
 return self::com($p);}
 
 static function edit($p){$rid=randid('icons'); $id=$p['id'];
-$r=sql('ref,nam,icon',self::$db,'ra','where id='.$id);
+$r=sql('ref,nam,icon',self::$db,'ra',$id);
 //$ret=label($rid,$r['ref'].' '.$r['icon']);
 //$ret.=goodinput($rid,$r['nam']);
 $nam=$r['nam'];

@@ -139,14 +139,14 @@ bank::$rf['new_cluster']=$nid;
 $rb=['bid'=>$nid,'cid'=>$bid,'ct'=>$ct];
 $kid=sql::sav(self::$db5,$rb);//associate parent
 bank::$rf['new_parent']=$kid;
-sql::up(self::$db,'status','2',$bid,'',0);//disactivate old cluster
+sql::upd(self::$db,['status'=>'2'],$bid);//disactivate old cluster
 bank::$rf['disactivate']=$bid;
 if($nid && $kid)return 'ok';}
 
 static function bank_finalization($p){$ret='';//needed by bank
 [$bid,$cid,$va,$ty,$rf,$cnd]=vals($p,['aid','cid','value','type','rf','cnd'],0);
 $ret.=help('New cluster created').' ';
-if($rf)$ret.=trace(bank::$rf);
+if($rf)$ret.=rplay(bank::$rf);
 return $ret;}
 
 #parents
@@ -155,8 +155,8 @@ $id=$p['id']; $pid=$p['pid']; $cid=$p['cid'];
 $ct=sql('ct','cluster_parents','v',$pid);
 if($id)sql::del('cluster_parents',$pid);
 //$ct=self::contract($p+['ok'=>0]);
-sql::up(bank::$db3,'ok','0',$ct);//resolve contract
-sql::up(self::$db,'status','0',$cid,'',0);//if($typ==0)
+sql::upd(bank::$db3,['ok'=>'0'],$ct);//resolve contract
+sql::upd(self::$db,['status'=>'0'],$cid);//if($typ==0)
 return self::parents($p);}
 
 static function contract($p){$cid='';
@@ -165,9 +165,9 @@ $uid=ses('uid'); $cuid=sql('uid',self::$db,'v',$id);
 [$ty,$va]=sql('typ,value',self::$db,'rw',$id);//if!$va)...calculate
 $r=['uid'=>$uid,'uid2'=>$cuid,'value'=>$va?$va:0,'type'=>$ty?$ty:0,'app'=>self::$a,'aid'=>$pid];
 $rb=sql('id,ok',bank::$db3,'rw',$r); if($rb)[$cid,$ok]=$rb;
-if($cid && $ok!=$ok2)sql::up(bank::$db3,'ok',$ok2,$cid);//surely better to not update
+if($cid && $ok!=$ok2)sql::upd(bank::$db3,['ok'=>$ok2],$cid);//surely better to not update
 elseif(!$cid && $ok2)$cid=sql::sav(bank::$db3,$r+['ok'=>1]);
-sql::up(self::$db,'status',1,$cid);
+sql::upd(self::$db,['status'=>1],$cid);
 return $cid;}
 
 static function sav_parent($p){
@@ -177,7 +177,7 @@ $ex=sql('id','cluster_parents','v',['bid'=>$id,'pid'=>$pid]);
 $ct=self::contract($p+['pid'=>$pid,'ok'=>1]);
 $r=['bid'=>$id,'pid'=>$pid,'ct'=>$ct];
 if(!$ex)$p['pid']=sql::sav('cluster_parents',$r);
-if($p['pid']??'')sql::up(self::$db,'status','1',$pid);
+if($p['pid']??'')sql::upd(self::$db,['status'=>'1'],$pid);
 return self::parents($p);}
 
 static function open_parent($p){$ret=''; $id=$p['id'];
@@ -229,7 +229,7 @@ return div($edt,'',$cb.'edt').$ret;}
 //edit prop (forbidden action)
 static function mdf_prop($p){$id=$p['ida'];
 if($p['del']??'')sql::del(self::$db2,$id);
-else sql::up(self::$db2,'prop',$p['mdfprop'],$id);
+else sql::upd(self::$db2,['prop'=>$p['mdfprop']],$id);
 return self::properties($p);}
 
 static function edt_prop($p){$id=$p['id']; $ida=$p['ida'];
@@ -245,7 +245,7 @@ $atid=$p['atid']; $unid=$p['unid']; $prop=$p['addprop'];
 $r=['bid'=>$id,'atid'=>$atid,'unid'=>$unid,'prop'=>$prop];
 $ex=sql('id','cluster_prop','v',$r);
 if(!$ex)sql::sav('cluster_prop',$r);
-else sql::up2('cluster_prop',$r,$ex);
+else sql::upd('cluster_prop',$r,$ex);
 return self::properties($p);}
 
 static function add_prop($p){$id=$p['id']??''; $atid=$p['atid']; $attr=$p['addattr'];

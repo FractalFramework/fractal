@@ -31,13 +31,13 @@ return $d;}
 
 static function save0($t,$d){
 $id=sql('id',self::$db,'v',['tit'=>$t]);
-if($id)sql::up(self::$db,'txt',$d,$id); else $id=sql::sav(self::$db,[$t,$d]);
+if($id)sql::upd(self::$db,['txt'=>$d],$id); else $id=sql::sav(self::$db,[$t,$d]);
 return $id;}
 
 static function save($t,$d){
 $db='multilang'; $uid=ses('uid'); $md5=random();
 $id=sql('id',$db,'v',['tit'=>$t]);
-if($id)sql::up($db,'txt',$d,$id); else $id=sql::sav($db,[$uid,$t,$d,'it',$md5,0,0]);
+if($id)sql::upd($db,['txt'=>$d],$id); else $id=sql::sav($db,[$uid,$t,$d,'it',$md5,0,0]);
 return $id;}
 
 #build
@@ -63,7 +63,7 @@ $d=file_get_contents($f,NULL,NULL,$start,self::$sz);
 //$d=str::goodend($d,$start,self::$sz);
 //$d=conv::call(['txt'=>$d]);
 //$d=strip_tags($d);
-//sql::up('dbdoc','txt',$d,1);
+//sql::upd('dbdoc',['txt'=>$d],,1);
 //self::save($n,$d);
 return $bt.$d;}
 
@@ -110,7 +110,7 @@ write_file($f,$ret);
 return $ret;}
 
 static function reflush($p){$ret='';
-for($i=203;$i>199;$i--)sql::up('multilang','id',$i+1,$i,'',1);
+for($i=203;$i>199;$i--)sql::upd('multilang',['id'=>$i+1],$i);
 return $ret;}
 
 static function book($p){$ret=''; $lg=self::$lg; $lg='fr';
@@ -118,7 +118,7 @@ $r=sql('tit,txt','multilang','kv','where lang="'.$lg.'" and id>17 order by id');
 foreach($r as $k=>$v){//sql::sav('book_chap',[5,$k,$v]);
 	$idb=sql('id','book_chap','v',['chapter'=>$k,'bid'=>5]);
 	$v=str_replace(['<h1>','</h1>'],['[',':h1]'],$v);
-	if($idb)sql::up('book_chap','txt',$v,$idb);}
+	if($idb)sql::upd('book_chap',['txt'=>$v],$idb);}
 return $ret;}
 
 static function call($p){$ret='';

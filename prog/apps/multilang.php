@@ -57,7 +57,7 @@ return parent::edit($p);}
 #translations
 static function refresh($p){$id=$p['id']??'';//make backup
 $md5=sql('md5',self::$db,'v',$id);
-sql::up(self::$db,'md5','_'.$md5,$id);
+sql::upd(self::$db,['md5'=>'_'.$md5],$id);
 $id=sql('id',self::$db,'v',['md5'=>$md5,'lang'=>'fr']);
 if(!$id)$id=sql('id',self::$db,'v',['md5'=>$md5,'lang'=>'en']);
 if(!$id)$id=sql('id',self::$db,'v',['md5'=>$md5,'lang'=>'es']); $p['id']=$id;
@@ -74,9 +74,9 @@ if(isset($r['it'])){$idb=$r['it']; $lg='it';}
 if(isset($idb)){
 	[$t,$d]=sql('tit,txt',self::$db,'rw',$idb);
 	$t2=trans::com(['from'=>$lg,'to'=>$lang,'txt'=>$t]);
-	if($t2)sql::up(self::$db,'tit',$t2,$id);
+	if($t2)sql::upd(self::$db,['tit'=>$t2],$id);
 	$d2=trans::com(['from'=>$lg,'to'=>$lang,'txt'=>$d]);
-	if($d2)sql::up(self::$db,'txt',$d2,$id);}
+	if($d2)sql::upd(self::$db,['txt'=>$d2],$id);}
 return self::edit($p);}
 
 static function newfrom($p){

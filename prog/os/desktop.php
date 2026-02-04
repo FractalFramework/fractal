@@ -91,7 +91,7 @@ if($rb)return div('deleted','tit').tabler($rb);}
 
 //rename
 static function savemdfbt($p){
-if(auth(6) && $p['id'])sql::up(self::$db,'bt',$p['mdfbt'],$p['id']);
+if(auth(6) && $p['id'])sql::upd(self::$db,['bt'=>$p['mdfbt']],$p['id']);
 return desk::load('desktop','build',$p['dir']);}
 
 static function modifbt($p){
@@ -110,7 +110,7 @@ return self::manage($p);}
 //update
 static function update($p){
 $keys='dir,type,com,picto,bt'; $r=explode(',',$keys);
-foreach($r as $k=>$v)sql::up(self::$db,$v,$p[$v],$p['id']);
+foreach($r as $k=>$v)sql::upd(self::$db,[$v=>$p[$v]],$p['id']);
 //return lang('updated').' '.self::reload();
 return self::manage($p);}
 
@@ -149,7 +149,7 @@ if($p['col']=='picto')$btn=ico($p['val']).' '; else $btn=$p['val'];
 return bj($p['cbk'].'|desktop,modif|id='.$p['id'].',col='.$p['col'].',val='.jurl($p['val']).',cbk='.$p['cbk'],$btn,'btn');}
 
 static function savemdf($p){$p['val']=$p[$p['idv']];
-sql::up(self::$db,$p['col'],$p['val'],$p['id']);
+sql::upd(self::$db,[$p['col']=>$p['val']],$p['id']);
 return self::mdfbt($p);}
 
 static function modif($p){
@@ -161,10 +161,10 @@ return $ret;}
 
 //manage
 static function manage($p){$ret=''; $ra=[]; $dir=$p['dir']??'';
-if(isset($p['addrow'])){$r=sql::cols(self::$db,1,0);
+if(isset($p['addrow'])){$r=sql::cols(self::$db,2,0);
 	foreach($r as $k=>$v)$rb[$k]='';
-	$rb['uid']=ses('uid'); $rb['dir']=$dir;
-	$nid=sql::sav(self::$db,$rb);}
+	$rb['uid']=ses('uid'); $rb['dir']=$dir; $rb['auth']=0;
+	$nid=sql::sav(self::$db,$rb,'','',1);}
 if(auth(2))$ret=bj('dskmg|desktop,manage|dir='.$dir.',addrow=1',langp('add'),'btn');
 //if(auth(2))$ret=bj('popup|desktop,add|dir='.$dir,langp('add'),'btn');
 //$ret.=bj('dskmg|desktop,manage|dir='.$dir,langp('refresh'),'btn');
@@ -200,21 +200,19 @@ $uid=ses('uid'); $usr=ses('usr'); $spd=ses('dskspd');//3=usr,2=public,1=private
 $keys=self::$db.'.id,dir,type,com,picto,bt,auth,uid';
 if(!$cuid)$cuid=$uid; if(!$spd)$spd=3;
 if($spd==3){//cusr
-	$wu='uid="'.$cuid.'"';
+	$sq=['uid'=>$cuid];
 	if($uid!=$cuid){
 		$ab=sql('id','tlex_ab','v',['usr'=>ses('uid'),'ab'=>$cuid]);
-		if($ab)$wa='desktop.auth<=2'; elseif(!$uid)$wa='desktop.auth<1'; else $wa='desktop.auth<2';}
-	else $wa='';}
+		if($ab)$sq['{desktop.auth']='2'; elseif(!$uid)$sq['<desktop.auth']='1'; else $sq['<desktop.auth']='2';}}
 elseif($spd==2){//public
 	$rab=sql('ab','tlex_ab','rv',['usr'=>$uid]); $rab[]=$cuid; $wu='';
 	//$w='left join tlex_ab on tlex_ab.ab=uid where uid="'.$uid.'" and tlex_ab.usr="'.$uid.'"';
-	if($rab)$wa='(uid in ('.implode_q($rab).') or auth<2)';
-	elseif(!$uid)$wa='auth<1'; else $wa='auth<2';}
+	if($rab)$sq['or']=['(uid'=>$rab,'<auth'=>'2'];
+	elseif(!$uid)$sq['<auth']='1'; else $sq['<auth']='2';}
 elseif($spd==1){//private 
-	$wu='uid="'.$uid.'"'; $wa='auth<="'.ses('auth').'"';}
-if($wu && $wa)$w=$wu.' and '.$wa; elseif($wu)$w=$wu; elseif($wa)$w=$wa;
-$w=$w?'where '.$w:''; if($dir)$w.=' and dir like "'.$dir.'%"';
-return sql($keys,self::$db,'id',$w.' order by id desc');}//limit 100
+	$sq['uid']=$uid; $sq['{auth']=ses('auth');}
+if($dir)$sq['[dir']=$dir; $sq['_order']='id desc'; //$sq['_limit']='100';
+return sql($keys,self::$db,'id',$sq);}
 
 static function pick($p){$css='bicon'; $cuid=ses('uid'); $id=$p['id']??''; $ret='';
 $r=sql('id,dir,type,com,picto,bt,auth',self::$db,'id','where uid="'.$cuid.'" and dir like "/documents/img%" order by id asc');// limit 100//and auth<="'.ses('auth').'" 

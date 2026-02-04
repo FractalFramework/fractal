@@ -18,15 +18,15 @@ $rp=['rid','usr','subslist','follow','block','refuse','approve','unfollow','list
 [$rid,$usr,$list,$flw,$block,$refus,$apr,$unf,$lst]=vals($p,$rp); if(!$list)$list=$flw; $cuid=idusr($usr);
 if($list){//save
 	$id=sql('id','tlex_ab','v',['usr'=>$uid,'ab'=>$cuid]);
-	if($id)sql::up('tlex_ab','list',$list,$id);
+	if($id)sql::upd('tlex_ab',['list'=>$list],$id);
 	else{$private=sql('privacy','profile','v',['pusr'=>$usr]);
 		sql::sav('tlex_ab',[$uid,$cuid,$list,$private,0]);
 		tlxf::saventf1($usr,ses('usr'),4);}
 	return tlex::followbt($p);}
 elseif($block){
 	$id=sql('id','tlex_ab','v',['usr'=>$uid,'ab'=>$cuid]);
-	if($block==2)sql::up('tlex_ab','block',0,$id);
-	elseif($id)sql::up('tlex_ab','block',1,$id);
+	if($block==2)sql::upd('tlex_ab',['block'=>0],$id);
+	elseif($id)sql::upd('tlex_ab',['block'=>1],$id);
 	else sql::sav('tlex_ab',[$uid,$cuid,'','',1]);
 	return tlex::followbt($p);}
 elseif($refus){$apr=idusr($apr);
@@ -93,30 +93,39 @@ foreach($r1 as $k=>$v)if($r2[$k]??''){$r3[]=$k; unset($r1[$k]); unset($r2[$k]);}
 $r3=array_flip($r3);
 return [$r1,$r2,$r3];}
 
-static function call($p){
+static function menu($p){
 $rp=['data-prmtm'=>'no'];//stop continuous scrolling!
-$usr=$p['usr']??ses('usr'); $uid=$p['uid']??ses('uid'); $c=''; $ret=''; $ko=1;
+$usr=$p['usr']??ses('usr'); $uid=$p['uid']??ses('uid'); $c=''; $ret='';
+$op=$p['op']??''; $rm=['reciproques','subscriptions','subscribers'];
+foreach($rm as $k=>$v)$rc[]=$v==$op?1:0; $ko=1;
 //if(!$uid)return help('must_be_loged');
-[$r1,$r2,$r3]=self::build($p);
-$n1=count($r1); $n2=count($r2); $n3=count($r3);
+//[$r1,$r2,$r3]=self::build($p);
+//$n1=count($r1); $n2=count($r2); $n3=count($r3);
 //$n4=sql('count(id)','tlex_ntf','v',['4usr'=>$usr,'state'=>1,'typntf'=>5]);
 //$n5=sql('count(id)','tlex_ntf','v',['4usr'=>$usr,'state'=>1,'typntf'=>4]);
 $bt=langph('friends');//.' '.span($n3?$n3:'','nbntf react')
-$rt[]=toggle('cbfr|friends,reciproques|usr='.$usr,$bt,$c,[],'',$ko).' ';
+$rt[]=toggle('cbck|friends,reciproques|usr='.$usr,$bt,$c,[],$rc[0],$ko).' ';
 $bt=langph('subscriptions');//.' '.span($n1?$n1:'','nbntf react')
-$rt[]=toggle('cbfr|friends,subscriptions|usr='.$usr,$bt,$c,[],'',$ko).' ';
-$role=sql('role','profile','v','where pusr="'.$usr.'"');
+$rt[]=toggle('cbck|friends,subscriptions|usr='.$usr,$bt,$c,[],$rc[1],$ko).' ';
+$role=sql('role','profile','v',['pusr'=>$usr]);
 $bt=langph($role==3?'members':'subscribers');//.' '.span($n2,'nbntf react','tlxsub').($n5?' active':'')
-$rt[]=toggle('cbfr|friends,subscribers|usr='.$usr,$bt,$c,[],'',$ko);
+$rt[]=toggle('cbck|friends,subscribers|usr='.$usr,$bt,$c,[],$rc[2],$ko);
 //$rt[]=hidden('tlxabsnb',$n2);//.hidden('tlxsubnb',$n1)
-//$rt[]=toggle('cbfr|mob,showusrs|usr='.$usr,langpi('other accounts'),$c);
-return div(implode(' ',$rt),'lisb').div('','','cbfr');}
+//$rt[]=toggle('cbck|mob,showusrs|usr='.$usr,langpi('other accounts'),$c);
+return implode(' ',$rt);}
 
-static function menu($p){
+/*static function menu0($p){
 $rt[]=toggle('cbck|friends,call|',langp('friends'),'',[],1);
 $rt[]=toggle('cbck|friends,call|',langp('followed'),'',[],1);
 $rt[]=toggle('cbck|friends,call|',langp('followers'),'',[],1);
-return implode(' ',$rt);}
+return implode(' ',$rt);}*/
+
+static function call($p){$p['usr']=ses('usr');
+return ['nav2'=>self::menu($p),'cbck'=>self::reciproques($p)];}
+
+static function com($p){
+//self::install();
+return self::call($p);}
 
 static function content($p){
 //self::install();

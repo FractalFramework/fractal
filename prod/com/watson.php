@@ -4,11 +4,12 @@ class watson{
 //https://gateway-lon.watsonplatform.net/assistant/api
 //static $private=1;
 
-static function getkey(){$k=ses('wtsnkey');
-if(!$k)ses('wtsnkey',read_file('cnfg/watson.txt'));
-$k='f_Pt_yx8OpRDGvmQxAPaTujTRl1SWAor4Jdn85D5veyJ';
-$k=ses('wtsnkey',$k);
-return $k;}
+static function skey(){
+//return 'f_Pt_yx8OpRDGvmQxAPaTujTRl1SWAor4Jdn85D5veyJ';
+return read_file('cnfg/watson.txt');}
+
+static function getkey(){
+return sesm('watson','skey');}
 
 static function url(){
 return 'https://gateway-lon.watsonplatform.net/assistant/api/';}
@@ -18,7 +19,7 @@ $post['apikey']=self::getkey();
 $u='https://gateway-lon.watsonplatform.net/assistant/api/'.$u.'?'.mkprm($get);
 //if($get)$d=@file_get_contents($u);
 $d=curl($u,$format,$post);
-$r=json_decode($d,true); pr($r); echo $u;
+$r=json_decode($d,true); //pr($r); echo $u;
 //$r=json_decode($d,true);
 return $r;}
 
