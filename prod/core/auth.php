@@ -11,15 +11,7 @@ sql::create(self::$db,$r);}
 
 static function updateIp($uid){
 $r=['name'=>'var','password'=>'var','ip'=>'var'];
-<<<<<<< HEAD
 sql::upd(self::$db,['ip'=>ip()],$uid);}
-=======
-<<<<<<< HEAD
-sql::upd(self::$db,['ip'=>ip()],$uid);}
-=======
-sql::up(self::$db,'ip',ip(),$uid);}
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function logout(){
 unset($_SESSION['usr']); unset($_SESSION['uid']);
@@ -38,7 +30,6 @@ $msg=host(1).'/login/recovery:'.$rid;
 mail::send($mail,$title,$msg,self::$mailadmin,'text');
 return 'recovery_mailsent';}
 
-<<<<<<< HEAD
 static function create_password($psw){
 return password_hash($psw,PASSWORD_DEFAULT);}
 
@@ -47,23 +38,6 @@ if(!filter_var($mail,FILTER_VALIDATE_EMAIL))return 'register_fail_mail';
 if(sql('id','login','v',['name'=>$user]))return 'register_fail_aex';
 $psw=self::create_password($pass);
 $r=[$user,$pass,$auth,strtolower($mail),$ip];//,'0'
-=======
-<<<<<<< HEAD
-static function create_password($psw){
-return password_hash($psw,PASSWORD_DEFAULT);}
-
-static function register($user,$pass,$mail,$auth){$ip=ip();
-if(!filter_var($mail,FILTER_VALIDATE_EMAIL))return 'register_fail_mail';
-if(sql('id','login','v',['name'=>$user]))return 'register_fail_aex';
-$psw=self::create_password($pass);
-$r=[$user,$pass,$auth,strtolower($mail),$ip];//,'0'
-=======
-static function register($user,$pass,$mail,$auth){$ip=ip();
-if(!filter_var($mail,FILTER_VALIDATE_EMAIL))return 'register_fail_mail';
-if(sql('id','login','v','where name="'.$user.'"'))return 'register_fail_aex';
-$r=[$user,'PASSWORD("'.$pass.'")',$auth,strtolower($mail),$ip];//,'0'
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $uid=sql::sav(self::$db,$r);
 if($uid)self::activateSession($uid,$user,$auth);
 self::activateCookie($uid,$user);
@@ -104,19 +78,10 @@ self::activateSession($uid,$user,$auth);
 self::activateCookie($uid,$user);
 return 'loged_ok';}
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static function verif_user($usr,$psw){
 $hash=sql('password','login','v',['name'=>$usr]);
 return password_verify($psw,$hash);}
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static function login($user='',$pass=''){
 //self::install();
 $uid=ses('uid'); //if($uid)return 'loged';
@@ -133,21 +98,9 @@ if($user){
 			if(isset($ra['name']) && $ra['name']==$user)
 				$state=self::logon($ra['id'],$ra['name'],$ra['auth']);}}
 	elseif($user && $pass){
-<<<<<<< HEAD
 		$ok=self::verif_user($user,$pass);
 		$rb=sql('id,ip,auth',self::$db,'ra',['name'=>$user]);
 		if($ok && $rb){
-=======
-<<<<<<< HEAD
-		$ok=self::verif_user($user,$pass);
-		$rb=sql('id,ip,auth',self::$db,'ra',['name'=>$user]);
-		if($ok && $rb){
-=======
-		$sq=['name'=>$user,'password'=>'PASSWORD("'.$pass.'")'];
-		$rb=sql('id,ip,auth',self::$db,'ra',$sq);
-		if($rb){
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 			$state=self::logon($rb['id'],$user,$rb['auth']);
 			if($rb['ip']!=ip())self::updateIp($uid);}
 		elseif($uid)$state='bad_password';
@@ -169,19 +122,10 @@ $call='login|auth=2,o='.$o;
 if($o)return bubble($call,$bt,$c='',$o='');
 return pagup($call,$bt,$c='',$o='');}
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static function verif(){
 $psw=$p['psw']??'';
 $hash=self::create_password($psw);
 $ok=password_verify($psw,$hash)?1:0;}
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 }
 ?>

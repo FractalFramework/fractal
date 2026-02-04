@@ -41,8 +41,4 @@ $bt.=lk('/update',langp('updates'),'btn');
 return $bt.div('','',$rid);}
 }
 
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235

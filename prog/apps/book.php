@@ -7,14 +7,7 @@ static $db='book';
 static $cb='bok';
 static $cols=['tit','subt','bkg','img','pub','edt'];
 static $typs=['var','var','var','var','int','int'];
-<<<<<<< HEAD
 //static $dbdf=['tit'=>'var','subt'=>'var','bkg'=>'var','img'=>'var','pub'=>'int','edt'=>'int'];
-=======
-<<<<<<< HEAD
-//static $dbdf=['tit'=>'var','subt'=>'var','bkg'=>'var','img'=>'var','pub'=>'int','edt'=>'int'];
-=======
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static $db2='book_chap';
 static $conn=1;
 static $open=1;
@@ -33,23 +26,10 @@ $d='function format(p,o){document.execCommand(p,false,o?o:null);}';
 return ;}
 
 static function headers(){
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 root::$title=self::$title;
 //root::$descr=self::$description;
 root::$image=self::$image;
 //head::add('csscode','');
-<<<<<<< HEAD
-=======
-=======
-//head::prop('og:title',self::$title);
-//head::prop('og:description',self::$description);
-//head::prop('og:image',self::$image);
-head::add('csscode','');
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 head::add('jscode',self::js());}
 
 static function save($p){return parent::save($p);}
@@ -66,15 +46,7 @@ static function create($p){return parent::create($p);}
 
 static function reorder($p){
 $r=sql('id',self::$db2,'rv',['bid'=>$p['id']]);
-<<<<<<< HEAD
 if($r)foreach($r as $k=>$v)sql::upd(self::$db2,['idn'=>$k+1],$v);
-=======
-<<<<<<< HEAD
-if($r)foreach($r as $k=>$v)sql::upd(self::$db2,['idn'=>$k+1],$v);
-=======
-if($r)foreach($r as $k=>$v)sql::up(self::$db2,'idn',$k+1,$v);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return parent::subcall($p);}
 
 static function subops($p){$p['t']='chapter'; return parent::subops($p);}
@@ -91,17 +63,8 @@ static function subform($r){$ret=hidden('bid',$r['bid']);
 $idn=$r['idn']?$r['idn']:sql('count(id)',self::$db2,'v',['bid'=>$r['bid']]);
 $ret.=div(input('idn',$idn,4,lang('idn'),'',25,1).label('idn',lang('idn')));
 $ret.=div(input('chapter',$r['chapter'],63,lang('chapter'),'',255).label('chapter',lang('chapter')));
-<<<<<<< HEAD
 //$j='txt[book,sav|id='.$id.'|txt';
 $ret.=divarea('txt',conn::mincom($r['txt'],1),'article booktxt',1);//,['onblur'=>ajx($j)]
-=======
-<<<<<<< HEAD
-//$j='txt[book,sav|id='.$id.'|txt';
-$ret.=divarea('txt',conn::mincom($r['txt'],1),'article booktxt',1);//,['onblur'=>ajx($j)]
-=======
-$ret.=divarea('txt',conn::mincom($r['txt'],1),'article booktxt',1);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $ret;}
 
 //edit
@@ -116,15 +79,7 @@ $ret.=tag('h1','',$r['tit']);
 $ret.=tag('h3','',$r['subt']);
 if($rb)foreach($rb as $k=>$v){
 	$ret.=tag('h2','',$v['chapter']);//maths::roman($v['idn']).' - '.
-<<<<<<< HEAD
 	$ret.=conn::call(['msg'=>$v['txt'],'ptag'=>1,'opt'=>'html']);}
-=======
-<<<<<<< HEAD
-	$ret.=conn::call(['msg'=>$v['txt'],'ptag'=>1,'opt'=>'html']);}
-=======
-	$ret.=conn::com($v['txt'],1);}
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $ret.='</body>';
 mkdir_r($f); write_file($f,$ret);
 return lk('/'.$f,langp('download'),'btn');}
@@ -145,15 +100,7 @@ case('epub'):$f='usr/'.$r['name'].'/'.$fa.'.epub';
 case('art'):$rt='';
 	foreach($rb as $k=>$v)$rt.='['.$v['chapter'].':h1]'.n().n().$v['txt'].n().n();
 	$ex=sql('id','arts','v',['tit'=>$r['tit']]);
-<<<<<<< HEAD
 	if($ex)sql::upd('arts',['txt'=>$rt],$ex);
-=======
-<<<<<<< HEAD
-	if($ex)sql::upd('arts',['txt'=>$rt],$ex);
-=======
-	if($ex)sql::up('arts','txt',$rt,$ex);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	else $ex=sql::sav('arts',['uid'=>ses('uid'),'tit'=>$r['tit'],'txt'=>$rt,'pub'=>0,'edt'=>0]);
 	$ret=popup('art,edit|opn=1,id='.$ex,pic('art'),'btn'); break;
 	if($aid)$tx=sql('txt','arts','v',$aid);
@@ -170,15 +117,7 @@ case('art'):$rt='';
 	if($rf)foreach($rf as $k=>$v){$i=$k+1;//save chapters
 		$ex=sql('id',self::$db2,'v',['bid'=>$id,'idn'=>$i]);
 		$rd=['bid'=>$id,'idn'=>$i,'chapter'=>$v[0],'txt'=>$v[1]]; //pr($rd);
-<<<<<<< HEAD
 		if($ex)sql::upd(self::$db2,$rd,$ex); else $ex=sql::sav(self::$db2,$rd);}
-=======
-<<<<<<< HEAD
-		if($ex)sql::upd(self::$db2,$rd,$ex); else $ex=sql::sav(self::$db2,$rd);}
-=======
-		if($ex)sql::up2(self::$db2,$rd,$ex); else $ex=sql::sav(self::$db2,$rd);}
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	$ret=bj(self::$cb.($id).'|book,edit|opn=1,id='.$ex,langp('see'),'btn'); break;
 case('impnte'):$aid=$p['aid']??''; break;}
 return $ret;}
@@ -249,27 +188,11 @@ $rb=sql('idn,chapter,txt',self::$db2,'ra',$idb);
 $ret=div(lku('book/'.$id,pic('top').' '.$r['tit']),'btit booknfo');
 $nav=self::nav($p,$rb);
 $ret.=div($nav,'booknfo');
-<<<<<<< HEAD
 $ret.=tag('h1','',$rb['chapter']);//maths::roman($rb['idn']).' - '.
 $txt=conn::com($rb['txt'],1);
 //$ret.=div($txt,'booktxt','edt'.$id.'-'.$idb).' ';
 $ret.=tag('div',['contenteditable'=>'off','class'=>'booktxt','id'=>'edt'.$id.'-'.$idb],$txt);
 //$ret.=div($nav,'booknfo');
-=======
-<<<<<<< HEAD
-$ret.=tag('h1','',$rb['chapter']);//maths::roman($rb['idn']).' - '.
-$txt=conn::com($rb['txt'],1);
-//$ret.=div($txt,'booktxt','edt'.$id.'-'.$idb).' ';
-$ret.=tag('div',['contenteditable'=>'off','class'=>'booktxt','id'=>'edt'.$id.'-'.$idb],$txt);
-//$ret.=div($nav,'booknfo');
-=======
-$ret.=tag('h2','',$rb['chapter']);//maths::roman($rb['idn']).' - '.
-$txt=conn::com($rb['txt'],1);
-$ret.=div($txt,'booktxt','edt'.$id.'-'.$idb).' ';
-//$ret.=tag('div',['contenteditable'=>'off','class'=>'booktxt','id'=>'edt'.$id.'-'.$idb],$txt);
-$ret.=div($nav,'booknfo');
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return div($ret,'');}
 
 static function play($p){$id=$p['id']??''; $idb=$p['idb']??''; $idn=$p['p2']??'';
@@ -280,18 +203,8 @@ return $ret;}
 
 static function cover($id,$r=[]){$s='';
 if(!isset($r['subt']))$r=sql::inner('name,tit,subt,bkg',self::$db,'login','uid','ra',$id);
-<<<<<<< HEAD
 $ret=tag('h1',[],$r['tit']);
 if($tb=$r['subt'])$ret.=tag('h3',[],$tb);
-=======
-<<<<<<< HEAD
-$ret=tag('h1',[],$r['tit']);
-if($tb=$r['subt'])$ret.=tag('h3',[],$tb);
-=======
-$ret=tag('h1','',$r['tit']);
-if($tb=$r['subt'])$ret.=tag('h3','',$tb);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 //if($nm=$r['name'])$ret.=tag('h3','',$nm);
 if($tb=$r['bkg'])$s=theme($r['bkg']);
 return div($ret,'bookcov','',$s);}
@@ -299,18 +212,8 @@ return div($ret,'bookcov','',$s);}
 static function preview($p){
 $r=sql('all',self::$db2,'ra',$p['idb']);
 $txt=$r['txt']; if(self::$conn==1)$txt=conn::com($txt);
-<<<<<<< HEAD
 if($p['epub']??'')$rt=conn::call(['msg'=>$r['txt'],'mth'=>'minconn','ptag'=>1,'opt'=>'epub']); 
 else $rt=conn::call(['msg'=>$r['txt'],'mth'=>'reader','ptag'=>1,'opt'=>'']);
-=======
-<<<<<<< HEAD
-if($p['epub']??'')$rt=conn::call(['msg'=>$r['txt'],'mth'=>'minconn','ptag'=>1,'opt'=>'epub']); 
-else $rt=conn::call(['msg'=>$r['txt'],'mth'=>'reader','ptag'=>1,'opt'=>'']);
-=======
-if($p['epub']??'')$rt=conn::call(['msg'=>$r['txt'],'mth'=>'minconn','ptag'=>1,'opt'=>'epub']); else//
-$rt=conn::call(['msg'=>$r['txt'],'mth'=>'reader','ptag'=>1,'opt'=>'']);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $ret=textarea('',$rt);
 return div($rt,'txt').$ret;}
 

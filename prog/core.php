@@ -7,7 +7,6 @@ static function help($p){[$ref,$c,$cn,$b]=vals($p,['ref','css','conn','brut']); 
 static function val($p){return $p['p1']??'';}
 static function send($p){return $p[$p['v']]??'';}
 //static function com($p){return com($p['app'],$p['id']);}
-//static function com($p){return com($p['app'],$p['id']);}
 static function app($p){return app($p['app']??'',$p['p']??'');}
 static function mkbcp($p){return sql::backup($p['b'],$p['o']??'');}
 static function rsbcp($p){return sql::rollback($p['b']);}
@@ -104,7 +103,6 @@ if(!$no && $r && $d && !array_key_exists($d,$r) && !is_numeric($d)){//strpos($d,
 	if($d && $d!='/' && strpos($d,'"')===false)sql::savif('lang',$rp,0);
 	$r=sesf('lang_com',$lang,1);}
 $ret=!empty($r[$d])?$r[$d]:$d;
-if(!$o)$ret=str::ucfirst_b($ret);
 if(!$o)$ret=str::ucfirst_b($ret);
 return $ret;}
 
@@ -549,8 +547,4 @@ head::add('jscode','ajx("popup|core,txt|txt='.$d.'");');}
 
 function er($d){ses::$er[]=$d;}
 
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235

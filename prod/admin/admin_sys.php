@@ -25,30 +25,14 @@ $ra=sql::pvalk($p,self::$db);
 if($id){
 	$txt=sql('txt',self::$db,'v',$id);
 	if($txt && !$p['txt'])$p['txt']=$txt;
-<<<<<<< HEAD
 	sql::upd(self::$db,$ra,$id,0,1);}//??
-=======
-<<<<<<< HEAD
-	sql::upd(self::$db,$ra,$id,0,1);}//??
-=======
-	sql::up2(self::$db,$ra,$id,0,1);}
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 else $id=sql::sav(self::$db,$ra,0,0,1);
 if(isset(self::$maj[$id]))unset(self::$maj[$id]);
 return $id;}
 
 static function update($p){
 $id=$p['id']??''; $txt=val($p,'tx'.$id); $rid=$p['rid']??'';
-<<<<<<< HEAD
 sql::upd(self::$db,['txt'=>trim($txt)],$id);
-=======
-<<<<<<< HEAD
-sql::upd(self::$db,['txt'=>trim($txt)],$id);
-=======
-sql::up(self::$db,'txt',trim($txt),$id);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::modif($id,$txt,$rid,$p['app']??'');}
 
 static function modif($id,$txt,$rid,$app=''){

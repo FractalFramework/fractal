@@ -46,10 +46,8 @@ $r=sql('all',self::$db,'rr',$id);
 return $r;}
 
 /*static function lastagpos($v,$ab,$ba){$d=str::substrpos($v,$ab,$ba);
-/*static function lastagpos($v,$ab,$ba){$d=str::substrpos($v,$ab,$ba);
 $nb_aa=substr_count($d,'<'); $nb_bb=substr_count($d,'>'); $nb=$nb_aa-$nb_bb;
 if($nb>0){for($i=0;$i<$nb;$i++)$ba=strpos($v,'}',$ba+1); $ba=lastagpos($v,$ab,$ba);}
-return $ba;}*/
 return $ba;}*/
 
 #read
@@ -62,7 +60,6 @@ $f='usr/dav/WaletHumm3.html';
 //echo array_sum(count_chars($d));
 $d=file_get_contents($f,NULL,NULL,$start,self::$sz);
 //$d=file_get_contents($f);
-//$d=str::goodend($d,$start,self::$sz);
 //$d=str::goodend($d,$start,self::$sz);
 //$d=conv::call(['txt'=>$d]);
 //$d=strip_tags($d);

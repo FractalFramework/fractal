@@ -546,17 +546,10 @@ var rgx=new RegExp(/([^A-Za-z0-9\-])/);
 if(rgx.test(val))for(var i=0;i<arr.length;i++)val=strreplace(ra[i],rb[i],val);
 return val;}
 
-<<<<<<< HEAD
 //function nsf(){return false;} function nst(){return true;} 
 function noslct(a){
 if(window.sidebar){if(a)document.onmousedown=true; else document.onmousedown=false;}}
 //document.onselectstart=new Function("return false");
-=======
-function nsf(){return false;} function nst(){return true;} 
-function noslct(a){
-if(window.sidebar){if(a)document.onmousedown=nst; else document.onmousedown=nsf;}}
-//document.onselectstart = new Function("return false");
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 function zindex(id){popz++; curid=id; var bub=getbyid(id);
 if(bub!=null)bub.style.zIndex=popz;}

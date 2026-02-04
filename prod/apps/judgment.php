@@ -53,15 +53,7 @@ static function create($p){return parent::create($p);}
 static function savcsv($p){
 $id=$p['id']??''; $d=$p['datas']??''; $b=self::$db2;
 $r=explode_r($d,"\n",','); $com=array_shift($r);
-<<<<<<< HEAD
 if(auth(6))sql::upd(self::$db,['com'=>implode('|',$com)],$id);
-=======
-<<<<<<< HEAD
-if(auth(6))sql::upd(self::$db,['com'=>implode('|',$com)],$id);
-=======
-if(auth(6))sql::up(self::$db,'com',implode('|',$com),$id);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $cl=array_keys(sql::cols($b,3,0)); if(auth(6))sql::del($b,$id,'bid');
 if(auth(6))foreach($r as $k=>$v){array_unshift($v,$id,ses('uid'));sql::sav($b,$v);}
 return self::collect($p);}
@@ -79,15 +71,7 @@ return $ret;}
 static function paqsav($p){
 $id=$p['id']??''; $d=$p['datas']??''; $b=self::$db2;
 $d=str::clean_separator($d,';',"\n"); $r=explode_r($d,';',','); $com=array_shift($r);
-<<<<<<< HEAD
 if(auth(6))sql::upd(self::$db,['com'=>implode('|',$com)],$id);
-=======
-<<<<<<< HEAD
-if(auth(6))sql::upd(self::$db,['com'=>implode('|',$com)],$id);
-=======
-if(auth(6))sql::up(self::$db,'com',implode('|',$com),$id);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(auth(6))sql::del($b,$id,'bid');
 $rb=referendum::onpaq($r); $rc=[];
 foreach($rb as $k=>$v)foreach($v as $ka=>$va)$rc[]=[$id,$ka+1,$k,$va];
@@ -105,15 +89,7 @@ return $ret;}
 
 #note
 static function votants($p){$id=$p['id']; $rt=[];
-<<<<<<< HEAD
 $r=sql::inner('distinct(uid),name',self::$db2,'login','uid','kv',['bid'=>$id]);
-=======
-<<<<<<< HEAD
-$r=sql::inner('distinct(uid),name',self::$db2,'login','uid','kv',['bid'=>$id]);
-=======
-$r=sql::inner('distinct(uid),name',self::$db2,'login','uid','kv','where bid="'.$id.'"');
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if($r)foreach($r as $k=>$v)$rt[]=profile::call(['usr'=>$v,'sz'=>'small']);
 return div(implode('',$rt));}
 
@@ -121,15 +97,7 @@ static function note($p){$id=$p['id'];
 $w=['bid'=>$id,'uid'=>ses('uid'),'choice'=>$p['choice']];
 $idnote=sql('id',self::$db2,'v',$w,0);
 if(!$idnote)$p['idnote']=sql::sav(self::$db2,[$id,ses('uid'),$p['choice'],$p['val']]);
-<<<<<<< HEAD
 else sql::upd(self::$db2,['val'=>$p['val']],$idnote);
-=======
-<<<<<<< HEAD
-else sql::upd(self::$db2,['val'=>$p['val']],$idnote);
-=======
-else sql::up(self::$db2,'val',$p['val'],$idnote);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::build($p);}
 
 #lib
@@ -380,15 +348,7 @@ for($i=1;$i<5;$i++)$ret.=bj($j.',ex='.$i.'|codb','m'.$i,$i==$a?'bton':'btno');
 $ret.=' '.lang('winner').': '.tag('b','',$win).' ';
 $ret.=lang('mention').': '.tag('b','',self::$rm[$ka]??'0').'; '.$status.' ';
 if($ra)$ret.=lang('among').' '.tag('b','',count(array_shift($ra))).' '.lang('voters',1).' ';
-<<<<<<< HEAD
 $ret.=rplay(self::$rf['process']??[]);
-=======
-<<<<<<< HEAD
-$ret.=rplay(self::$rf['process']??[]);
-=======
-$ret.=trace(self::$rf['process']??[]);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return div($ret,'valid');}
 
 static function results($rb,$rc,$a,$rid,$id=''){//pr($rb);

@@ -10,11 +10,7 @@ function __construct(){if(!self::$qr)self::dbq();}
 
 static function dbq(){[$h,$n,$p,$b]=sql::r(); self::$db=$b;
 $dsn='mysql:host='.$h.';dbname='.$b.';charset=utf8mb4';
-<<<<<<< HEAD
 $ro=[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_PERSISTENT=>true,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_NUM];//Pdo\Mysql::
-=======
-$ro=[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_PERSISTENT=>true,PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];//Pdo\Mysql::
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 self::$qr=new PDO($dsn,$n,$p,$ro);}
 
 #render
@@ -28,7 +24,6 @@ try{return $qr->query($sql);}catch(Exception $e){self::$er=$e->getMessage();}}
 
 static function format($r,$p){
 $rt=[];  if($p=='v')$rt='';
-<<<<<<< HEAD
 if($p=='rq')return $r;
 if($p=='ry' or $p=='ra' or $p=='rw')return array_first($r);
 if($p=='phy' or $p=='rid')$p='krr';
@@ -44,34 +39,14 @@ foreach($r as $k=>$v)switch($p){
 	case('kr'):$rt[$v[0]][]=$v[1]; break;
 	case('kkv'):$rt[$v[0]][$v[1]]=$v[2]; break;
 	case('kkk'):$rt[$v[0]][$v[1]][$v[2]]=1; break;
-=======
-foreach($r as $k=>$v)switch($p){
-	case('a'):$rt=$v; break;//assoc
-	case('w'):$rt=$v; break;//num
-	case('r'):$rt=$v; break;//both
-	case('v'):$rt=$v[0]; break;
-	case('k'):$rt[$v[0]]=($rt[$v[0]]??0)+1; break;
-	case('ar'):$rt[]=$v; break;
-	case('rr'):$rt[]=$v; break;
-	case('rv'):$rt[]=$v[0]; break;//r
-	case('kv'):$rt[$v[0]]=$v[1]??''; break;
-	case('kk'):$rt[$v[0]][$v[1]]=($rt[$v[0]][$v[1]]??0)+1; break;
-	case('vv'):$rt[]=[$v[0],$v[1]]; break;
-	case('kr'):$rt[$v[0]][]=$v[1]; break;
-	case('kkv'):$rt[$v[0]][$v[1]]=$v[2]; break;
-	case('kkk'):$rt[$v[0]][$v[1]][$v[2]]+=1; break;
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	case('kkkv'):$rt[$v[0]][$v[1]][$v[2]]=$v[3]; break;
 	case('kvv'):$rt[$v[0]]=[$v[1],$v[2]]; break;
 	case('kkr'):$rt[$v[0]][$v[1]][]=$v[2]; break;
 	case('krr'):$rt[$v[0]][]=$v; break;
 	case('kx'):$rt[$v[0]]=explode('/',$v[1]); break;
 	case('ks'):$rt[$v[0]]=explode(' ',$v[1]); break;
-<<<<<<< HEAD
 	case('kad'):if(isset($rt[$v[0]]))$rt[$v[0]]+=1; else $rt[$v[0]]=1; break;
 	case('id'):$k=array_shift($v); $rt[$k]=$v; break;
-=======
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	case('index'):$rt[$v[0]]=$v; break;
 	default:$rt[]=$v; break;}
 return $rt;}
@@ -154,31 +129,18 @@ return $rt;}
 static function bind($stmt,$r){
 foreach($r as $k=>$v)$stmt->bindValue(':'.$k,$v,is_numeric($v)?PDO::PARAM_INT:PDO::PARAM_STR);}
 
-<<<<<<< HEAD
 static function prep($sql,$r,$p,$z=''){
-=======
-static function prep($sql,$r,$z=''){
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $qr=self::rq(); if($z)echo self::see($sql,$r);
 //try{}catch(Exception $e){er($e->getMessage());}
 $stmt=$qr->prepare($sql);
 self::bind($stmt,$r);
 $stmt->execute();
-<<<<<<< HEAD
 //$stmt->closeCursor();
 return self::fetch($stmt,$p);}
 
 static function query($sql,$r,$p,$z=''){
 $rq=self::prep($sql,$r,$p,$z);
 if($rq)$rt=sqb::format($rq,$p); else $rt=$p=='v'?'':[];
-=======
-$stmt->closeCursor();
-return $stmt;}
-
-static function query($sql,$r,$p,$z=''){
-$stmt=self::prep($sql,$r,$z); $rt=self::fetch($stmt,$p);
-if($p)$rt=self::format($rt,$p); else $rt=$p=='v'?'':[];
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $rt;}
 
 static function see($sql,$r){
@@ -247,21 +209,13 @@ return [$r,$sql,$cols];}
 static function sav($b,$q,$z='',$o='',$vd=''){
 [$r,$q,$c]=self::insertions($q,$vd?$b:'',$o);
 $sql='insert into '.$b.' ('.$c.') values ('.$q.')';
-<<<<<<< HEAD
 $stmt=self::prep($sql,$r,$p,$z);
-=======
-$stmt=self::prep($sql,$r,$z);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::nid();}
 
 static function savup($b,$q,$z='',$o='',$vd=''){
 [$r,$q,$c]=self::insertions($q,$vd?$b:'',$o);
 $sql='insert ignore into '.$b.' ('.$c.') values ('.$q.')';
-<<<<<<< HEAD
 $stmt=self::prep($sql,$r,$p,$z);
-=======
-$stmt=self::prep($sql,$r,$z);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::nid();}
 
 static function savif($b,$r,$z=''){$ex=self::read('id',$b,'v',$r,$z);
@@ -273,11 +227,7 @@ foreach($q as $k=>$v){$rb=[];
 	foreach($v as $ka=>$va){$rb[]=':'.$ka.$k; $rt[$ka.$k]=$va;}
 	$sq[]='('.join(',',$rb).')';}
 $sql='insert into '.$b.' ('.join(',',$ra).') value '.join(',',$sq).' on duplicate key update id=id';
-<<<<<<< HEAD
 self::prep($sql,$rt,$p,$z);
-=======
-self::prep($sql,$rt,$z);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::nid();}
 
 //[[1,'hello'],[2,hey]]//usused
@@ -297,21 +247,13 @@ return self::nid();}
 static function upd($b,$r,$q,$z=''){$rt=[];
 $vals=self::mkvk($r); [$ra,$sql]=self::where($q);
 $sql='update '.$b.' set '.$vals.' '.$sql;
-<<<<<<< HEAD
 $stmt=self::prep($sql,$r+$ra,$p,$z);
-=======
-$stmt=self::prep($sql,$r+$ra,$z);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $stmt?1:0;}
 
 static function del($b,$q,$z=''){
 [$ra,$sql]=self::where($q);
 $sql='delete from '.$b.' '.$sql.' limit 1';
-<<<<<<< HEAD
 $stmt=self::prep($sql,$ra,$p,$z);
-=======
-$stmt=self::prep($sql,$ra,$z);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $stmt?1:0;}
 
 #usage

@@ -33,7 +33,6 @@ static function importnode($dom,$rec,$v,$tg){
 if($tg=='img' or $tg=='meta')$tag='div'; else $tag=$tg;
 $dest=$rec->appendChild($rec->createElement($tag));
 if($tg=='img')$dest->nodeValue=($v->getAttribute('src'));//urlroot
-if($tg=='img')$dest->nodeValue=($v->getAttribute('src'));//urlroot
 elseif($tg=='meta')$dest->nodeValue=$v->getAttribute('content');
 elseif($v->childNodes)foreach($v->childNodes as $k=>$el)$dest->appendChild($rec->importNode($el,true));
 return $rec;}

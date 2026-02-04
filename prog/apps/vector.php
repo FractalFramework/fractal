@@ -39,7 +39,6 @@ return $ret;}
 static function el($k,$v,$rid){//called bu build::iterbt
 return insert('['.implode(',',$v).':'.$k.']',$rid);}
 
-<<<<<<< HEAD
 static function r(){
 return ['attr','stroke','shapes'=>['rect','circle','ellipse','line','polyline','polygon','path','arc'],'btn'=>['group','text','tspan','a','bj','js'],'defs'=>['filter'=>['feBlend','feOffset','feGaussianBlur','feColorMatrix'],'animate'],'linearGradient'=>['linearGradient','stop'],'specials'=>['dim','grid','setvar','var','g','gp','verbose'],'examples'=>array_keys(svg::ex())];}
 
@@ -53,10 +52,6 @@ elseif(!$ret)$ret='[:'.$bt.']';
 return [$cb=>$p['codea'].n().$ret];}
 
 static function menu($p){$r=svg::motor(); $ra=self::r();
-=======
-static function menu($p){$r=svg::motor();
-$ra=['attr','stroke','shapes'=>['rect','circle','ellipse','line','polyline','polygon','path','arc'],'btn'=>['group','text','tspan','a','bj','js'],'defs'=>['filter'=>['feBlend','feOffset','feGaussianBlur','feColorMatrix'],'animate'],'linearGradient'=>['linearGradient','stop'],'specials'=>['dim','grid','setvar','var','g','gp','verbose']];
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return build::iterbt($p,$ra,$r,'functions','vector');}
 
 static function svgbt($rid,$id){$ret=''; $r=svg::motor(); $t='vector'.$id; //sql('tit',self::$db,'v',$id);

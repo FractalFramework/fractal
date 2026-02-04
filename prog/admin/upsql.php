@@ -9,11 +9,7 @@ static function js(){return;}
 #client
 static function installdb($a,$r){
 if(isset($r) && is_array($r)){
-<<<<<<< HEAD
-	sql::trunc($a);
-=======
 	//sql::trunc($a);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	sql::sav2($a,$r,5,1,0,1);
 	if($a=='lang')ses('lang',lang_com(ses('lng')));
 	if($a=='icons')ses('icon',icon_com());
@@ -117,8 +113,4 @@ $bt=hlpbt('upsql');
 $bt.=self::menu($p);
 return $bt.div('','',$p['rid']);}
 }
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235

@@ -90,7 +90,6 @@ return span($ret,'nfo'.$c).' ';}
 #save
 static function build_conn($d,$o=''){$ret=[];
 $d=str::clean_n($d);
-$d=str::clean_n($d);
 $d=str_replace("\n",' (nl) ',$d);
 $r=explode(' ',$d);
 foreach($r as $v){
@@ -511,4 +510,3 @@ static function content($p){
 return home::call($p+['op'=>'posts']);}
 }
 ?>
-

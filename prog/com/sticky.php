@@ -70,15 +70,7 @@ return self::stream_notes($p);}
 static function modif_note($p){
 $a=self::$a; $db=self::$db2; $cb=self::$cb; $cols=sql::cols($db,3);
 $id=$p['id']; $txt=$p['pad'.$id];
-<<<<<<< HEAD
 sql::upd(self::$db2,['txt'=>$txt],$id);
-=======
-<<<<<<< HEAD
-sql::upd(self::$db2,['txt'=>$txt],$id);
-=======
-sql::up(self::$db2,'txt',$txt,$id);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return;}
 
 static function edit_note($p){$id=$p['id']??'';

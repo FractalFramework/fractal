@@ -69,7 +69,7 @@ case('img'):$u=between($atb,'src="','"'); $alt=between($atb,'alt="','"'); $b64='
 	//if($w && $h)$u.='|'.$w.'-'.$h;
 	return '['.$u.''.($alt?'|'.$alt:'').']'; break;//:img
 case('table'):
-	if(mb_substr($d,-1,1)=='ï¿½')$d=mb_substr($d,0,-1);
+	if(mb_substr($d,-1,1)=='¬')$d=mb_substr($d,0,-1);
 	if(post('th')){$o='|1'; self::$th='';} else $o='';
 	return '['.$d.$o.':table]';break;//.$o
 case('big'):return '['.$d.':big]'; break;
@@ -160,11 +160,7 @@ elseif($ab!==false)$bb=$ab;
 else{$bb=-1;}
 $after=mb_substr($v,$bb+1);//>...
 $tag=strtolower($tag);
-<<<<<<< HEAD
 //itération
-=======
-//itï¿½ration
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(mb_strpos($txt,'<')!==false)$txt=self::parse($txt,$x);
 if(!$x)//interdit l'imbrication
 	$txt=self::tags($tag,$atb,$txt);
@@ -203,7 +199,6 @@ return join('',$rt);}
 static function call($p){
 $d=$p['txt']??''; //eco($d);
 //$d=unicode($d);
-<<<<<<< HEAD
 //if(!$p['brut']??'')$d=str::deln($d);
 $d=str::delt($d);
 $d=str::delnbsp($d);
@@ -214,32 +209,13 @@ if(strpos($d,'<br>')!==false && strpos($d,"\n")!==false)$d=str::deln($d);
 if(strpos($d,'<br>')!==false && strpos($d,"\n")===false)$d=str::delbr($d,"\n");
 //$d=str::delp($d);
 $d=str::clean_lines($d);
-=======
-//if(!$p['brut']??'')$d=deln($d);
-$d=delt($d);
-$d=delsp($d);
-$d=delr($d);
-$d=deln($d,' ');
-//$d=clean_mail($d);
-if(strpos($d,'<br>')!==false && strpos($d,"\n")!==false)$d=deln($d);
-if(strpos($d,'<br>')!==false && strpos($d,"\n")===false)$d=delbr($d,"\n");
-//$d=delp($d);
-$d=clean_lines($d);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $d=self::cleanhtml($d);
 $d=self::parse($d);
 //$d=self::parsedom(dom($d));
 $d=self::cleanconn($d);
-<<<<<<< HEAD
 $d=str::delbr($d,"\n");
 $d=str::clean_n($d);
 $d=str::repair_punct($d);
-=======
-$d=delbr($d,"\n");
-$d=clean_n($d);
-$d=cleansp($d);
-$d=nbsp($d);
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 //eco($d);
 return $d;}
 

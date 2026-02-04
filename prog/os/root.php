@@ -19,11 +19,7 @@ static function headers(){
 static function demo($p){
 $ty=valb($p,'ty','public'); $r=applist::build($ty); $ret=help('apps_'.$ty);
 //$ra=sql('com,auth','desktop','kv','where dir like "/apps/'.$ty.'%"');
-<<<<<<< HEAD
 foreach($r as $k=>$v){$bt=pic($k).span(helpx($k)); $ath=false; $c=''; //?
-=======
-foreach($r as $k=>$v){$bt=pic($k).span(helpx($k)); $ath=false; $c='';
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	if(class_exists($k)){$ath=$k::$private??false;
 		if(method_exists($k,'com') && isset($k::$db))$call=$k.',com'; else $call=$k;}
 	if($ath===0)$ret.=popup($call,div($bt)); else $ret.=div($bt,'opac');}
@@ -34,11 +30,7 @@ return sql('role','profile','v',['pusr'=>$usr]);}
 
 static function template(){
 return [
-<<<<<<< HEAD
 ['div'=>['class'=>'container','id'=>'main'],[
-=======
-['div'=>['class'=>'container'],[
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	['div'=>[],[
 		['div'=>['class'=>'lisb','id'=>'nav1'],'{nav1}'],
 		['div'=>['class'=>'lisb','id'=>'nav2'],'{nav2}'],
@@ -52,13 +44,8 @@ $nav1=div($nav1,'lisb','nav1');
 $nav2=div($nav2,'lisb','nav2');
 $nav3=div($nav3,'','nav3');
 $ret=div($nav1.$nav2.$nav3);
-<<<<<<< HEAD
 $ret.=div($cnt,'',self::$cb);//cbck
 return div($ret,'container','main').hidden('prmtm',$pm);}
-=======
-$ret.=div($cnt,'',self::$cb);
-return div($ret,'container').hidden('prmtm',$pm);}
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function call($p){//pr($p);
 [$op,$index,$app]=vals($p,['opn','index','app']);

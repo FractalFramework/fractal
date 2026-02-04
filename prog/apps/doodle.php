@@ -72,15 +72,7 @@ return $ret;}
 static function check($p){$bid=$p['id']??''; $day=$p['day']??'';
 $id=sql('id',self::$db2,'v',['bid'=>$bid,'uid'=>ses('uid'),'day'=>$day]);
 if(!$id)sql::sav(self::$db2,[$bid,ses('uid'),$day,1]);
-<<<<<<< HEAD
 else sql::upd(self::$db2,['ok'=>$p['go']??''],$id);
-=======
-<<<<<<< HEAD
-else sql::upd(self::$db2,['ok'=>$p['go']??''],$id);
-=======
-else sql::up(self::$db2,'ok',$p['go']??'',$id);
->>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return self::play($p);}
 
 #build

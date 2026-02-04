@@ -35,7 +35,6 @@ static function api_philum($u){
 $dom=domain($u); $id=strend($u,'/');
 $f='http://'.$dom.'/apicom/id:'.$id.',json:1';//,conn:1 //conn not works with json
 $d=get_file($f); //eco($d);
-$d=get_file($f); //eco($d);
 $r=json_decode($d,true); //echo upsql::error();
 if(isset($r[$id]))$r=$r[$id]; //pr($r);
 //if($r)foreach($r as $k=>$v)if(is_string($v))$r[$k]=html_entity_decode($v);
@@ -62,9 +61,6 @@ $img=$r['image']??'';//lead_image_url
 $txt=$r['content']??'';
 /*$enc=self::utf8($u);
 if($enc=='utf-8'){
-	$tit=str::utfdec($tit);
-	$img=str::utfdec($img);
-	$txt=str::utfdec($txt);}*/
 	$tit=str::utfdec($tit);
 	$img=str::utfdec($img);
 	$txt=str::utfdec($txt);}*/

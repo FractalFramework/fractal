@@ -16,17 +16,10 @@ head::add('csslink','/css/pictos.css');
 head::add('csslink','/css/fa.css');
 head::add('jslink','/js/ajax.js'.$nc);
 head::add('jslink','/js/core.js'.$nc);
-<<<<<<< HEAD
 head::add('jscode','var index="'.($index=='home'?'root':$index).'";');
 //head::add('jslink','/js/bab.js');
 head::name('generator','Fractal');
 head::name('version','26');
-=======
-head::add('jscode','var index="'.$index.'";');
-//head::add('jslink','/js/bab.js');
-head::name('generator','Fractal');
-head::name('version','23');
->>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 #usr
 $own=ses('usr'); $usr=$p['usr']??'';
 ses('cusr',$own); ses('cuid',ses('uid'));
