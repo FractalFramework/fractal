@@ -34,6 +34,8 @@ if(!$r or $x){$ra=$r;// or !$r[0]
 	if(strpos($d,'newsnet.fr')!==false)$r=vacuum::com(http($d),1);
 	else $r=self::metas($d); //eco($d);
 	if(!$r[0])$r=self::kit($d)??$r; //pr($r);
+	else $r=self::metas($d); //eco($d);
+	if(!$r[0])$r=self::kit($d)??$r; //pr($r);
 	//if(!$r[0])$r=self::headers($d);
 	if($r[1])$r[1]=str_replace(['“','”'],'',$r[1]);//html_entity_decode
 	if($r[2])$r[2]=saveimg($r[2],'web','590','400');

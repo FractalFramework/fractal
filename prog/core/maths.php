@@ -51,9 +51,15 @@ static function ratan2($x,$y){return rad2deg(atan2($x,$y))+(($x<0)?180:0);}//com
 static function nm2thz($d){return self::lightspeed()/($d*pow(10,3));}//usable reciprocally
 static function cm2hz($d){return self::soundspeed()/($d*pow(10,-2));}//w=c/f
 static function parsec(){return 648000/M_PI;}
+<<<<<<< HEAD
 static function lightspeed(){return 299792458;}//m/s
 static function soundspeed($d=1){return bcmul($d,345,2);}//m/s
 static function sunsz($d){return bcmul($d,1392000,2);}//sun size
+=======
+static function soundspeed(){return 345;}//m/s
+static function lightspeed(){return 299792458;}//m/s
+static function sunsz($d,$o=1){return bcmul($d,1392000,2);}//sun size
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static function al2km($d){return bcmul($d,9460730472580,8);}
 static function km2al($d){return bcdiv($d,9460730472580,8);}
 static function au2km($d){return bcmul($d,149597900,8);}
@@ -224,7 +230,11 @@ return implode(' ',$rt);}
 static function which($d,$rb){
 foreach($rb as $k=>$v)if(strpos($d,$v))return (int)trim(str_replace($v,'',$d)); return 0;}
 
+<<<<<<< HEAD
 static function time2sec($d){$yr=$mt=$dy=$hr=$min=$sec=0; if(!$d)return;
+=======
+static function time2sec($d){$yr=$mt=$dy=$hr=$mn=$sc=0; if(!$d or !is_numeric($d))return;
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $r=explode(' ',$d); $r=array_pad($r,-6,'0'); $rb=['yr','mt','dy','hr','min','sec'];
 foreach($r as $k=>$v)$rc[$k]=self::which($v,$rb); 
 foreach($rc as $k=>$v)if($v){$u=$rb[$k]; $$u=$v;}
@@ -250,7 +260,11 @@ if($sc && $o)$rt[]=[$sc,'second'];
 foreach($rt as $k=>$v)$rd[]=$v[0].' '.$v[1].($v[0]>1?'s':'');
 return implode(', ',$rd);}
 
+<<<<<<< HEAD
 static function compute_time($d,$o=0){//maths::sec2time
+=======
+static function goodtime($d,$o=0){//maths::sec2time
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if($d>86400*365.2422)$ret=bcdiv($d,86400*365,2422).' years';
 elseif($d>86400)$ret=bcdiv($d,86400,12).' days';
 elseif($d>3600)$ret=round($d/3600,8).' hours ';
@@ -470,7 +484,11 @@ $ratio=bcdiv(9460730472580,$distance,9);
 $time=bcmul($distorsion,$ratio,11);
 $time_edges=bcmul($distorsion_egdes,$ratio,10);
 $t=bcmul($d,$time,12); $e=bcmul($d,$time_edges,12);
+<<<<<<< HEAD
 return $o?$d=self::compute_time($t).' +/- '.self::compute_time($e):[$t,$e];}
+=======
+return $o?$d=self::goodtime($t).' +/- '.self::goodtime($e):[$t,$e];}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function call($p){bcscale(self::$bsc); $ret='';
 $fc=$p['fc']; $in1=$p['in1']; $in2=$p['in2']; $in3=$p['in3'];

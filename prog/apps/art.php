@@ -8,7 +8,15 @@ static $cols=['tit','txt','pub','edt'];
 static $typs=['var','long','int','int'];
 static $open=2;
 static $conn=1;
+<<<<<<< HEAD
 static $title='art';
+=======
+<<<<<<< HEAD
+static $title='art';
+=======
+static $title='/art';
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static $descr='Articles';
 static $tags=1;
 static $image;
@@ -20,6 +28,7 @@ static function admin($p){$p['o']='1';
 return parent::admin($p);}
 
 static function js(){return '';}
+<<<<<<< HEAD
 static function css(){return '';}
 
 static function headers(){
@@ -27,6 +36,24 @@ static function headers(){
 root::$title=self::$title;
 root::$descr=self::$descr;
 root::$image=self::$image;}
+=======
+<<<<<<< HEAD
+static function css(){return '';}
+
+static function headers(){
+//head::add('csscode','');
+root::$title=self::$title;
+root::$descr=self::$descr;
+root::$image=self::$image;}
+=======
+
+static function headers(){
+head::add('csscode','');
+head::prop('og:title',addslashes_b(self::$title));
+head::prop('og:description',addslashes_b(self::$descr));
+head::prop('og:image',self::$image);}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 //edit
 static function wsgbt($id){$ret=build::wsgbt('txt'.$id,1);
@@ -45,13 +72,29 @@ return $id;}
 static function reinit($p){$id=$p['id']??''; 
 $tit=lang('title'); $txt=tag('p','',lang('text'));
 $r=['tit'=>$tit,'txt'=>$txt,'pub'=>3,'edt'=>0];
+<<<<<<< HEAD
 sql::upd(self::$db,$r,$id);
+=======
+<<<<<<< HEAD
+sql::upd(self::$db,$r,$id);
+=======
+sql::up2(self::$db,$r,$id);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $id;}
 
 static function create($p){
 $r=['uid'=>ses('uid'),'tit'=>lang('title'),'txt'=>tag('p','',lang('text'))];//
 $id=sql('id',self::$db,'v',$r); $p['opn']=1;
+<<<<<<< HEAD
 if($id){$p['id']=$id; sql::upd(self::$db,['up'=>datz('Y-m-d H:i:s',time())],$id);}//??
+=======
+<<<<<<< HEAD
+if($id){$p['id']=$id; sql::upd(self::$db,['up'=>datz('Y-m-d H:i:s',time())],$id);}//??
+=======
+if($id){$p['id']=$id; sql::up(self::$db,'up',date('Y-m-d H:i:s',time()),$id);}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 else $p['id']=self::untitled($p);
 return self::edit($p);
 return div(self::call($p),'',self::$cb);}
@@ -64,8 +107,18 @@ if(!$editable)return;
 if($conn)$txt=$p['txt']; else $txt=conv::call($p);
 if($tit){$tit=trim(strip_tags(delbr($tit,' ')));
 	if(strlen($tit)>144)$tit=substr($tit,0,144);
+<<<<<<< HEAD
 	sql::upd(self::$db,['tit'=>$tit],$id); return $tit;}
 if($txt)sql::upd(self::$db,['txt'=>trim($txt)],$id);
+=======
+<<<<<<< HEAD
+	sql::upd(self::$db,['tit'=>$tit],$id); return $tit;}
+if($txt)sql::upd(self::$db,['txt'=>trim($txt)],$id);
+=======
+	sql::up(self::$db,'tit',$tit,$id); return $tit;}
+if($txt)sql::up(self::$db,'txt',trim($txt),$id,'id');
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if($conn)return self::play($p);
 return conn::call(['msg'=>$txt,'ptag'=>1]);}
 
@@ -84,7 +137,15 @@ return $ret;}
 static function modiftxt($p){
 $id=$p['id']??''; $rid=$p['rid']??'';
 $d=$p[$rid]??''; $d=str::cleanconn($d);
+<<<<<<< HEAD
 sql::upd(self::$db,['txt'=>$d],$id);
+=======
+<<<<<<< HEAD
+sql::upd(self::$db,['txt'=>$d],$id);
+=======
+sql::up(self::$db,'txt',$d,$id);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return conn::call(['msg'=>$d,'ptag'=>1]);}
 
 static function editconn($p){$id=$p['id']??'';

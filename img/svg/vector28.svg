@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="400px" height="400px" >
+
+<rect x="0" y="0" width="400" height="400" fill="none" stroke="black"></rect><circle cx="200" cy="200" r="160" fill="none" stroke="black"></circle>
+<defs fill="none" stroke="black"><g id="gr1" fill="none" stroke="black"><polygon points="200,200 40,200 130,130" fill="none" stroke="black"></polygon><polygon points="130,130 87,87 87,163" fill="none" stroke="black"></polygon></g></defs>
+<use xlink:href="#gr1" x="0" y="0" fill="none" stroke="black"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(45 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(90 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(135 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(180 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(225 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(270 200,200)"></use>
+<use xlink:href="#gr1" x="0" y="0" transform="rotate(315 200,200)"></use></svg>

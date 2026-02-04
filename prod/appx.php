@@ -110,6 +110,7 @@ return $a::edit($p);}
 static function modif($p){
 $id=$p['id']??''; $a=static::$a; $db=static::$db;
 if($a::$conn==1 && isset($p['txt']))$p['txt']=str::cleanconn($p['txt']??'');
+if($a::$conn==1 && isset($p['txt']))$p['txt']=str::cleanconn($p['txt']??'');
 $r=sql::pvalk($p,$db,0); $r=trims($r);
 $ok=self::perms($db,$id,'pub');
 if(!$ok)return lang('permission denied');

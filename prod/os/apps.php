@@ -67,7 +67,11 @@ foreach($rt as $k=>$v){ksort($v); $ret.=div($k,'tit').div(implode('',$v),'cols')
 return div($ret,'');}
 
 static function build(){
+<<<<<<< HEAD
 return sql('app',self::$db,'rv',['uid'=>ses('uid'),'_order'=>'id']);}
+=======
+return sql('app',self::$db,'rv','where uid="'.ses('uid').'" order by id');}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function appbt($v,$c){
 $auth=sesif('auth',0);

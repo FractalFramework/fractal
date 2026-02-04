@@ -80,7 +80,11 @@ curl --request POST \
   --data \'
 {
   "text": [
+<<<<<<< HEAD
     "'.(addslashes($txt)).'"
+=======
+    "'.escapeshellcmd($txt).'"
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
   ],
   "target_lang": "'.strtoupper($to).'",
   "source_lang": "'.strtoupper($from).'",

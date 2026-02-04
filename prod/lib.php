@@ -37,7 +37,11 @@ function ajx($d){return atj('ajx',$d);}
 
 //tags
 function tag($tag,$r,$t='',$o=''){$p=''; //if(is_string($r))trace();
+<<<<<<< HEAD
 if(!$r)$r=[]; elseif(is_string($r))$r=prmr($r);//
+=======
+if(!$r)$r=[]; elseif(is_string($r))$r=prmr($r);
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return '<'.$tag.atr($r).(!$o?'>'.$t.'</'.$tag.'>':'/>');}
 function tagb($tag,$r=[]){return '<'.$tag.atr($r).'/>';}
 function div($t,$c='',$id='',$s='',$r=[]){
@@ -122,6 +126,7 @@ function radio($id,$r,$ck,$o=''){$ret='';
 $rk=explode('-',$ck); $rk=array_flip($rk);
 foreach($r as $k=>$v){$ka=$k;
 	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
+	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	$atb=['type'=>'radio','name'=>$id,'id'=>$kb,'value'=>$k];
 	if(isset($rk[$k]))$atb['checked']='checked';
 	$ret.=span(tagb('input',$atb).label($kb,lang($v)),'btn');}
@@ -129,6 +134,7 @@ foreach($r as $k=>$v){$ka=$k;
 function checkbox($id,$r,$ck='',$o=''){$ret='';
 $rk=explode('-',$ck); $rk=array_flip($rk);
 foreach($r as $k=>$v){$ka=$k;
+	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	if($o)$k=is_numeric($k)?$v:$k; $kb=$id.str::normalize($k);
 	$atb=['type'=>'checkbox','name'=>$id,'id'=>$kb,'value'=>$k];
 	if(isset($rk[$ka]))$atb['checked']='checked';
@@ -313,7 +319,11 @@ function padleft($d,$n){return sprintf('%\'.0'.$n.'d',$d);}
 
 #dates
 function mktime2($y=0,$m=0,$d=0,$h=0,$i=0,$s=0){return mktime($h,$i,$s,$m,$d,$y);}
+<<<<<<< HEAD
 function is_date($y,$m,$d){return sprintf("%04d-%02d-%02d",$y,$m,$d);}
+=======
+function isdate($y,$m,$d){return sprintf("%04d-%02d-%02d",$y,$m,$d);}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 function day2date($d){$s=mktime2(date('Y'),1,1)+(86400*$d); return datz('Y-m-d',$s);}
 function day($d='',$n=''){return date($d?$d:'ymdhis',$n?$n:time());}
 function datz($d='',$n=''){$tz=new DateTimeZone(ses::$cnfg['tz']); $dt=new DateTime(!is_numeric($n)?$n:'',$tz);
@@ -418,12 +428,14 @@ function cleanrl($d){return cleannl(delr($d,"\n"));}
 
 #conn
 function cprm($d,$o=0){$s='|';
+function cprm($d,$o=0){$s='|';
 //$d=str_replace(['$','|'],$s,$d);//patch//,'*'
 return split_one_mb($s,$d,$o);}//
 
 function readconn($d){//p|o:c
 //return poc($d);
 [$da,$c]=split_one(':',$d,1);
+[$p,$o]=cprm($da);
 [$p,$o]=cprm($da);
 return [$p,$o,$c,$da];}
 
@@ -566,6 +578,7 @@ return curl_exec($ch);}
 
 function get_file($f){
 $d=curl($f);//try{}catch(Exception $e){echo $e->message();}
+$d=curl($f);//try{}catch(Exception $e){echo $e->message();}
 //if(!$d)$ret=read_context($f);
 //if(!$d)$ret=read_file($f);
 return $d;}
@@ -577,6 +590,7 @@ return $d;}
 
 function dom($d,$f=''){
 if($f)$d=curl($f);
+//$d=str::utf8dec($d);
 //$d=str::utf8dec($d);
 $dom=new DomDocument('2.0');//,'UTF-8'
 $dom->validateOnParse=true;
@@ -690,6 +704,7 @@ return $n>120?'000000':'ffffff';}
 $r=array_map(fn($v)=>dechex(255-$v),$r);
 $r=array_map(fn($v)=>str_pad($v,2,'0',STR_PAD_LEFT),$r);
 return join('',$r);}
+<<<<<<< HEAD
 
 #ifis
 function is_bin($d){return preg_match('/^[01]+$/',$d)===1;}
@@ -704,6 +719,8 @@ if(is_numeric($d))$r[]='num';
 if(is_hex($d))$r[]='hex';
 if(is_string($d))$r[]='string';
 return $r;}
+=======
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 #img
 //force LH, cut and center
@@ -763,3 +780,4 @@ function chrono($d='chrono',$n=5){static $s;
 if(!$s)$s=$_SERVER['REQUEST_TIME_FLOAT']; $s1=microtime(1); $res=$s1-$s; $s=$s1;
 return $d.':'.round($res,$n);}
 ?>
+

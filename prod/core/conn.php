@@ -13,6 +13,11 @@ $r=explode("\n",$d); $b=$o?'ol':'ul';
 foreach($r as $v)if($v){
 	if(substr($v,0,2)=='- ')$v=substr($v,2);
 	elseif(substr($v,0,1)=='-')$v=substr($v,1);
+<<<<<<< HEAD
+	$rt[]=tag('li',[],$v);}
+return tag($b,[],implode('',$rt));}
+=======
+<<<<<<< HEAD
 	$rt[]=tag('li',[],$v);}
 return tag($b,[],implode('',$rt));}
 
@@ -25,6 +30,26 @@ foreach($tr as $k=>$row)$rt[]=explode('|',$row);
 return tabler($rt,$o);}
 
 static function url($d,$c='',$e=''){[$p,$o]=cprm($d);
+=======
+	$ret[]=tag('li','',$v);}
+return tag($b,'',implode('',$ret));}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
+
+static function tabler($d,$o=''){
+if(strpos($d,'¬')===false && strpos($d,"\n"))$d=str_replace("\n",'¬',$d);
+$d=str_replace(['|¬',"¬\n",' ¬'],'¬',$d);
+if(substr(trim($d),-1)=='¬')$d=substr(trim($d),0,-1);
+$tr=explode('¬',$d);
+foreach($tr as $k=>$row)$rt[]=explode('|',$row);
+return tabler($rt,$o);}
+
+<<<<<<< HEAD
+static function url($d,$c='',$e=''){[$p,$o]=cprm($d);
+=======
+static function url($d,$c='',$e=''){
+[$p,$o]=cprm($d); //echo $p.'--'.$o.br();
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(is_img($p))return playimg($d,'full','',$o);
 elseif(strpos($p,'.mp4'))return pagup('video,call|headers=1,id='.jurl($p),pic('movie',16).$p,'appicon');//
 else return lk($p,$o,$c,$e);}
@@ -34,10 +59,16 @@ $r=explode(',',$d); $ret=''; //self::$obj['gallery'][]=[$d];
 foreach($r as $k=>$v)$ret.=playimg($v,$k==0?'full':'mini');
 return $ret;}
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 static function img($d,$o='',$b=''){
 $h=''; self::$obj['img'][]=[$d,'']; //[$p,$o]=cprm($d); 
 //if($o && $b!='epub')return imgup($p,$o,'');
 //if(strpos($w,'-'))[$w,$h]=explode('-',$w); if(self::$imax)$w=720;
+<<<<<<< HEAD
+=======
 if(strpos($d,','))return self::gallery($d);
 if($b=='epub'){$f='usr/_epub/OEBPS/images/'.$d; $fa='img/full/'.$d;
 	if(!is_file($f) && is_file($fa))copy($fa,$f); return imgalt($f,$o);}//tag('p',[],)
@@ -52,6 +83,31 @@ return imgalt($d,$o);}
 static function saveimg($d){
 if(is_img($d) && substr($d,0,4)=='http')$d=saveimg($d,'art','');
 return '['.$d.']';}
+=======
+static function img($d,$w='',$b=''){
+$h=''; self::$obj['img'][]=[$d,''];
+[$p,$o]=cprm($d); if($o)return imgup($p,$o,'');
+if(strpos($w,'-'))[$w,$h]=explode('-',$w); if(self::$imax)$w=720;
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
+if(strpos($d,','))return self::gallery($d);
+if($b=='epub'){$f='usr/_epub/OEBPS/images/'.$d; $fa='img/full/'.$d;
+	if(!is_file($f) && is_file($fa))copy($fa,$f); return imgalt($f,$o);}//tag('p',[],)
+elseif(is_numeric($b) && count(self::$obj['img'])>1)return playimg($d,'mini','','');//self::$one
+elseif($b=='html')return img('/img/full/'.$d,'','','','max-width:640px;');
+//elseif(strpos($d,'/')===false)return playimg($d,'full','');
+elseif(strpos($d,'/')===false)return img2($d,'full',$o);
+if(strpos($d,'/')===false)$d='/img/full/'.$d;
+<<<<<<< HEAD
+//return img($d,$w,$h);
+return imgalt($d,$o);}
+
+static function saveimg($d){
+if(is_img($d) && substr($d,0,4)=='http')$d=saveimg($d,'art','');
+return '['.$d.']';}
+=======
+return img($d,$w,$h);}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function video($p,$o){
 $pv=video::provider_from_id($p);
@@ -86,7 +142,15 @@ $da=str_replace(':aj',':bj',$da);
 return '['.str_replace('*','|',$da).']';}
 
 static function noconn($d,$b){[$p,$o,$c]=readconn($d);
+<<<<<<< HEAD
 $r=['b','i','u','e','n','h1','h2','h3','h4','h5','span','div','small','big','table'];
+=======
+<<<<<<< HEAD
+$r=['b','i','u','e','n','h1','h2','h3','h4','h5','span','div','small','big','table'];
+=======
+$r=['b','i','u','e','n','h1','h2','h3','h4','span','div','small','big','table'];
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(in_array($c,$r))return $p;
 $ret=match($c){
 'url'=>$o.' ',
@@ -144,11 +208,24 @@ default=>''}; if($ret)return $ret;
 return $p;}
 
 static function minconn($da,$b){
+<<<<<<< HEAD
+[$p,$o,$c,$d]=readconn($da);//echo $p.'|'.$o.':'.$c.br();
+=======
+<<<<<<< HEAD
 [$p,$o,$c,$d]=readconn($da);//echo $p.'|'.$o.':'.$c.br();
 $r=['b','i','u','h1','h2','h3','h4','small','big','span','div'];
 if(in_array($c,$r))return tag($c,[],$p);
 $r=['h'=>'big','k'=>'strike','q'=>'blockquote','s'=>'small','e'=>'sup','n'=>'sub','c'=>'center'];
 if(isset($r[$c]))return tag($r[$c],'',$d);
+if($d=='--')return hr();
+=======
+[$p,$o,$c,$d]=readconn($da);//echo $p.'$'.$o.':'.$c.br();
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
+$r=['b','i','u','h1','h2','h3','h4','small','big','span','div'];
+if(in_array($c,$r))return tag($c,[],$p);
+$r=['h'=>'big','k'=>'strike','q'=>'blockquote','s'=>'small','e'=>'sup','n'=>'sub','c'=>'center'];
+if(isset($r[$c]))return tag($r[$c],'',$d);
+<<<<<<< HEAD
 if($d=='--')return hr();
 $ret=match($c){
 '--'=>hr(),
@@ -179,6 +256,54 @@ default=>''}; if($ret)return $ret;
 if($p=='no')return;
 //if(is_img($p))return $b=='epub'?self::img($p,$o,$b):img2($p,self::$imax?'med':'',$o);
 if(is_img($p))return self::img($p,$o,$b);
+=======
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+switch($c){
+	case('--'):return hr(); break;
+	case('a'):return self::url($d,''); break;
+	case('url'):return self::url($d,''); break;
+	case('img'):return self::img($p,$o,$b); break;
+	case('list'):return self::mklist($d); break;
+	case('numlist'):return self::mklist($d,1); break;
+	case('center'):return tag('center',$o,$p); break;
+<<<<<<< HEAD
+	case('table'):return self::tabler($d,$o); break;
+	case('nh'):if($b=='epub')
+		return '<sup id="nh'.$p.'"><a epub:type="noteref" href="#nb'.$p.'">'.$p.'</a></sup>';
+		else return tag('a',['href'=>'#nb'.$p,'id'=>'nh'.$p],''.$p.''); break;
+=======
+	case('table'):return self::tabler($p,$o); break;
+	case('nh'):if($b=='epub')
+		return '<sup id="nh'.$p.'"><a epub:type="noteref" href="#nb'.$p.'">['.$p.']</a></sup>';
+		else return tag('a',['href'=>'#nb'.$p,'id'=>'nh'.$p],'['.$p.']'); break;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+	case('nb'):if($b=='epub')return tag('a',['href'=>'#nh'.$p],'['.$p.']');
+		return tag('a',['href'=>'#nh'.$p,'id'=>'nb'.$p],'['.$p.']'); break;
+	case('aside'):$o=between($p,'#nh','"');
+		return '<aside epub:type="footnote" id="nb'.$o.'">'.$p.'</aside>';
+	//case('aside'):return tag('aside',['id'=>'nb'.$o],$p);
+	//case('video'):return video::com2($p,$o); break;//send directly webpage
+	case('video'):return video::lk($p,$o); break;//if($b=='epub')
+	//case('audio'):return audio($p); break;
+	//case('mp4'):return video($p); break;
+	//case('mp3'):return audio($p); break;
+	case('stabilo'):return span($d,'','','background-color:yellow; color:black;'); break;
+	case('clr'):return span($p,'','','color:#'.$o.';'); break;
+	case('bkg'):return span($p,'','','background-color:#'.$o.'; color:#'.clrneg($o,1).';'); break;
+	case('code'):return div(tag('code','',$d),'console'); break;
+	case('php'):return build::code($d); break;
+	case('ascii'):return '&#'.$p.';'; break;
+	case('var'):return self::$r[$p]??''; break;
+	case('on'):return '['.$da.']'; break;
+	case('no'):return; break;}
+<<<<<<< HEAD
+//if(is_img($p))return $b=='epub'?self::img($p,$o,$b):img2($p,self::$imax?'med':'',$o);
+if(is_img($p))return self::img($p,$o,$b);
+=======
+//if(is_img($da))return $b=='epub'?self::img($da,'',$b):img2($da,self::$imax?'med':'');
+if(is_img($da))return self::img($da,'',$b);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(substr($p,0,4)=='http')return self::url($da,'');
 return '['.$da.']';}
 
@@ -187,13 +312,30 @@ static function html($p,$o,$c){}
 
 #read
 static function reader($da,$b=''){
+<<<<<<< HEAD
 [$p,$o,$c,$d]=readconn($da); $atb=[];//[p|o:c]//d=p|o
+=======
+<<<<<<< HEAD
+[$p,$o,$c,$d]=readconn($da); $atb=[];//[p|o:c]//d=p|o
+=======
+[$p,$o,$c,$d]=readconn($da); $atb=[];//[p|o:c]//d=p*o
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if($p=='http'){$p.=':'.$c; $c='';}
 $r=['b','i','u','h1','h2','h3','h4','sub','big','small','center'];
 if(in_array($c,$r)){return tag($c,$atb,$d);}//if($o)$p=self::url($d,'');
 $r=['h'=>'big','k'=>'strike','q'=>'blockquote','s'=>'small','e'=>'sup','n'=>'sub','c'=>'center'];
+<<<<<<< HEAD
 if(isset($r[$c]))return tag($r[$c],[],$d);
 if($d=='--')return hr();
+=======
+<<<<<<< HEAD
+if(isset($r[$c]))return tag($r[$c],[],$d);
+if($d=='--')return hr();
+=======
+if(isset($r[$c]))return tag($r[$c],'',$d);
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if($xt=strend($da,'.')){
 	if($xt=='mp3')$c='audio'; elseif($xt=='mp4')$c='mp4';
 	elseif($xt=='pdf')$c='pdf';}
@@ -257,11 +399,31 @@ $ret=match($c){
 'biu'=>'<b><i><u>'.$d.'</u></i></b>',
 default=>''}; if($ret)return $ret;
 switch($c){
+<<<<<<< HEAD
 	case('gen'):$r=explode_k($o,',','='); return gen::com($p,$r,$b); break;
 	case('setvar'):self::$r[$o]=$p; return; break;
 	case('svg'):[$w,$h,$t]=expl('/',$o,3); return svg::com($p,$w,$h,$t); break;
 	case('math'):$v=self::read($d,'conn','math',$o);
 		return tag('math',['xmlns'=>'http://www.w3.org/1998/Math/MathML'],$v); break;
+=======
+	case('br'):return br(); break;
+<<<<<<< HEAD
+	//case('hr'):return hr(); break;//page-break-after
+=======
+	case('--'):return hr(); break;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+	case('a'):return self::url($d,''); break;
+	case('tag'):return tag($c,$o,$p); break;
+	case('url'):return self::url($d,''); break;
+	case('lk'):return self::url($d,''); break;
+	case('list'):return self::mklist($d); break;
+	case('numlist'):return self::mklist($d,1); break;
+<<<<<<< HEAD
+	case('table'):return self::tabler($d,$o); break;
+=======
+	case('table'):return self::tabler($p,$o); break;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	//case('img'):self::$obj[$c][]=[$p,'']; return playimg($p,'full'); break;
 	//case('img'):return images::com($p,'full'); break;//rename img
 	case('web'):self::$obj[$c][]=[$d,'']; return web::play($d); break;
@@ -269,15 +431,94 @@ switch($c){
 		else return twitter::read($p,0); break;
 	case('pdf'):$bt=span(ico('file-pdf-o').domain($da),'apptit');
 		return toggle('|iframe,get|url='.nohttp($da),$bt,'appicon'); break;
+<<<<<<< HEAD
 	case('apj'):$js=ajx('div,cn'.$c.',,1|'.$p.','.$o.'|headers=1');
+=======
+	//case('img'):return images::com($p,'full'); break;//rename img
+	case('mini'):return playimg($p,'mini'); break;
+	case('gallery'):return self::gallery($d); break;
+	case('figure'):return tag('figure','',playimg($p,'').tag('figcaption','',$o)); break;
+	case('id'):if(is_numeric($p))return tlex::playquote($p); break;
+	case('@'):return bubble('profile,call|sz=small,usr='.$p,'@'.$p,'btlk',1); break;
+	case('#'):return bj('pagup|tlex,search_txt|srch='.$p,'#'.$p,'btlk'); break;
+	case('stabilo'):return span($d,'stabilo'); break;
+	case('sticky'):return stabilo::pad($p,$o); break;
+	case('clr'):return span($p,'','','color:#'.$o.';'); break;
+	case('bkg'):return span($p,'','','background-color:#'.$o.'; color:#'.clrneg($o,1).';'); break;
+	case('code'):return div(tag('code','',$d),'console'); break;
+	case('php'):return build::code($d); break;
+	case('pub'):return lk('/art/'.$p,$o?$o:art::tit(['id'=>$p]),'btlk'); break;
+<<<<<<< HEAD
+	case('apj'):$js=ajx('div,cn'.$c.',,1|'.$p.','.$o.'|headers=1');
+=======
+	case('apj'):$js='ajx("div,cn'.$c.',,1|'.$p.','.$o.'|headers=1");';
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 		return div(head::csscode($js),'','cn'.$c); break;
 	//case('app'):return app($p,_jrb($o)); break;//c|o
 	case('app'):[$b,$a]=split_one(':',$d,1); return app($a,_jrb($b,'=')); break;//p:a|t
 	case('com'):[$b,$a]=split_one(':',$d,1); return app($a,_jrb($b,'='),'com'); break;
 	case('bt'):[$b,$a]=split_one(':',$p,1); $t=$a=='art'?art::tit(['id'=>$b]):($a);//p:a|t
 		return pagup($a.',call|'.implode_k(_jrb($b,'='),',','='),pic($a).($o?$o:$t)); break;
+<<<<<<< HEAD
 }
 if(is_img($p))return self::img($p,$o,$b);
+=======
+	//case('open'):if(method_exists($p,$o))return $p::$o([]); break;
+	case('popup'):return popup($p,$o?$o:pic('popup'),''); break;
+	case('pagup'):return pagup($p,$o?$o:pic('pagup'),''); break;
+	case('imgup'):return imgup($p,$o); break;
+	case('artxt'):return art::call(['id'=>$p]); break;
+<<<<<<< HEAD
+	case('nh'):return tag('a',['href'=>'#nb'.$p,'name'=>'nh'.$p],$p); break;//'['.$p.']'
+	case('nb'):return tag('a',['href'=>'#nh'.$p,'name'=>'nb'.$p],$p); break;
+=======
+	case('nh'):return tag('a',['href'=>'#nb'.$p,'name'=>'nh'.$p],'['.$p.']'); break;
+	case('nb'):return tag('a',['href'=>'#nh'.$p,'name'=>'nb'.$p],'['.$p.']').' '.$o; break;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+	case('ico'):return ico($p,$o?$o:24); break;
+	case('pic'):return pic($p,$o); break;
+	case('lang'):return lang($p,$o); break;
+	case('help'):return helpx($p,$o); break;
+	case('picto'):return picto($p,$o?$o:24); break;
+	case('ascii'):return '&#'.$p.';'; break;
+	case('aside'):return tag('aside',['id'=>'nb'.$o],$p);
+	case('b64'):return img($p); break;
+<<<<<<< HEAD
+	case('gen'):$r=explode_k($o,',','='); return gen::com($p,$r,$b); break;
+	case('calc'):return self::calc($d,$o); break;
+	case('date'):return datz($d); break;
+	case('setvar'):self::$r[$o]=$p; return; break;
+	case('var'):return self::$r[$p]??''; break;
+=======
+	case('var'):return self::$r[$p]??''; break;
+	case('setvar'):self::$r[$o]=$p; return; break;
+	case('gen'):$r=explode_k($o,',','='); return gen::com($p,$r,$b); break;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+	case('svg'):[$w,$h,$t]=expl('/',$o,3); return svg::com($p,$w,$h,$t); break;
+	case('math'):$v=self::read($d,'conn','math',$o);
+		return tag('math',['xmlns'=>'http://www.w3.org/1998/Math/MathML'],$v); break;
+	case('form'):return self::read($d,'conn','form',$o); break;
+	case('loop'):return self::loop($p,$o); break;
+	case('protect'):return jurl($p); break;
+	case('auth'):return auth(6)?$p:$o; break;
+	case('db'):return db::call(['f'=>'usr/'.$p]); break;
+	//case('db'):return pagup($c.',call|f=usr/'.$p,span(pic($c).' '.$p,'apptit'),'appicon'); break;
+	case('bj'):return bj($p,$o,''); break;
+	case('no'):return '['.$d.']'; break;
+<<<<<<< HEAD
+	case('ko'):return; break;
+	case('bi'):return '<b><i>'.$d.'</i></b>'; break;
+	case('bu'):return '<b><u>'.$d.'</u></b>'; break;
+	case('iu'):return '<i><u>'.$d.'</u></i>'; break;
+	case('biu'):return'<b><i><u>'.$d.'</u></i></b>'; break;
+}
+if(is_img($p))return self::img($p,$o,$b);
+=======
+	case('ko'):return; break;}
+if(is_img($da))return playimg($da,'');//self::
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 if(substr($p,0,4)=='http')return self::url($da,'');
 if(method_exists($c,'call'))return self::app($c,$p,$o,$b);
 return '['.$da.']';}
@@ -340,25 +581,63 @@ $ptag=$p['ptag']??''; self::$r=$p['r']??[]; //explode_k($p['vars']??'',',','=');
 //$d=str_replace("<br />\n","\n",$d); $d=str_replace('<br />','',$d);
 $app=$p['app']??'conn'; $mth=$p['mth']??'reader'; self::$one=0; self::$obj=[];
 if($p['imax']??''){self::$imax=1; $mth='minconn';}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $d=self::read($d,$app,$mth,$opt);
 if($d)$d=cleannl($d);
 if($ptag==1)$d=str::ptag($d);
 elseif($ptag!='no')$d=nl2br($d??'');
 if($opt=='epub')$d=str_replace("&nbsp;","&#160;",$d); //self::$usd=0;
 return $d;}
+<<<<<<< HEAD
 
 static function com($p,$o=''){return self::call(['msg'=>$p,'ptag'=>$o]);}
 static function com2($d,$a='conn',$m='reader',$r=[]){conn::$r=$r;
 $d=self::read($d,$a,$m); if($d)cleanrl($d,"\n"); return $d;}
+=======
+
+static function com($p,$o=''){return self::call(['msg'=>$p,'ptag'=>$o]);}
+static function com2($d,$a='conn',$m='reader',$r=[]){conn::$r=$r;
+$d=self::read($d,$a,$m); if($d)cleanrl($d,"\n"); return $d;}
+=======
+$ret=self::read($d,$app,$mth,$opt);
+if($ptag==1)$ret=str::ptag($ret);
+elseif($ptag!='no')$ret=nl2br($ret??'');
+if($opt=='epub')$ret=str_replace("&nbsp;","&#160;",$ret); //self::$usd=0;
+return $ret;}
+
+static function com($p,$o=''){return self::call(['msg'=>$p,'ptag'=>$o]);}
+static function com2($d,$a='conn',$m='reader',$r=[]){conn::$r=$r; return self::read($d,$a,$m);}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function mincom($p,$o=''){return self::call(['msg'=>$p,'mth'=>'minconn','ptag'=>$o,'opt'=>'']);}
 
 static function content($p){
 $j='cnn|conn,call|ptag=1|msg';
 $r=['id'=>'msg','rows'=>16,'cols'=>80,'class'=>'console','onkeyup'=>ajx($j),'onclick'=>ajx($j)];
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $d=build::connbt('msg').tag('textarea',$r,'');
 //$d.=bj($j,langp('ok'),'btsav');
 $d.=div('','board','cnn');
 return $d;}
+<<<<<<< HEAD
 }
 ?>
+=======
+}
+?>
+=======
+$ret=build::connbt('msg').tag('textarea',$r,'');
+//$ret.=bj($j,langp('ok'),'btsav');
+$ret.=div('','board','cnn');
+return $ret;}
+}
+?>
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235

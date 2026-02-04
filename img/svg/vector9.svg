@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="150px" height="150px" >
+
+
+
+
+
+
+//obj1
+<rect x="0" y="30" width="50" fill="lightcoral" stroke="black"></rect>
+<rect x="30" y="0" height="50" fill="seagreen" stroke="black"></rect>
+//obj2
+<rect x="100" y="30" width="50" fill="mediumaquamarine" stroke="black"></rect>
+<rect x="100" y="0" height="50" fill="forestgreen" stroke="black"></rect>
+//obj3
+<rect x="0" y="100" width="50" fill="midnightblue" stroke="black"></rect>
+<rect x="30" y="100" height="50" fill="darkslateblue" stroke="black"></rect>
+//obj4
+<rect x="100" y="100" width="50" fill="deepskyblue" stroke="black"></rect>
+<rect x="100" y="100" height="50" fill="lightyellow" stroke="black"></rect></svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="400px" height="400px" >
+
+<rect x="0" y="0" width="400" height="400" fill="white" stroke="black" stroke-width="1"></rect>
+
+
+
+
+
+
+
+
+
+
+<path d="M 200,200 a 20,20 0 0,1 40,0 a 40,40 0 0,1 -80,0 a 60,60 0 0,1 120,0 a 80,80 0 0,1 -160,0 a 100,100 0 0,1 200,0" fill="none" stroke="red" stroke-width="2"></path>
+
+<path d="M 220,200 a 20,20 0 0,1 -40,0 a 40,40 0 0,1 80,0 a 60,60 0 0,1 -120,0 a 80,80 0 0,1 160,0 a 100,100 0 0,1 -200,0" fill="none" stroke="red" stroke-width="2"></path>
+
+<path d="M 100,100 a 20,20 0 0,1 0,40" fill="none" stroke="red" stroke-width="2"></path></svg>

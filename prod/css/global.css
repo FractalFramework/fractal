@@ -148,8 +148,11 @@ a .pic:hover,a.active .pic{}
 /*.lisb a:first-child {margin-left:0;}*/
 .lisb a:hover{background-color:var(--b2); border-color:var(--b2); color:var(--c2);}
 .lisb a.active{background-color:var(--b3); border-color:var(--b3); color:var(--c2);}
+<<<<<<< HEAD
 .lisb a.ok{background-color:rgba(103,242,25,0.29);}
 .lisb a.ko{background-color:rgba(242,25,25,0.29);}
+=======
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 .lisb a:hover.active{background-color:var(--b4); color:var(--c0);}
 .lisb a:hover.del{background-color:#c82020; color:var(--c2);}
 .lisb div{color:inherit;}
@@ -392,7 +395,11 @@ background-image:linear-gradient(#fcfcfc,#eee);}
 .sicon .pic{font-size:20px;}
 .sicon.active{background-color:var(--b5);}
 /*tabs*/
+<<<<<<< HEAD
 .tabs{padding:6px 4px; font-size:small;}
+=======
+.tabs{padding:2px 4px; font-size:small;}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 .tabs a{margin:0 0px; padding:2px 6px; border-width:0px 0px 1px 0px; border-style:solid; border-color:var(--cb) var(--cb) var(--c2) var(--cb); background-color:var(--cd); color:var(--c2);}
 .tabs a .pic{color:var(--c2);}
 .tabs a:hover{background-color:var(--ce); color:var(--c2);}

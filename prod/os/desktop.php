@@ -200,6 +200,7 @@ $uid=ses('uid'); $usr=ses('usr'); $spd=ses('dskspd');//3=usr,2=public,1=private
 $keys=self::$db.'.id,dir,type,com,picto,bt,auth,uid';
 if(!$cuid)$cuid=$uid; if(!$spd)$spd=3;
 if($spd==3){//cusr
+<<<<<<< HEAD
 	$sq=['uid'=>$cuid];
 	if($uid!=$cuid){
 		$ab=sql('id','tlex_ab','v',['usr'=>ses('uid'),'ab'=>$cuid]);
@@ -213,6 +214,23 @@ elseif($spd==1){//private
 	$sq['uid']=$uid; $sq['{auth']=ses('auth');}
 if($dir)$sq['[dir']=$dir; $sq['_order']='id desc'; //$sq['_limit']='100';
 return sql($keys,self::$db,'id',$sq);}
+=======
+	$wu='uid="'.$cuid.'"';
+	if($uid!=$cuid){
+		$ab=sql('id','tlex_ab','v',['usr'=>ses('uid'),'ab'=>$cuid]);
+		if($ab)$wa='desktop.auth<=2'; elseif(!$uid)$wa='desktop.auth<1'; else $wa='desktop.auth<2';}
+	else $wa='';}
+elseif($spd==2){//public
+	$rab=sql('ab','tlex_ab','rv',['usr'=>$uid]); $rab[]=$cuid; $wu='';
+	//$w='left join tlex_ab on tlex_ab.ab=uid where uid="'.$uid.'" and tlex_ab.usr="'.$uid.'"';
+	if($rab)$wa='(uid in ('.implode_q($rab).') or auth<2)';
+	elseif(!$uid)$wa='auth<1'; else $wa='auth<2';}
+elseif($spd==1){//private 
+	$wu='uid="'.$uid.'"'; $wa='auth<="'.ses('auth').'"';}
+if($wu && $wa)$w=$wu.' and '.$wa; elseif($wu)$w=$wu; elseif($wa)$w=$wa;
+$w=$w?'where '.$w:''; if($dir)$w.=' and dir like "'.$dir.'%"';
+return sql($keys,self::$db,'id',$w.' order by id desc');}//limit 100
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function pick($p){$css='bicon'; $cuid=ses('uid'); $id=$p['id']??''; $ret='';
 $r=sql('id,dir,type,com,picto,bt,auth',self::$db,'id','where uid="'.$cuid.'" and dir like "/documents/img%" order by id asc');// limit 100//and auth<="'.ses('auth').'" 

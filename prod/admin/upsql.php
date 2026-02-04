@@ -9,7 +9,11 @@ static function js(){return;}
 #client
 static function installdb($a,$r){
 if(isset($r) && is_array($r)){
+<<<<<<< HEAD
 	sql::trunc($a);
+=======
+	//sql::trunc($a);
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	sql::sav2($a,$r,5,1,0,1);
 	if($a=='lang')ses('lang',lang_com(ses('lng')));
 	if($a=='icons')ses('icon',icon_com());
@@ -82,10 +86,17 @@ static function archive(){
 $r=self::$dba; $dr='usr/_db'; mkdir_r($dr);
 foreach($r as $k=>$v){$d=self::render(['p'=>$v]); file_put_contents($dr.'/'.$v.'.json',$d);}}
 
+<<<<<<< HEAD
 static function install($p){$r=self::$dba; $rt=[];
 if($p['local']??'')$a='loccall'; else $a='call';//local or distant
 foreach($r as $k=>$v)$rt[]=self::$a(['app'=>$v]);
 return implode(br(),$rt);}
+=======
+static function install($p){$r=self::$dba; $ret=[];
+if($p['local']??'')$a='loccall'; else $a='call';//local or distant
+foreach($r as $k=>$v)$ret[]=self::$a(['app'=>$v]);
+return implode(br(),$ret);}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 static function lastest($p){$r=self::$dba;
 if(auth(6))$r=array_merge($r,self::$dbb,applist::pub());
@@ -113,4 +124,8 @@ $bt=hlpbt('upsql');
 $bt.=self::menu($p);
 return $bt.div('','',$p['rid']);}
 }
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235

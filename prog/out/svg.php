@@ -268,9 +268,14 @@ return $ret;}*/
 
 static function content($p){
 $p['code']=build::sample(['a'=>'svg','k'=>'basics']);
+<<<<<<< HEAD
 //$bt=build::sample(['a'=>'svg','b'=>'codea']);
 //$bt=div(menu::call(['app'=>'vector','mth'=>'menu','bid'=>'codea','drop'=>0]));
 $bt=subt::load(['cb'=>'codea','a'=>'vector','m'=>'cbk','d'=>'r','inp'=>'codea']);
+=======
+$bt=build::sample(['a'=>'svg','b'=>'codea']);
+$bt.=div(menu::call(['app'=>'vector','mth'=>'menu','bid'=>'codea','drop'=>0]));
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $bt.=textarea('codea',$p['code'],64,12,'','console');
 $bt.=bj('svgcb|svg,call|rid=a|codea',langp('ok'),'btn');
 return $bt.div(self::call($p),'board','svgcb');}

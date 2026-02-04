@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="240px" >
+
+
+<polygon points="0,0 240,0 240,60 120,60 120,120 180,120 180,180 60,180 60,240 0,240 0,0" fill="red" stroke="0"></polygon>
+
+
+<polygon points="240,0 300,0 300,240 60,240 60,180 180,180 180,120 120,120 120,60 240,60 240,0" fill="aliceblue" stroke="black"></polygon></svg>

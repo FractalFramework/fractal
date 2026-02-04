@@ -47,7 +47,11 @@ else return self::oper($q);}
 //proc
 static function buildreq($r){$rt=[];
 foreach($r as $k=>[$c,$p,$v]){
+<<<<<<< HEAD
 	if(is_array($v))$va=self::atmra($v); elseif($v)$va=sql::escape($v); else $va='';
+=======
+	if(is_array($v))$va=self::atmra($v); elseif($v)$va=self::atm($v); else $va='';
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 	$rt[]=$c.' '.$p.' '.$va;}
 return $rt;}
 
@@ -62,9 +66,15 @@ $rq=self::operq($q);
 return self::buildsql($rq);}
 
 static function read($d,$b,$p,$q,$z=''){//sql
+<<<<<<< HEAD
 $sql='select '.$d.' from '.$b.' '.self::where($q);
 $rq=sql::qr($sql,$z); $ret=$p=='v'?'':[];
 if($rq){$ret=sql::format($rq,$p); sql::qfc($rq);}
+=======
+$sql='select '.$d.' from '.db($b).' '.self::where($q);
+$rq=self::qr($sql,$z); $ret=$p=='v'?'':[];
+if($rq){$ret=sql::format($rq,$p); self::qrf($rq);}
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 return $ret;}
 
 //prep
@@ -108,8 +118,12 @@ return self::buildsql_oo($rq);}
 //[['day','>','1769442890'],['suj','like','trump']]
 static function read_oo($d,$b,$p,$q,$z=''){
 [$ql,$r]=self::where_oo($q);
+<<<<<<< HEAD
 $sql='select '.$d.' from '.$b.' '.$ql; if($z)echo $sql;
 //return sqb::query($sql,$r,$p,$z);
+=======
+$sql='select '.$d.' from '.db($b).' '.$ql; if($z)echo $sql;
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $rq=self::prep($sql,$r,$p);
 if($rq)$ret=sqb::format($rq,$p); else $ret=$p=='v'?'':[];
 return $ret;}

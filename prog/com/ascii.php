@@ -25,7 +25,15 @@ $r=db::read('db/system/ascii2',1);
 $ret=bj('ask|ascii,call|rid='.$id,pic('back'),'');
 if($b)foreach($r as $k=>$v)if($v[3]!=$b)$r[$k]=[];
 foreach($r as $k=>$v)if($v)$ret.=toggle('ask2|ascii,readsym|rid='.$id.',k='.$k,$v[0],'').' ';
+<<<<<<< HEAD
 return div($ret,'lisb').div('','','ask2');}
+=======
+<<<<<<< HEAD
+return div($ret,'lisb').div('','','ask2');}
+=======
+return div($ret,'lisb').div('','lisb','ask2');}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 #by groups
 static function symbolsdb(){
@@ -58,7 +66,16 @@ $r=self::symbolsdb(); //p($r);
 foreach($r as $k=>$v)$bt.=toggle('ask2|ascii,open|rid='.$id.',k='.$k,$k,'',[],$k=='useful'?1:0).' ';
 //if($k=='useful')$ret.=div(div(langx($k),'tit').self::line($v,$id));
 $p['k']='useful'; $ret=self::open($p);
+<<<<<<< HEAD
 return div($bt,'lisb','ask').div($ret,'','ask2');}
+=======
+<<<<<<< HEAD
+return div($bt,'lisb','ask').div($ret,'','ask2');}
+=======
+$ret=div($bt,'lisb').div($ret,'','ask2');
+return div($ret,'','ask');}
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 //all
 static function all($p){
@@ -82,7 +99,15 @@ if($ty){$rb=$r[$ty]; $rb=array_flip(array_flip($rb)); sort($rb);
 return div($ret,'','ord');}
 
 static function nav($p){$o=valb($p,'p1',1); $t='';
+<<<<<<< HEAD
 $r=sesm('ascii','db'); foreach($r as $k=>$v)if($o>=$v[0] && $o<$v[1])$t=$k;
+=======
+<<<<<<< HEAD
+$r=sesm('ascii','db'); foreach($r as $k=>$v)if($o>=$v[0] && $o<$v[1])$t=$k;
+=======
+$r=sesm('ascii','db','',1); foreach($r as $k=>$v)if($o>=$v[0] && $o<$v[1])$t=$k;
+>>>>>>> b79f9fbf5da408718315110e8a3db51ac9e121eb
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 $ret=bj('asc|ascii,nav|p1='.($o-1),pic('previous'));
 $ret.=bj('asc|ascii,nav|p1='.($o+1),pic('next'));
 $ret.=span($t,'nfo');

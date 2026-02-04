@@ -1,6 +1,10 @@
 <?php
 class desk{	
+<<<<<<< HEAD
 static $cb='dskcnt';
+=======
+static $cb='cbck';
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 
 #sample
 static function menus(){
@@ -16,7 +20,11 @@ return $bt;}
 static function btmenu($ico,$v4){
 return div($ico.span($v4));}//pic('edit',12)
 
+<<<<<<< HEAD
 static function build($r,$current_depht,$current_level,$auth,$uid,$dir,$prm,$cmb,$rid){$rt=[];
+=======
+static function build($r,$current_depht,$current_level,$auth,$uid,$dir,$prm,$cmb,$rid){
+>>>>>>> 1e291934117955fdb0b0792ad329a68d5110b235
 foreach($r as $k=>$v){
 $level=explode('/',$v[0]); $depht=count($level)-1;
 //next_level: 1/[2]/3
